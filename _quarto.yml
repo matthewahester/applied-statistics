@@ -24,6 +24,9 @@ project:
     - "!run_reports/"
     - "!accessibility/"
 
+  resources:
+    - assets/hero-web.webp
+    - assets/hero-web-800.webp
 website:
   title: "Applied Statistical Methods"
   site-url: https://matthewhester.com/applied-statistics/
