@@ -1,10 +1,15 @@
 ---
-title: "Applied Statistical Methods"
-subtitle: "Choosing, running, interpreting, and communicating common applied analyses — responsibly"
+pagetitle: "Applied Statistical Methods"
 toc: false
 ---
 
-![](assets/hero.png){.course-hero-img fig-alt="Course identity hero for Applied Statistical Methods — a pink-and-green watermelon-tourmaline crystal cluster surrounded by applied-statistics graphics including a linear-model equation, group comparisons and one-way and two-way ANOVA, regression with residual diagnostics, a contingency table, and a logistic-regression curve, with the course title."}
+![](assets/hero-web.webp){.course-hero-img fig-alt="Course identity hero for Applied Statistical Methods — a pink-and-green watermelon-tourmaline crystal cluster surrounded by applied-statistics graphics including a linear-model equation, group comparisons and one-way and two-way ANOVA, regression with residual diagnostics, a contingency table, and a logistic-regression curve, with the course title."}
+
+# Applied Statistical Methods {.course-landing-title}
+
+::: {.course-landing-subtitle}
+Choosing, running, interpreting, and communicating common applied analyses — responsibly
+:::
 
 > A statistical method is not a button to press or a name to memorize. It is a way to connect a **question**, a
 > **data structure**, a set of **assumptions**, an **estimate**, its **uncertainty**, and an honest
