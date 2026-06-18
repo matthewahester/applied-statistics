@@ -1,0 +1,156 @@
+---
+title: "Notes"
+subtitle: "The weekly analysis-blueprint spine — question to estimate to conclusion"
+page-type: orientation
+toc: true
+---
+
+The notes are the backbone of the course. There is one note per week, and reading the current week's note before
+class — and again after — is the single most reliable way to keep up. Every note follows the same shape, so once
+you learn to read one, you can read them all. That shape is not decoration: it *is* the course. Each week walks
+the same six-step **analysis blueprint**, applied to a new method, so by the end you are not memorizing a box of
+named tests — you are running one disciplined workflow on whatever data structure lands in front of you.
+
+This is a **draft course site**: the example datasets are synthetic, the numbers are drafted and provisional, and
+R is shown but not executed. Read the methods and the reasoning as the course's own; treat every printed
+statistic as illustrative until the verification sign-off is complete.
+
+## The analysis blueprint — the six questions every note answers
+
+Every method in this course — the paired $t$, the two-sample $t$, one-way and two-way ANOVA, ANCOVA, simple and
+multiple regression, the chi-square test, and logistic regression — is one instance of the **same blueprint**.
+When you meet a new method, you are not learning a new ritual; you are filling in the same six steps with new
+specifics. Hold these six questions in mind on every page:
+
+1. **Question.** Are you *comparing*, *explaining*, or *predicting*? The plain-English question comes first;
+   the machinery follows from it.
+2. **Structure.** What is the unit of analysis? Which variable is the **response** ($Y$) and which are
+   **explanatory**, **grouping**, or **covariate**? What *type* is the outcome — quantitative, categorical, or
+   binary? And what is the **design** — paired vs independent, one factor vs two, observational vs experimental?
+3. **Method.** Which analysis matches that structure — and why *this* one and not a neighbor? (Why a paired $t$
+   and not a two-sample $t$; why Welch and not pooled; why ANCOVA and not a raw group comparison.)
+4. **Assumptions & diagnostics.** What does the method assume, and how do you *check* it — with a plot, a test,
+   a residual, a leverage value?
+5. **Estimate & uncertainty.** What does the model actually **estimate** — a mean difference, an effect size, a
+   slope, an odds ratio — reported **with a confidence interval, never as a bare p-value**?
+6. **Conclusion.** Is the result **statistically** significant, **practically** important, or both? Does the
+   design buy **association** or **causation**? What can this analysis *not* support?
+
+Two disciplines live *inside* the blueprint and recur on every single page, so watch for them by name:
+
+- **Report the estimate, not just a verdict.** An effect size and an interval — a mean difference of $6$ points
+  with a 95% CI of $(1.3, 10.7)$ — tells you far more than "significant, $p = 0.013$." A lone p-value is never
+  the answer.
+- **Keep three things distinct: statistical significance, practical significance, and causation.** A small
+  p-value does not make an effect large, and an **observational** comparison — where people *chose* their group
+  — buys you association, not causation, no matter how clean the output looks.
+
+This course is deliberately **four things it is not**, and the notes resist all four drifts. It is **not generic
+intro statistics** (descriptive summaries, the normal model, and a single one-sample t-test are assumed
+background); **not a pure R/software course** (the code carries out the fit, but the method's *logic* is the
+message); **not a formula-only methods course** (the point is to map question → structure → method → estimate →
+conclusion and to *read real output*, not to memorize a sampling distribution); and **not a disconnected catalog
+of named tests** (every test is one expression of the one blueprint).
+
+## How to read a week
+
+Each weekly note is built from the same parts, in the same order. Knowing the anatomy lets you skim for what you
+need and study with intent — and each part maps onto a step of the blueprint above:
+
+- **The week question.** A single plain-English question the week exists to answer (blueprint step 1). Hold it in
+  mind as you read; everything else is in service of it.
+- **Why this matters** and **Learning goals.** Where the week sits in the arc, and what you should be able to
+  *do* by the end — "By the end of this week you should be able to…".
+- **Core vocabulary.** The structural words the week leans on — response vs explanatory vs covariate, paired vs
+  independent, main effect vs interaction, log-odds vs odds ratio vs probability — defined where you can find them.
+- **Concept development.** The core ideas, built up in a few short sections from intuition toward a precise
+  statement of *what the method assumes and what it estimates* (blueprint steps 2–5). This is the part to read
+  slowly. The method's logic is shown first; then the locked numeric instance from the week's dataset makes it
+  concrete.
+- **Worked examples.** Each idea is worked on the recurring **Cypress Ridge College Student-Success** world —
+  the paired pre/post readiness scores, the Support-vs-Self-guided final exam comparison, final score by
+  instructional format, the Delivery × Background factorial, or the study-hours/pass-fail regression data — with
+  the question and structure stated, the assumptions checked, the computation shown in R, and the **estimate
+  reported with its uncertainty** and interpreted in sentences. Each concept week also carries one *transfer*
+  example in a fresh context, so you see the same blueprint move to new data.
+- **A common mistake.** The applied-methods error students most often make on this topic — using the wrong
+  design (paired vs independent), ignoring unequal variance, running many comparisons without error-rate control,
+  misreading an interaction, deleting an influential point, calling an observational association causal, reading a
+  bare p-value as the whole story, or interpreting a logit coefficient as a probability — named plainly so you
+  can watch for it in your own work.
+- **Low-stakes self-checks (ungraded).** A few practice prompts to test yourself. These are **self-check only** —
+  no points, no submission.
+- **Reading and source pointer.** Where to read more: the relevant *Introduction to Modern Statistics* (IMS)
+  topic on nearly every week; *ModernDive* on the computational and reporting weeks; *Introductory Statistics for
+  the Life and Biomedical Sciences* (ISLBS) on the applied-lab weeks; and *Learning Statistics with R* (Navarro)
+  named only as an optional pointer — with the reminder that these notes are the course's own synthesis, grounded
+  in but not copied from the sources.
+- **Evidence and verification status.** An honest note that every numeric value in the example datasets is
+  drafted, synthetic ($\texttt{set.seed(35203)}$), and not independently checked — R is not executed in this
+  build, and the worked numbers are provisional and not independently verified.
+- **Looking ahead.** A sentence or two connecting this week to the next, so the arc stays visible.
+
+Keep the [methods glossary](../resources/methods-glossary.qmd), the
+[method chooser](../resources/method-chooser.qmd) (the question → structure → method decision guide), the
+[assumptions and diagnostics guide](../resources/assumptions-and-diagnostics-guide.qmd), and the
+[reporting and interpretation guide](../resources/reporting-and-interpretation-guide.qmd) open alongside the
+notes.
+
+## The four parts
+
+The fifteen weeks fall into four parts. Each part has a job, and the weeks within it build on one another. The
+same six-step blueprint runs through all of them; what changes is the data structure — and therefore the method,
+the estimate, and what you can conclude.
+
+**Part I — Questions, structure & estimation (weeks 1–3).** Before any test, you learn to read a question, name
+the data structure, look at the data, and report an estimate with its uncertainty. This is the blueprint in
+miniature, established once so every later week can lean on it.
+
+1. [Week 1 — Statistical questions, data structure & applied workflow](week-01-statistical-questions-and-data-structure.qmd)
+2. [Week 2 — Exploratory analysis & graphical comparison](week-02-exploratory-analysis-and-graphical-comparison.qmd)
+3. [Week 3 — Estimation, uncertainty & practical significance](week-03-estimation-uncertainty-and-practical-significance.qmd)
+   *(Labor Day falls in this week — Mon Sep 7 has no class, so week 3 runs W/F compressed.)*
+
+**Part II — Comparing groups (weeks 4–9).** The heart of the course: comparing one or many groups, getting the
+design right (paired vs independent, one factor vs two), checking assumptions, controlling error rates across
+many comparisons, and reading an interaction before a main effect. The **midterm (Fri Oct 9, in class)** lands
+in week 7 and covers weeks 1–7.
+
+1. [Week 4 — One-sample & paired comparisons](week-04-one-sample-and-paired-comparisons.qmd)
+2. [Week 5 — Two-group comparisons](week-05-two-group-comparisons.qmd)
+3. [Week 6 — Many-group comparisons & one-way ANOVA](week-06-many-group-comparisons-and-one-way-anova.qmd)
+4. [Week 7 — Assumptions, diagnostics & the midterm](week-07-assumptions-diagnostics-and-the-midterm.qmd)
+5. [Week 8 — Multiple comparisons & planned contrasts](week-08-multiple-comparisons-and-planned-contrasts.qmd)
+6. [Week 9 — Two-way ANOVA & interaction](week-09-two-way-anova-and-interaction.qmd)
+
+**Part III — Models, covariates & categorical data (weeks 10–13).** From comparing groups to *modeling*
+outcomes: regression and the difference between a raw and an adjusted slope, ANCOVA and covariate adjustment, and
+then categorical and binary outcomes — contingency tables and logistic regression. This is where the
+**confounding → adjustment → association-vs-causation** thread is sharpest.
+
+1. [Week 10 — Simple & multiple regression review](week-10-simple-and-multiple-regression-review.qmd)
+2. [Week 11 — ANCOVA & adjustment](week-11-ancova-and-adjustment.qmd)
+3. [Week 12 — Categorical outcomes & contingency tables](week-12-categorical-outcomes-and-contingency-tables.qmd)
+4. [Week 13 — Logistic regression for binary outcomes](week-13-logistic-regression-for-binary-outcomes.qmd)
+   *(Fall break, Nov 22–28, falls between weeks 13 and 14 — no classes.)*
+
+**Part IV — Reporting & synthesis (weeks 14–15).** Turning an analysis into an honest, clearly-bounded report,
+then stepping back to see the whole blueprint at once across the five datasets.
+
+1. [Week 14 — Applied analysis report workshop](week-14-applied-analysis-report-workshop.qmd)
+2. [Week 15 — Applied methods synthesis & review](week-15-applied-methods-synthesis-and-review.qmd)
+   *(Last class is Mon Dec 7; the final-exam window is Dec 9–15, with the exact block posted via Blackboard.)*
+
+One coherent synthetic world — the **Cypress Ridge College Student-Success Study** — runs underneath all four
+parts, realized as five datasets of different structures (paired, two-group, many-group, two-factor, and a
+regression/categorical set), so each method is seen exactly where its data structure calls for it. Seeing the
+same study analyzed five ways is what makes this "models, groups, and categorical data" rather than a test
+catalog.
+
+## Public vs. graded
+
+These notes, the examples, and the practice here are **public and ungraded** — study material only. No graded
+prompts, answer keys, rubrics, point values, or due dates appear on this site. Graded applied-methods
+checkpoints, weekly quizzes, homework and analysis memos, applied analysis labs, the midterm, the applied
+methods project, and the final exam live in **Blackboard (the LMS)**, which is authoritative for due dates,
+submissions, and grades. If this page and Blackboard ever disagree, follow Blackboard.

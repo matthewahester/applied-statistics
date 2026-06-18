@@ -1,0 +1,319 @@
+---
+title: "Method chooser (decision guide)"
+subtitle: "From a data shape and a question to a defensible method"
+page-type: reference
+verified: false
+toc: true
+---
+
+Keep this page open while you read the notes. It is a decision *guide*, not a flowchart that picks "the" test.
+The habit it teaches runs through every table below and is the spine of the whole course — the **analysis
+blueprint**, six steps walked for every method: **(1) Question** — are you comparing, explaining, or predicting?
+**(2) Structure** — the unit of analysis, the response versus the explanatory / grouping / covariate variables,
+the outcome type (quantitative, categorical, binary), and the design (paired vs independent, one factor vs two,
+observational vs experimental). **(3) Method** — the analysis that matches that structure, and why this one and
+not a neighbor. **(4) Assumptions & diagnostics** — what it assumes and how you check. **(5) Estimate &
+uncertainty** — what the model *estimates* (a mean difference, an effect size, a slope, an adjusted mean, an
+odds ratio), reported **with a confidence interval, never as a bare p-value**. **(6) Conclusion** — statistical
+versus **practical** significance, **association versus causation**, and what the analysis cannot support.
+
+This guide deliberately lays out *candidates* — what each assumes and what each estimates — rather than naming
+"the" test, because the same numbers can call for different methods when the question changes. Two disciplines
+run inside every cell and recur on every page: **report the estimate with its uncertainty, not just a verdict**,
+and **keep statistical significance, practical importance, and a causal claim distinct** — observational data
+buy association, not causation. All numeric values referenced come from the synthetic **Cypress Ridge College
+Student-Success** datasets (seed set, `set.seed(35203)`) and are provisional — the worked numbers are provisional pending review. R is shown only as static, non-executed code.
+
+The five recurring datasets are referenced throughout by their *structure*, because structure — not subject
+matter — is what drives method choice:
+
+| Dataset | What it holds | Its structure | Where it teaches |
+|---|---|---|---|
+| **P** | pre/post readiness on the **same $n = 30$ students** | paired, one quantitative response measured twice | [one-sample & paired (wk 4)](../notes/week-04-one-sample-and-paired-comparisons.qmd) |
+| **G** | final scores, **Support vs Self-guided**, $n_1 = n_2 = 45$ | two independent groups, quantitative response, observational | [two-group (wk 5)](../notes/week-05-two-group-comparisons.qmd) |
+| **F** | final score by **Format** (L, LL, O, H), $n = 25$ each, plus a pretest covariate | one factor with 4 levels (+ covariate) | [one-way ANOVA (wk 6–8)](../notes/week-06-many-group-comparisons-and-one-way-anova.qmd), [ANCOVA (wk 11)](../notes/week-11-ancova-and-adjustment.qmd) |
+| **X** | final score, **Delivery × Background** $2\times 2$, $n = 20$ per cell | two crossed factors, quantitative response | [two-way ANOVA (wk 9)](../notes/week-09-two-way-anova-and-interaction.qmd) |
+| **R** | hours / attendance / pretest / program → **final score & pass/fail**, $n = 120$ | a quantitative predictor, a categorical predictor, and a binary outcome | [regression (wk 10)](../notes/week-10-simple-and-multiple-regression-review.qmd), [categorical (wk 12)](../notes/week-12-categorical-outcomes-and-contingency-tables.qmd), [logistic (wk 13)](../notes/week-13-logistic-regression-for-binary-outcomes.qmd) |
+
+## How to read this guide
+
+For every candidate method below, fill in the same blueprint columns *before* you compare any p-values. These
+are steps 3–6 of the blueprint, laid out so you can see the trade-offs side by side:
+
+| Column | The blueprint question it answers |
+|---|---|
+| **Method** | Which analysis matches this structure (step 3)? |
+| **Key assumption** | What must be true (or approximately true) for the claim to hold, and how do you check it (step 4)? |
+| **Estimate (with uncertainty)** | What does the model *estimate*, reported with a CI / effect size — not a bare p (step 5)? |
+| **Conclusion it can / can't support** | Statistical vs practical vs causal — what would it oversell to claim (step 6)? |
+
+A method is well chosen when you can write a sentence in each cell and the **estimate** cell holds a *quantity
+with an interval*, not a verdict. If your estimate cell says only "significant" or "$p < 0.05$," you have
+stopped one step short of the conclusion the course asks for.
+
+## Step 1–2 — name the question and the structure
+
+Two analyses of the same numbers can call for different methods because they ask different questions. Pin down
+the question (compare? explain? predict?) and the structure (outcome type × design) before choosing. The grid
+below maps the structure to the cell of this guide that fits it.
+
+| Outcome type | Design / structure | Question | Go to |
+|---|---|---|---|
+| quantitative | one group, or the same unit measured twice (like **P**) | did the typical value, or the typical change, move? | [One group / paired](#one-group-or-paired-a-single-quantitative-response) |
+| quantitative | two independent groups (like **G**) | do the two group means differ? | [Two independent groups](#two-independent-groups-comparing-two-means) |
+| quantitative | one factor, three or more groups (like **F**) | do *any* of the group means differ — and which? | [Many groups, one factor](#many-groups-one-factor-one-way-anova) |
+| quantitative | two crossed factors (like **X**) | does each factor matter, and do they interact? | [Two factors](#two-factors-two-way-anova-and-interaction) |
+| quantitative | a quantitative predictor (like **R**) | how does the response change with the predictor? | [A quantitative predictor](#a-quantitative-predictor-regression) |
+| quantitative | groups **plus** a quantitative covariate (like **F** + pretest) | do groups differ *after adjusting* for the covariate? | [Groups plus a covariate](#groups-plus-a-covariate-ancova) |
+| categorical | two categorical variables in a table (like **R**: pass × program) | are the two categorical variables associated? | [Two categorical variables](#two-categorical-variables-the-contingency-table) |
+| binary | a binary outcome with one or more predictors (like **R**: pass) | how do the predictors change the *odds* of the outcome? | [A binary outcome](#a-binary-outcome-logistic-regression) |
+
+Each cell below opens with the question and the structure, then lays out the candidate(s), what each assumes,
+and — the point of the course — what each *estimates*. Choose for a purpose; do not run every test and report
+the smallest p.
+
+## One group, or paired — a single quantitative response (structure: Dataset P)
+
+**Question and structure.** Dataset P measures a readiness diagnostic on the **same $n = 30$ students** before
+and after a support module. The structure that must be respected is the *pairing*: each student is their own
+control, so you analyze the $30$ paired differences $d_i = \text{post} - \text{pre}$, never the two columns as
+if they were independent samples. The question — did the typical change move off zero? — is a one-sample
+question *about the differences*.
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **Paired $t$-test** (one-sample $t$ on the differences) | the $30$ differences are roughly normal (check a QQ plot of $d_i$); pairs independent | mean difference $\bar d = +6.0$ pts; $\mathrm{SE} = 9/\sqrt{30} \approx 1.64$; $t \approx 3.65$ on $29$ df, $p \approx 0.001$; **95% CI $(2.6, 9.4)$ pts**; $d_z = 6/9 \approx 0.67$ | that readiness *rose on average* over the module; **not** that the module *caused* it (single arm, no control) and not whether $+6$ pts is practically meaningful — that is a judgment on the scale |
+| **One-sample $t$ against a fixed target** | the single sample is roughly normal | a mean with a CI relative to a benchmark (e.g. "is post-readiness above $65$?") | a comparison to a *known standard*, not a before/after change |
+
+**What this says.** The paired analysis reports a **$+6$-point gain with a 95% CI of $(2.6, 9.4)$** — an
+estimate with its uncertainty, not "$p < 0.05$." Pairing is what makes it powerful: if you *wrongly* treated
+pre and post as two independent samples of $30$, the SE would be $\sqrt{12^2/30 + 11^2/30} \approx 2.97$ —
+nearly **double** the paired SE of $1.64$ — because pairing removes between-student variation. The classic
+error is exactly that: running an *independent* two-sample test on paired data, discarding the pairing and the
+power it buys. **Practical vs statistical:** a $+6$-point gain on a $100$-point scale is modest-to-meaningful;
+significance does not settle importance. See [week 4](../notes/week-04-one-sample-and-paired-comparisons.qmd).
+
+## Two independent groups — comparing two means (structure: Dataset G)
+
+**Question and structure.** Dataset G compares final scores for **Support** ($n_1 = 45$) versus **Self-guided**
+($n_2 = 45$) students. The structure is *independent* groups (different students), and the data are
+**observational** — students self-selected into the support center. The question is whether the two group means
+differ.
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **Welch two-sample $t$** (the safe default) | approximate normality (or large $n$ via the CLT); does **not** assume equal variances | mean difference $78 - 72 = 6.0$ pts; $\mathrm{SE} \approx 2.38$, df $\approx 86$, $t \approx 2.53$, $p \approx 0.013$; **95% CI $(1.3, 10.7)$ pts**; Cohen's $d = 6/11.27 \approx 0.53$ (medium) | that the Support mean is *higher*; **not** that the support center *caused* higher scores — motivated students self-select |
+| **Pooled two-sample $t$** | additionally that the two variances are equal ($s_1 = 10.5$, $s_2 = 12.0$ here — close) | nearly identical to Welch when $n_1 = n_2$ ($\mathrm{SE} \approx 2.38$) | the same comparison, but only when equal-variance is justified — otherwise prefer Welch |
+
+**What this says.** Report the **$6$-point difference with its CI $(1.3, 10.7)$ and $d \approx 0.53$**, not the
+lone $p$. Prefer **Welch** unless equal variances are clearly justified — it costs almost nothing here and
+protects you when spreads differ. The deepest point is step 6: because students *chose* the support center,
+this is **association, not causation**; a confound (motivation) plausibly drives both the choice and the score.
+A $6$-point gap is about half a standard deviation — medium, not trivial, but not dramatic. Contrast the
+*paired* design of [week 4](../notes/week-04-one-sample-and-paired-comparisons.qmd); see
+[week 5](../notes/week-05-two-group-comparisons.qmd) and its
+[lab](../labs/lab-05-two-group-comparison-and-effect-size.qmd).
+
+## Many groups, one factor — one-way ANOVA (structure: Dataset F)
+
+**Question and structure.** Dataset F compares final scores across **four instructional formats** — Lecture (L),
+Lecture+Lab (LL), Online (O), Hybrid (H), $n = 25$ each. With more than two groups, running all pairwise
+$t$-tests inflates the family-wise error rate; the question "do *any* means differ?" is answered by one omnibus
+test, and "*which* differ?" by controlled follow-ups.
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **One-way ANOVA** (omnibus $F$) | roughly normal residuals; **equal variances** across groups (Levene's test $p \approx 0.40$ here — fine); independence | means $L\,74, LL\,81, O\,70, H\,79$; $F = 616.7/81 \approx 7.61$ on $(3, 96)$, $p \approx 0.0001$; **effect size $\eta^2 = 1850/9626 \approx 0.19$** (format explains $\approx 19\%$ of variance) | that *some* format means differ; **not** *which* pairs differ, and **not** causation (formats may enroll different students) |
+| **Tukey HSD** (all pairwise, error-rate controlled) | as ANOVA; controls family-wise error across all 6 pairs | critical difference $\approx 6.64$; significant: $LL-O = 11$, $H-O = 9$, $LL-L = 7$; not: $H-L = 5$, $L-O = 4$, $LL-H = 2$ | which pairs differ *with the family-wise error held at 5%* |
+| **Planned contrast** (pre-specified question) | a single contrast chosen *before* looking; $\sum c_j = 0$ | "hands-on (LL,H) vs delivered-only (L,O)": $\hat\psi = 80 - 72 = 8$ pts; $\mathrm{SE} = 1.8$; $t \approx 4.44$, $p < 0.001$ | a *pre-specified* comparison, more powerful than post-hoc; it cannot answer questions you did not plan |
+
+**What this says.** The omnibus $F \approx 7.61$ with $\eta^2 \approx 0.19$ says format matters and roughly *how
+much*. **Unadjusted** pairwise comparisons would wrongly flag $H-L$ and $L-O$; multiplicity control
+(Tukey / Bonferroni) prevents that, and a **pre-specified contrast** is more powerful than post-hoc snooping for
+a planned question. The common error is reporting a bare omnibus $p$ with no effect size, or chasing every
+pairwise difference without error-rate control. See [week 6](../notes/week-06-many-group-comparisons-and-one-way-anova.qmd),
+[week 7](../notes/week-07-assumptions-diagnostics-and-the-midterm.qmd),
+[week 8](../notes/week-08-multiple-comparisons-and-planned-contrasts.qmd), and the
+[ANOVA lab](../labs/lab-08-anova-with-multiple-comparisons.qmd).
+
+## Two factors — two-way ANOVA and interaction (structure: Dataset X)
+
+**Question and structure.** Dataset X is a $2\times 2$ design: **Delivery** {In-person, Online} crossed with
+**Background** {Weak, Strong}, $n = 20$ per cell. Two crossed factors raise a question one factor cannot: do the
+factors *interact* — does the effect of one depend on the level of the other?
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **Two-way ANOVA with interaction** | normal residuals; equal cell variances ($\mathrm{MSE} = 81$); independence | Delivery $F \approx 10.4$, $p \approx 0.002$; Background $F \approx 67.2$, $p < 0.001$; **Interaction $F \approx 5.0$, $p \approx 0.028$**; cell means In-person/Weak $73$, In-person/Strong $85$, Online/Weak $62$, Online/Strong $83$ | that the In-person advantage *depends on background* ($11$ pts for Weak, $2$ pts for Strong) — read the interaction first |
+| **Two separate one-way ANOVAs** | (a tempting shortcut) | each factor alone — but this *hides* the interaction | nothing about whether the factors interact — it cannot see the $11$-vs-$2$ pattern |
+
+**What this says.** When the interaction is significant, the main effects are **conditional**: do *not* report
+"Online is $6.5$ points worse" as if it applied uniformly — it costs weak-background students $11$ points but
+strong-background students only $2$. **Read the interaction plot (non-parallel lines) before the main-effect
+table.** The classic error is reporting marginal main effects while a real interaction is present, which
+misstates what the data show. See [week 9](../notes/week-09-two-way-anova-and-interaction.qmd).
+
+## A quantitative predictor — regression (structure: Dataset R)
+
+**Question and structure.** Dataset R relates **study hours/week** to **final score** for $n = 120$ students,
+with attendance and a pretest also recorded. The question is explanatory: how does the response change with the
+predictor — and does that change survive *adjustment* for other predictors?
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **Simple linear regression** | linearity; roughly constant-variance, normal residuals; no overly influential point | $\widehat{\text{final}} = 55 + 1.6\cdot\text{hours}$; slope SE $\approx 0.22$, $t \approx 7.3$, $p < 0.001$, **95% CI $(1.16, 2.04)$**; $R^2 \approx 0.30$ | that each extra study-hour is *associated with* $+1.6$ final points; **not** that studying *causes* it (observational) |
+| **Multiple regression** (adjusting for attendance, pretest) | as above, plus low multicollinearity (VIF $\approx 1.3$ — fine) | $\widehat{\text{final}} = 30 + 1.1\cdot\text{hours} + 0.25\cdot\text{att} + 0.30\cdot\text{pretest}$; $R^2 \approx 0.46$; **the hours slope drops $1.6 \to 1.1$** | the *partial* slope, "holding attendance and pretest fixed"; the drop reveals confounding, not causation |
+
+**What this says.** Report the slope **with its CI** and $R^2$, and notice the headline move: the hours slope
+**drops from $1.6$ to $1.1$ after adjustment**, because students who study more also attend more and start
+higher — confounding. The partial slope answers a *different* question ("hold the others fixed") than the simple
+slope ("ignore them"). Watch for an influential high-leverage point — **investigate, do not auto-delete**. This
+bridges directly to ANCOVA: adjustment changes the estimate. See
+[week 10](../notes/week-10-simple-and-multiple-regression-review.qmd) and its
+[lab](../labs/lab-10-building-and-checking-a-regression.qmd).
+
+## Groups plus a covariate — ANCOVA (structure: Dataset F + pretest)
+
+**Question and structure.** Take the four-format comparison of Dataset F and add a **pretest** covariate that
+correlates with the final score ($r \approx 0.50$ within group). If the formats started at slightly different
+baselines, a raw comparison confounds format with baseline. The question becomes: do the formats differ *at the
+same baseline*?
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **ANCOVA** (group means adjusted for the covariate) | the usual ANOVA assumptions, **plus parallel slopes** (homogeneity of regression: format × pretest interaction NS, $p \approx 0.5$ — valid) | adjusted means $L\,74.5, LL\,80.6, O\,70.9, H\,78.1$ (gaps shrink); covariate $F \approx 30$, $p < 0.001$; **format after adjustment $F \approx 6.2$ on $(3,95)$, $p \approx 0.0007$, $\eta^2_{\text{partial}} \approx 0.16$** (down from $0.19$) | the format effect *adjusted for baseline readiness*; **not** causation (formats still observational) |
+| **Unadjusted one-way ANOVA** | ignores the covariate | the raw means ($\eta^2 \approx 0.19$) | a comparison that confounds format with baseline differences |
+
+**What this says.** Adjustment **shrinks** the format gaps and the effect size ($\eta^2\,0.19 \to 0.16$) — some
+of the apparent format advantage was really baseline advantage. ANCOVA is only valid when the **parallel-slopes**
+assumption holds; check the format × covariate interaction first. The comparison is now "formats at the same
+baseline," a cleaner estimate — but still association, not causation. See
+[week 11](../notes/week-11-ancova-and-adjustment.qmd).
+
+## Two categorical variables — the contingency table (structure: Dataset R, pass × program)
+
+**Question and structure.** Cross-tabulate **pass/fail** against **support program** {None, Drop-in,
+Structured} ($40$ each) — a $3 \times 2$ table. Both variables are categorical, so means and slopes do not
+apply; the question is whether the two variables are *associated*.
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **Chi-square test of independence** | **expected counts not too small** (all $\ge 5$ here — expected pass $= 40(0.6) = 24$); independent observations | pass rates None $45\%$, Drop-in $60\%$, Structured $75\%$; $\chi^2 = 3.75 + 0 + 3.75 = 7.5$ on $2$ df, $p \approx 0.024$ | that pass rate and program are *associated*; **not** the *direction or size* by itself, and **not** causation |
+| **Effect measures** (report alongside the test) | a chosen reference comparison | Structured vs None: **risk difference $= 0.30$**, **relative risk $\approx 1.67$**, **odds ratio $\approx 3.67$** | the *magnitude* of association — the part the bare $\chi^2$ omits |
+
+**What this says.** A significant $\chi^2$ alone is a verdict, not an estimate. Pair it with an effect measure —
+the **risk difference $0.30$**, **RR $\approx 1.67$**, or **OR $\approx 3.67$** for Structured vs None — so you
+report *how much*, not just *whether*. Note $\mathrm{OR} \ne \mathrm{RR}$; say which you mean. And because
+students **self-select** into programs, a significant association is **not** proof the program *caused* passing.
+See [week 12](../notes/week-12-categorical-outcomes-and-contingency-tables.qmd).
+
+## A binary outcome — logistic regression (structure: Dataset R, pass)
+
+**Question and structure.** The outcome **pass $= (\text{final} \ge 70)$** is binary, with quantitative and
+categorical predictors. Linear regression is wrong for a 0/1 outcome (it can predict probabilities outside
+$[0,1]$); logistic regression models the **log-odds** and lets you adjust several predictors at once.
+
+| Method | Key assumption | Estimate (with uncertainty) | Conclusion it can / can't support |
+|---|---|---|---|
+| **Logistic regression** | a linear logit; independent observations; enough events per predictor | $\mathrm{logit}(\hat p) = b_0 + 0.22\cdot\text{hours} + 0.04\cdot\text{pretest} + 0.6\,[\text{Drop-in}] + 1.0\,[\text{Structured}]$; **OR per study-hour $= e^{0.22} \approx 1.25$**; **OR Structured vs None (adjusted) $= e^{1.0} \approx 2.72$** | the *adjusted* change in odds; a **predicted probability** ($\approx 0.56$ high-effort Structured vs $\approx 0.05$ low-effort None); not causation |
+| **Reading the raw logit as a probability** | (a tempting error) | the coefficient $1.0$ is on the **log-odds** scale | nothing on the probability scale until you exponentiate and back-transform |
+
+**What this says.** Coefficients live on the **log-odds** scale: exponentiate to an odds ratio, and read a
+**predicted probability** (the S-curve $p = 1/(1+e^{-\eta})$), never the raw logit, as the conclusion. The
+adjusted OR for Structured vs None **shrinks from the raw $3.67$ to $\approx 2.72$** once you adjust for hours
+and pretest — confounding again, the throughline of this dataset. And $\mathrm{OR} \ne \mathrm{RR}$: an odds
+ratio of $2.72$ is not "$2.72$ times as likely to pass." See
+[week 13](../notes/week-13-logistic-regression-for-binary-outcomes.qmd) and its
+[lab](../labs/lab-13-logistic-regression-and-odds-ratios.qmd).
+
+## A compact decision table
+
+One screen, the whole guide. Read across: structure → method → what it estimates. The estimate column is the
+one the course cares about most — it is never a bare p-value.
+
+| If the outcome is… | …and the structure is… | Method | It estimates | Key assumption | Week |
+|---|---|---|---|---|---|
+| quantitative | one group / paired (P) | paired (one-sample) $t$ | mean difference + CI; $d_z$ | normal differences | [4](../notes/week-04-one-sample-and-paired-comparisons.qmd) |
+| quantitative | two independent groups (G) | Welch two-sample $t$ | mean difference + CI; Cohen's $d$ | approx. normal; unequal var OK | [5](../notes/week-05-two-group-comparisons.qmd) |
+| quantitative | one factor, $\ge 3$ groups (F) | one-way ANOVA (+ Tukey / contrast) | which means differ; $\eta^2$ | equal variances; normal residuals | [6](../notes/week-06-many-group-comparisons-and-one-way-anova.qmd)–[8](../notes/week-08-multiple-comparisons-and-planned-contrasts.qmd) |
+| quantitative | two crossed factors (X) | two-way ANOVA | main effects + **interaction** | equal cell variances | [9](../notes/week-09-two-way-anova-and-interaction.qmd) |
+| quantitative | a quantitative predictor (R) | simple / multiple regression | slope + CI; $R^2$ | linearity; constant variance | [10](../notes/week-10-simple-and-multiple-regression-review.qmd) |
+| quantitative | groups + covariate (F + pretest) | ANCOVA | adjusted means; partial $\eta^2$ | parallel slopes | [11](../notes/week-11-ancova-and-adjustment.qmd) |
+| categorical | two categorical variables (R) | chi-square + effect measure | association; RD / RR / OR | expected counts $\ge 5$ | [12](../notes/week-12-categorical-outcomes-and-contingency-tables.qmd) |
+| binary | binary outcome + predictors (R) | logistic regression | odds ratio; predicted probability | linear logit | [13](../notes/week-13-logistic-regression-for-binary-outcomes.qmd) |
+
+A small R idiom for each, shown for the *shape* of the call only — **not executed** in this build (R is not
+installed; `set.seed(35203)` where randomness would enter):
+
+```r
+set.seed(35203)
+# paired / one-sample (P)
+t.test(post, pre, paired = TRUE)
+# two independent groups, Welch (G) — the safe default
+t.test(final ~ group, data = G)            # var.equal = FALSE by default
+# one-way ANOVA + Tukey (F)
+fit <- aov(final ~ format, data = F); summary(fit); TukeyHSD(fit)
+# two-way ANOVA with interaction (X) — read the interaction row first
+summary(aov(final ~ delivery * background, data = X))
+# multiple regression (R)
+summary(lm(final ~ hours + attendance + pretest, data = R))
+# ANCOVA: covariate first, then the group factor (F + pretest)
+summary(aov(final ~ pretest + format, data = F))
+# contingency table (R: pass x program)
+chisq.test(table(R$program, R$pass))
+# logistic regression (R) — coefficients are log-odds; exponentiate for ORs
+fit <- glm(pass ~ hours + pretest + program, family = binomial, data = R)
+exp(coef(fit)); exp(confint(fit))          # odds ratios with CIs
+```
+
+## A note on choosing — purpose over reflex
+
+The whole guide reduces to a few sentences worth carrying. Each drift below has a disciplined move that keeps you
+inside the blueprint:
+
+| Drift to resist | The disciplined move |
+|---|---|
+| reporting a bare p-value as the result | report the **estimate with its CI / effect size** — a mean difference, a slope, an OR |
+| running an independent test on paired data | preserve the **pairing**; analyze the differences (Dataset P) |
+| treating an observational association as causal | say **"associated with," not "causes"**; name the likely confound |
+| ignoring unequal variance in two groups | default to **Welch**; check spreads before pooling |
+| chasing every pairwise difference | use **Tukey / a planned contrast**; control the family-wise error |
+| reading main effects past a real interaction | read the **interaction plot first**; report conditional effects (Dataset X) |
+| deleting an influential point silently | **investigate, do not auto-delete**; report with and without |
+| reading a logit coefficient as a probability | **exponentiate** to an OR, back-transform to a **predicted probability** |
+| confusing statistical with practical significance | judge the estimate **against the scale**, not against $p < 0.05$ |
+
+When a method's assumptions genuinely hold and its estimate answers your question, it is the right, efficient
+choice — say *why this one*, report the estimate with its uncertainty, and bound the conclusion to what the
+design (observational vs experimental) can support. Match the method to the question and the structure, not to
+habit.
+
+## Evidence and verification status
+
+**verified: false.** The decision logic and the blueprint framing on this page are course-authored, but every
+numeric value referenced here — P's paired mean difference $+6$, $t \approx 3.65$, CI $(2.6, 9.4)$, $d_z \approx
+0.67$ and the independent-SE contrast $\approx 2.97$; G's difference $6$, Welch $t \approx 2.53$, CI $(1.3,
+10.7)$, $d \approx 0.53$; F's means $L\,74, LL\,81, O\,70, H\,79$, $F \approx 7.61$, $\eta^2 \approx 0.19$, Tukey
+critical difference $\approx 6.64$, contrast $\hat\psi = 8$, and the ANCOVA adjusted means
+($74.5, 80.6, 70.9, 78.1$) with $F \approx 6.2$, $\eta^2_{\text{partial}} \approx 0.16$; X's cell means
+($73, 85, 62, 83$) and $F$'s ($\approx 10.4, 67.2, 5.0$); R's slopes ($1.6 \to 1.1$), $R^2$ ($0.30, 0.46$),
+$\chi^2 = 7.5$ with RD $0.30$ / RR $\approx 1.67$ / OR $\approx 3.67$, and the logistic ORs ($e^{0.22} \approx
+1.25$, $e^{1.0} \approx 2.72$) with predicted probabilities ($\approx 0.56, 0.05$) — is **drafted, synthetic,
+and not independently checked**; the data are simulated with `set.seed(35203)` and **R is not executed in this
+build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
+
+## Public vs. graded
+
+These notes, the examples, and the practice here are **public and ungraded** — study material only. No graded
+prompts, answer keys, rubrics, point values, or due dates appear on this site. Graded applied-methods
+checkpoints, weekly quizzes, homework and analysis memos, applied analysis labs, the midterm, the applied
+methods project, and the final exam live in **Blackboard (the LMS)**, which is authoritative for due dates,
+submissions, and grades. If this page and Blackboard ever disagree, follow Blackboard.
+
+## See also
+
+- [Methods glossary](methods-glossary.qmd) — the vocabulary and notation behind every term used here.
+- [Assumptions & diagnostics guide](assumptions-and-diagnostics-guide.qmd) — what each method assumes and how to
+  check it (normality, equal variance, parallel slopes, expected counts, the linear logit).
+- [Reporting & interpretation guide](reporting-and-interpretation-guide.qmd) — effect sizes and confidence
+  intervals, practical vs statistical significance, and association vs causation in applied reporting.

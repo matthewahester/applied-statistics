@@ -1,0 +1,235 @@
+---
+title: "Syllabus (public companion)"
+subtitle: "Orientation and course shape — Blackboard is authoritative for graded specifics"
+toc: true
+---
+
+::: {.callout-important}
+This public page is an **orientation companion** to the syllabus, not the operational syllabus itself. It
+describes the *shape* of the course in qualitative terms. It carries no numeric grade weights, no schedules, and
+no submission rules. For everything that counts toward your grade — exact weights, deadlines, policies, and
+submissions — **Blackboard (the LMS) is authoritative**. If this page and Blackboard ever disagree, follow
+Blackboard.
+:::
+
+## Course description
+
+This course is about **using statistical methods to answer practical questions with real data** — choosing,
+running, interpreting, and communicating the common applied analyses *responsibly*. It sits between an
+introductory statistics course and more specialized courses in modeling, design, inference, Bayesian statistics,
+or resampling. We begin with statistical questions, data structure, and applied workflow — exploratory analysis,
+graphical comparison, estimation, uncertainty, and practical significance — and then work method by method:
+one-sample and paired comparisons, two-group comparisons, many-group comparisons and one-way ANOVA, assumptions
+and diagnostics, multiple comparisons and planned contrasts, two-way ANOVA and interaction, simple and multiple
+regression, ANCOVA and adjustment, categorical outcomes and contingency tables, and logistic regression for
+binary outcomes.
+
+The thread that holds all of this together is one **analysis blueprint**, returned to on every page. For each
+method we walk the same six steps: **(1) Question** — are we comparing, explaining, or predicting? **(2)
+Structure** — the unit of analysis; the response versus the explanatory, grouping, or covariate variables; the
+outcome type (quantitative, categorical, binary); and the design (paired versus independent, one factor versus
+two, observational versus experimental). **(3) Method** — the analysis that matches that structure, and why this
+one and not a neighbor. **(4) Assumptions and diagnostics** — what the method assumes and how you check it. **(5)
+Estimate and uncertainty** — what the model *estimates* (a mean difference, an effect size, a slope, an odds
+ratio), reported **with a confidence interval, not as a bare p-value**. **(6) Conclusion** — statistical versus
+practical significance, association versus causation, and what the analysis can and cannot support.
+
+This course is deliberately **not** four things, and it resists all four drifts:
+
+- It is **not a generic intro-statistics course.** Descriptive summaries, the normal model, a single one-sample
+  t-test, and the mechanics of one confidence interval are *assumed background*. The subject is connecting a
+  method to a data structure across groups, factors, covariates, and categorical outcomes — and reading what the
+  model estimates.
+- It is **not a pure R or software course.** R and Quarto *carry out* the fit and produce the output; what stays
+  central is the method's logic — what is compared, what is assumed, what is estimated, and what can be
+  concluded.
+- It is **not a formula-only methods course.** The goal is never to memorize a test statistic; it is to map
+  **question → structure → method → estimate → conclusion** and to read and check real output.
+- It is **not a disconnected catalog of named tests.** The paired t, the two-sample t, one-way and two-way ANOVA,
+  ANCOVA, regression, chi-square, and logistic regression are connected expressions of one blueprint, not a box
+  of "use this when…".
+
+Two disciplines run inside the blueprint and recur on every page: **report the estimate with its uncertainty, not
+just a verdict** — an effect size and interval, never a lone p-value — and **keep statistical significance,
+practical significance, and a causal claim distinct.** Because most of the example data here are observational,
+they buy *association, not causation*.
+
+## Who it is for
+
+This course assumes a prior introductory statistics course or comparable preparation. You should be comfortable
+with variables, data tables, graphical and numerical summaries, means, medians, and standard deviations,
+proportions, confidence intervals, hypothesis tests, p-values, correlation, and basic regression *ideas*. **Prior
+R is helpful but not required** — software examples are scaffolded, and the course reviews the workflow it needs.
+The course is *less mathematical than a formal inference course, but it is not formula-free*: expect light
+algebra and notation-reading. The main expectation is a willingness to reason about which method a data structure
+calls for, write short interpretations in plain sentences, read real output, and separate a statistical result
+from a practical or causal claim.
+
+## Learning outcomes
+
+By the end of the course, a successful student will be able to:
+
+- Start from a **statistical question and a data structure** — the unit of analysis, the response versus
+  explanatory or grouping or covariate variables, the outcome type, and the design — and choose an analysis that
+  matches, rather than reaching for a named test by habit.
+- Carry out and read **one-sample and paired comparisons** and **two-group comparisons**, distinguishing a paired
+  design from independent samples and preferring Welch's t when equal variances are not justified.
+- Fit and interpret **one-way ANOVA** for many-group comparisons, report an effect size such as $\eta^2$, and use
+  **multiple-comparison control** (Tukey, Bonferroni) and **planned contrasts** to ask sharper questions while
+  controlling the family-wise error rate.
+- Check **assumptions and run diagnostics** — residual normality, equal variance, independence, outliers and
+  influence — and respond to a diagnostic finding without auto-deleting unusual observations.
+- Read a **two-way ANOVA**, recognize an **interaction**, and report main effects as conditional when an
+  interaction is present.
+- Fit and interpret **simple and multiple regression** and **ANCOVA**, explain how an estimate changes after
+  adjustment (a partial slope, an adjusted mean), and use that to reason about confounding.
+- Analyze **categorical outcomes** with contingency tables and the chi-square test, and report a **risk
+  difference, relative risk, or odds ratio** as the effect, not a bare p-value.
+- Fit and interpret **logistic regression** for a binary outcome — read coefficients on the log-odds scale,
+  exponentiate to an odds ratio, and report a predicted probability as the conclusion.
+- Throughout, **report an estimate with its confidence interval rather than a lone p-value**, and **keep
+  statistical significance, practical significance, and causation distinct**, stating honestly what an
+  observational analysis can and cannot support.
+
+## Weekly rhythm
+
+This is a lecture/activity course meeting three days a week (MWF), and each day has a settled role:
+
+- **Monday — method concept + checkpoint.** We introduce the week's method by walking the analysis blueprint:
+  what question it answers, what data structure calls for it, and what it estimates. A short applied-methods
+  checkpoint near the end of class confirms you can read the structure.
+- **Wednesday — analysis and diagnostics day.** We carry out the fit, read the real output, and check the
+  assumptions — residuals, equal variance, independence, influence — turning the method into an estimate with its
+  uncertainty.
+- **Friday — quiz / interpretation day.** A short quiz on recent material, then we practice the conclusion step:
+  separating statistical from practical significance, association from causation, and writing the result in plain
+  sentences.
+
+This rhythm is the *plan*; the authoritative weekly schedule, including any shifts, lives in Blackboard. A few
+calendar facts are fixed: classes begin **Mon Aug 24**; **Labor Day (Mon Sep 7)** has no class, so week 3 runs
+compressed on Wednesday and Friday; the **midterm is in class on Fri Oct 9** (covering weeks 1–7 — applied
+workflow, exploratory analysis, estimation and uncertainty, practical significance, one-sample and paired
+comparisons, two-group comparisons, many-group comparisons and one-way ANOVA, assumptions, and diagnostics); the
+last day to drop is **Oct 20**; **fall break is Nov 22–28**; the last class is **Mon Dec 7**; consultation day is
+**Dec 8**; and the **final-exam window is Dec 9–15**, with the exact block posted via Blackboard. Attendance is
+not graded directly, but checkpoints, quizzes, labs, and in-class activities happen during class, so consistent
+attendance matters — the course builds judgment by repeated passes through question → structure → method →
+estimate → conclusion.
+
+## Assessment shape (indicative — not a contract)
+
+The table below conveys the **relative emphasis** of each graded category in qualitative terms only. It is
+**not** a grading contract: it carries no percentages and no point values, and the actual weights live in
+Blackboard.
+
+| Category | Rough emphasis |
+|----------|----------------|
+| Applied-methods checkpoints | small |
+| Weekly quizzes | small |
+| Homework and analysis memos | the largest single category |
+| Applied analysis labs | moderate |
+| Midterm | moderate |
+| Applied methods project | moderate |
+| Final exam | small |
+
+Read this as a picture of *where the weight sits*: regular homework and analysis memos are the backbone of the
+grade, the labs and the two big instruments (midterm, project) carry moderate weight, and the smaller pieces —
+checkpoints, weekly quizzes, and the final — add up around them. The homework and memos are where you practice
+the discipline that defines the course: report an estimate with its interval, and say plainly what the analysis
+does and does not support. For the exact weighting, consult Blackboard.
+
+## Software and reproducibility
+
+We use **R** (through RStudio or Posit Cloud) and **Quarto**, along with spreadsheets and browser-based tools, to
+fit models, read output, check assumptions, and build tables and figures. Computation supports the reasoning
+rather than replacing it: you read, edit, and run code; interpret the output; and write short written
+conclusions. When software is used, you are expected to explain what the code is doing, what is being compared or
+estimated, what assumptions remain, and how the output supports the conclusion — the code carries out the fit,
+but the method logic is the message.
+
+All example data on this site are **synthetic, with the seed set** (`set.seed(35203)`) so results are
+reproducible — they are not real student records. Because this is a **draft course site**, the R
+code on the public pages is shown as **static, non-executed** examples (R is not run in this build), and every
+numeric value here is **drafted and provisional** until it is independently checked. Setup instructions for
+running R yourself live on the resource pages.
+
+## AI use (summary)
+
+Generative AI tools may be used as a **study and workflow aid** — to explain a concept a second way, generate
+practice questions, help debug R code, suggest a way to visualize a result, or check your understanding of a
+method. They may **not** produce work you submit as your own, complete homework or analysis-memo solutions, write
+project interpretations, fabricate output, invent conclusions, or replace your responsibility to understand and
+verify the reasoning, and they are **prohibited on quizzes and exams** unless explicitly allowed.
+
+Because the heart of this course is matching a method to a data structure and reporting an estimate honestly, AI
+output must be checked carefully against the design. AI assistants frequently **mismatch the method to the
+design** (running a one-way ANOVA where the structure calls for a paired or two-way analysis), **confuse paired
+and independent** samples, **ignore unequal variance** (defaulting to a pooled t when Welch is safer), **treat
+every p-value as a decision rule** instead of reporting an estimate with its interval, **misread an interaction**
+(reporting a main effect as if it applied uniformly), or **make a causal claim from observational data**.
+Whenever you use AI on a graded homework, analysis memo, lab, code submission, or project component, include a
+brief **AI Use Note** with three labeled lines:
+
+| Field | What to record |
+|-------|----------------|
+| Tool | which assistant you used (with approximate date or version) |
+| Purpose | what you used it for |
+| Verification | how you checked, tested, revised, or validated the output |
+
+**Verification** is the load-bearing line: rerun the code, confirm the design (paired versus independent, one
+factor versus two), check the assumptions against the notes, recompute a key estimate and its confidence interval
+by hand or in R, confirm that an effect is reported as an estimate-with-uncertainty rather than a bare p-value,
+re-read whether an interaction makes a main effect conditional, and make sure no causal language has slipped into
+an observational conclusion. Rewrite any AI explanation in your own words after checking it. The full policy lives
+in Blackboard.
+
+## Materials
+
+You will need:
+
+- **Instructor notes, examples, and applied-methods guides** — the primary course materials, posted on this site
+  and in Blackboard. These connect the supplements to the course's weekly arc, coding examples, interpretation
+  guides, and project expectations; the analysis blueprint and the recurring datasets originate here.
+- *Introduction to Modern Statistics*, 2nd ed. (Çetinkaya-Rundel & Hardin) — the main free open-text anchor, **CC
+  BY-SA 3.0**, at [openintro-ims.netlify.app](https://openintro-ims.netlify.app/), used for exploratory analysis,
+  inference for means and proportions, comparing many means (ANOVA), two-way tables, regression, and logistic
+  regression.
+- *Statistical Inference via Data Science: A ModernDive into R and the Tidyverse*, 2nd ed. (Ismay, Kim &
+  Valdivia) — a free computational supplement, **CC BY-NC-SA 4.0**, at [moderndive.com/v2](https://moderndive.com/v2/),
+  used for the R workflow, visualization, inference-for-regression, and reproducible reporting.
+- *Introductory Statistics for the Life and Biomedical Sciences* (Vu & Harrington) — a free OpenIntro-family
+  supplement (license to be confirmed), used selectively for applied, health-flavored examples and R-supported
+  labs.
+- *Learning Statistics with R* (Navarro) — an **optional** reference, named and cited only, for selected topics
+  (t-tests, chi-square, ANOVA, regression).
+- **R, RStudio or Posit Cloud, and Quarto** (plus spreadsheets or browser tools) — for the labs and analyses.
+- **Blackboard (the LMS)** — for all graded work, dates, and announcements.
+- A **non-graphing scientific calculator** for in-class quizzes; most computation is done in R.
+
+These notes are the course's own synthesis, grounded in but not copied from the sources. *Not used in this
+course:* Cengage, WebAssign, MyLab, or any paid homework platform.
+
+## Where things live
+
+Keep the two homes of the course straight:
+
+- **Blackboard (the LMS)** is the **operational** home: graded applied-methods checkpoints, weekly quizzes,
+  homework and analysis memos, applied analysis labs, the midterm, the applied methods project, the final exam,
+  all due dates, all submissions, and all grades. It is authoritative.
+- **This public site** is the **public notes** home: the weekly notes, the labs as study material, the resources
+  (the [method chooser](resources/method-chooser.qmd), the [methods glossary](resources/methods-glossary.qmd),
+  the assumptions-and-diagnostics guide, and the reporting-and-interpretation guide), and orientation pages like
+  this one. It is ungraded.
+
+::: {.callout-note}
+This companion exists to orient you. Whenever a graded specific is at stake — a weight, a deadline, a policy — go
+to Blackboard, which is authoritative.
+:::
+
+## Public vs. graded
+
+These notes, the examples, and the practice here are **public and ungraded** — study material only. No graded
+prompts, answer keys, rubrics, point values, or due dates appear on this site. Graded applied-methods
+checkpoints, weekly quizzes, homework and analysis memos, applied analysis labs, the midterm, the applied methods
+project, and the final exam live in **Blackboard (the LMS)**, which is authoritative for due dates, submissions,
+and grades. If this page and Blackboard ever disagree, follow Blackboard.

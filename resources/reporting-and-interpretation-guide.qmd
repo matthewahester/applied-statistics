@@ -1,0 +1,285 @@
+---
+title: "Reporting & interpretation guide"
+subtitle: "Effect sizes, intervals, and honest applied conclusions"
+page-type: reference
+verified: false
+toc: true
+---
+
+Keep this page open while you write up an analysis. It is the companion to the
+[method chooser](method-chooser.qmd): the chooser gets you from a data shape and a question to a defensible
+method; this guide gets you from a fitted model to an honest paragraph. It lives entirely in **steps 5 and 6 of
+the analysis blueprint** — the **estimate with its uncertainty**, and the **conclusion** that separates
+statistical significance from practical importance and from a causal claim. Two disciplines run through every
+section, and they are the whole point of the page: **report the estimate, not just a verdict** (an effect size
+and a confidence interval, never a lone p-value), and **keep statistical significance, practical significance,
+and causation distinct** — observational data buy you association, not causation. Name both, every time you
+write up a result.
+
+All numeric values below come from the synthetic **Cypress Ridge College Student-Success Study** datasets (seed
+set, `set.seed(35203)`) and are provisional — **R is not
+run in this build**. The numbers are drafted "as if observed," and you should treat them as worked illustrations
+of *how to phrase a result*, not as confirmed reference values.
+
+## Why reporting is a blueprint step, not an afterthought
+
+A common habit from an introductory course is to run a test, read off a p-value, and write "the result was
+significant ($p < 0.05$)." That sentence is the single most common failure this course is built to retire. It
+answers almost nothing a reader needs: it does not say **how big** the effect is, **how precisely** it was
+estimated, **what the method assumed**, or **what kind of claim** the design can support. A defensible applied
+report does four things the bare verdict cannot:
+
+| The bare verdict says | A blueprint report says |
+|---|---|
+| "significant, $p < 0.05$" | the **point estimate** — a mean difference, a slope, an odds ratio |
+| nothing about precision | the **confidence interval** around that estimate |
+| nothing about size | the **effect size** on a scale a reader can judge |
+| nothing about meaning | whether the effect is **practically** important, and whether it is **causal** |
+
+The discipline is to lead with the estimate and its uncertainty, attach an effect size, and only then mention the
+p-value as supporting evidence — and to close by saying plainly what the data and the method can and cannot
+support. Everything below is machinery for doing exactly that.
+
+## Step 5 — report the estimate with its uncertainty
+
+Every method in the course estimates *something*: the paired t estimates a mean change, the two-sample t a
+difference of means, ANOVA's follow-ups a contrast, regression a slope, the contingency table a risk difference
+or relative risk, logistic regression an odds ratio. The reporting rule is the same regardless of method.
+
+> **Report the point estimate, its confidence interval, and an effect size — then, if you like, the p-value.**
+> Never report the p-value alone.
+
+### The point estimate is the headline
+
+Write the number a reader actually cares about, in its natural units, first. From the locked datasets:
+
+- **Dataset P (paired, wk [4](../notes/week-04-one-sample-and-paired-comparisons.qmd)):** the readiness gain is
+  $\bar d = +6.0$ points on the 0–100 scale.
+- **Dataset G (two-group, wk [5](../notes/week-05-two-group-comparisons.qmd)):** the Support-vs-Self-guided
+  difference in final scores is $\bar x_1 - \bar x_2 = 78 - 72 = 6.0$ points.
+- **Dataset R (regression, wk [10](../notes/week-10-simple-and-multiple-regression-review.qmd)):** each extra
+  study-hour per week is worth a slope of $+1.6$ final points (simple), dropping to $+1.1$ after adjustment.
+
+The estimate is the sentence's subject. "Students who used the support center scored about 6 points higher" is a
+report; "the difference was significant" is not.
+
+### The confidence interval is the uncertainty
+
+Attach the interval immediately. It tells the reader the range of effect sizes the data are consistent with, and
+its width tells them how much to trust the headline.
+
+- **Dataset P:** the 95% CI for the mean gain is $6 \pm 2.045(1.64) \approx (2.6,\ 9.4)$ points — the whole
+  interval is above zero, so a gain is credible, but it could be as small as ~3 or as large as ~9.
+- **Dataset G:** the 95% CI for the difference is $6 \pm 1.99(2.38) \approx (1.3,\ 10.7)$ points. Note how
+  *wide* this is — it barely clears zero on the low end. A reader should not walk away thinking "exactly 6";
+  they should think "somewhere between about 1 and 11, probably."
+- **Dataset R (simple slope):** the 95% CI is $(1.16,\ 2.04)$ points per study-hour.
+
+A CI that nearly touches the no-effect value (like G's lower bound of 1.3) is a quieter result than its point
+estimate suggests — say so.
+
+### The effect size is the scale
+
+A difference of 6 points means different things on different scales. An effect size rescales the estimate so a
+reader can judge its size without knowing your variables. The menu, with phrasing, is the next section. From the
+datasets: Dataset P's $d_z = 6/9 \approx 0.67$, Dataset G's Cohen's $d = 6/11.27 \approx 0.53$, Dataset F's
+$\eta^2 \approx 0.19$, Dataset R's $R^2 \approx 0.30$ (simple) and $\approx 0.46$ (multiple).
+
+## The effect-size menu — and how to phrase each
+
+Pick the effect size that matches the outcome type and design. Each row gives the formula, the locked value, and
+a sentence template you can adapt. **Do not** report a standardized effect size *instead of* the natural-unit
+estimate — report both; the natural units are interpretable, the standardized size is comparable.
+
+| Effect size | When | Formula | Locked value | How to say it |
+|---|---|---|---|---|
+| **Cohen's $d$** (independent) | two groups, quantitative outcome | $d = \dfrac{\bar x_1 - \bar x_2}{s_p}$ | G: $6/11.27 \approx 0.53$ | "The groups differ by about half a standard deviation — a medium effect." |
+| **$d_z$** (paired) | one group, before/after | $d_z = \dfrac{\bar d}{s_d}$ | P: $6/9 \approx 0.67$ | "The typical student gained about two-thirds of a standard deviation." |
+| **$\eta^2$** | one-way / two-way ANOVA | $\dfrac{\mathrm{SS}_{\text{between}}}{\mathrm{SS}_{\text{total}}}$ | F: $1850/9626 \approx 0.19$ | "Instructional format explains about 19% of the variation in final scores." |
+| **$R^2$** | regression | $1 - \dfrac{\mathrm{SS}_{\text{res}}}{\mathrm{SS}_{\text{total}}}$ | R: $\approx 0.30$ / $0.46$ | "Study hours alone explain ~30% of score variation; adding attendance and pretest raises it to ~46%." |
+| **Risk difference (RD)** | two proportions | $\hat p_1 - \hat p_2$ | R: $0.75 - 0.45 = 0.30$ | "The pass rate is 30 percentage points higher under Structured than None." |
+| **Relative risk (RR)** | two proportions | $\hat p_1 / \hat p_2$ | R: $0.75/0.45 \approx 1.67$ | "Structured students pass about 1.67 times as often as None students." |
+| **Odds ratio (OR)** | $2\times 2$ / logistic | $\dfrac{p_1/(1-p_1)}{p_2/(1-p_2)}$ | R: raw $\approx 3.67$, adjusted $\approx 2.72$ | "The odds of passing are about 3.7 times higher under Structured (2.7 after adjustment)." |
+
+Three phrasing traps live in this table. First, **RD, RR, and OR are three different numbers for the same
+$2\times 2$ table** — Dataset R's pass-by-program comparison is a risk difference of 0.30, a relative risk of
+1.67, and an odds ratio of 3.67 *simultaneously*. They are not interchangeable; the OR is the largest and the
+most easily over-read. Say which one you mean. Second, **$\mathrm{OR} \ne \mathrm{RR}$** — an odds ratio of 3.67
+does *not* mean "3.67 times more likely to pass"; that phrasing is the relative risk (1.67). The OR exaggerates
+when the outcome is common, as passing is here. Third, an **adjusted** estimate answers a different question than
+a raw one: the raw OR of 3.67 becomes 2.72 after adjusting for hours and pretest
+([wk 13](../notes/week-13-logistic-regression-for-binary-outcomes.qmd)) — the shrinkage *is* the confounding
+story, and you should report it as such, not bury it.
+
+### A note on logistic-regression coefficients
+
+Logistic coefficients live on the **log-odds** scale and are not directly readable. From Dataset R's fit,
+$\mathrm{logit}(\hat p) = b_0 + 0.22\cdot\text{hours} + \dots$, the $0.22$ is a log-odds change. Exponentiate it:
+$e^{0.22} \approx 1.25$ is the **odds ratio per study-hour** — "each extra study-hour multiplies the odds of
+passing by about 1.25." Then, for a conclusion a non-statistician can use, report a **predicted probability** off
+the S-curve, never the raw logit: a high-effort Structured student has predicted pass probability $\approx 0.56$
+versus $\approx 0.05$ for a low-effort None student. The rule: **exponentiate to an odds ratio, read a predicted
+probability, and never present a bare logit coefficient as the conclusion.**
+
+## Step 5, continued — reading the interval and the p-value correctly
+
+The confidence interval and the p-value are the two uncertainty objects you will report, and both are routinely
+misread. Get the readings right and the misreadings flagged.
+
+### What a 95% confidence interval *does* and *does not* mean
+
+A 95% CI is a range of plausible values for the **parameter** (the true mean difference, slope, or odds ratio),
+constructed by a procedure that captures the true value 95% of the time across many such samples.
+
+| Correct reading | Common misreading (avoid) |
+|---|---|
+| "Values in the interval are consistent with the data at the 95% level." | "There is a 95% probability the true value is in *this* interval." (The parameter is fixed; the interval is random.) |
+| "A wide interval means an imprecise estimate." | "A wide interval means no effect." (Width is precision, not absence.) |
+| "If the interval excludes the no-effect value, the result is significant at that level." | "The endpoints are the largest/smallest plausible effects, period." (They are bounds at one confidence level, not hard limits.) |
+| Dataset G: $(1.3, 10.7)$ — "the data are consistent with anything from a trivial ~1-point edge to a large ~11-point one." | "The effect is 6 points." (That is the point estimate, not the interval's message.) |
+
+The practical discipline: read the **whole interval**, especially the end nearest the no-effect value. Dataset
+G's lower bound of 1.3 points is small enough to be practically negligible, even though the interval excludes
+zero — so the honest sentence is "there is likely *some* advantage, but it could be small."
+
+### What a p-value *does* and *does not* mean
+
+A p-value is the probability, **assuming the null hypothesis is true**, of a result at least as extreme as the
+one observed. That is all it is.
+
+| Correct reading | Common misreading (avoid) |
+|---|---|
+| "If there were truly no difference, a result this extreme would occur about 1.3% of the time." (Dataset G, $p \approx 0.013$.) | "There is a 1.3% probability the null is true." (It conditions *on* the null; it is not a probability of the null.) |
+| "A small p-value is evidence against the null." | "A small p-value means a large or important effect." (Size is the effect size's job, not the p-value's.) |
+| "A large p-value means the data are consistent with the null." | "A large p-value proves there is no effect." (Absence of evidence is not evidence of absence.) |
+| "$p \approx 0.001$ (Dataset P) — strong evidence the gain is not zero." | "$p \approx 0.001$ means the gain is big." (The gain is +6 points, $d_z \approx 0.67$ — *that* is the size.) |
+
+The connection to flag for readers: a tiny p-value with a small effect size, or a non-significant result with a
+wide interval, are both common and both easy to over- or under-state. **The p-value answers "is it more than
+noise?"; the effect size and interval answer "how much, and how sure?"** Report all three; lead with the last
+two.
+
+## Step 6 — the conclusion: statistical vs practical vs causal
+
+The final paragraph is where most applied write-ups overreach. Three distinctions keep it honest, and they are
+the course's recurring refrain.
+
+### Statistical significance is not practical significance
+
+A result can be statistically significant and practically trivial, or practically large and not significant (in a
+small sample). Decide practical importance on the **natural-units estimate and the effect size**, against a
+*subject-matter* benchmark — not the p-value.
+
+- **Dataset P:** the +6-point readiness gain is statistically significant ($p \approx 0.001$) *and* arguably
+  meaningful — 6 points on a 100-point scale, $d_z \approx 0.67$, is modest-to-moderate. Both claims, separately.
+- **Dataset G:** the 6-point difference is significant ($p \approx 0.013$, $d \approx 0.53$), but the interval
+  reaches down to 1.3 points, which would be practically negligible — so "significant" here does **not** license
+  "large." Hedge it.
+
+Write the two judgments in different sentences so a reader cannot collapse them: one sentence for "is it more
+than noise?" and one for "is it big enough to matter to a student or an administrator?"
+
+### Association is not causation — observational data buy association only
+
+This is the hardest discipline and the one the Cypress Ridge world is built to teach. Whether you may say
+"caused" depends on the **design**, not the size of the estimate or the smallness of the p-value.
+
+- **Dataset G is observational:** students *self-selected* into the support center. Motivated students are both
+  more likely to seek help and more likely to score well, so the 6-point gap is **association, not causation** —
+  you may say "students who used the center scored higher," never "the center raised scores."
+- **Dataset R's contingency table is observational:** students self-select into support programs, so the
+  significant $\chi^2 \approx 7.5$ ($p \approx 0.024$) and the RR of 1.67 are associations, not proof the program
+  *caused* passing.
+- **Adjustment narrows confounding but does not manufacture causation.** Dataset R's hours slope drops from 1.6
+  to 1.1 after adjustment ([wk 10](../notes/week-10-simple-and-multiple-regression-review.qmd)); the raw OR of
+  3.67 shrinks to 2.72 ([wk 13](../notes/week-13-logistic-regression-for-binary-outcomes.qmd)); Dataset F's
+  format gaps shrink after the pretest adjustment in ANCOVA
+  ([wk 11](../notes/week-11-ancova-and-adjustment.qmd)). Adjustment removes *measured* confounders only —
+  unmeasured ones remain, so an adjusted observational estimate is still association.
+
+The phrasing rule: in an observational study, use **"associated with," "higher among," "linked to"** — and
+reserve **"caused," "raised," "improved," "led to"** for designs that randomly assigned the treatment.
+
+### Writing the conclusion without overstating
+
+A good applied conclusion is short and explicitly bounded. A template that fits any of the datasets:
+
+> *On these data, [outcome] was [direction] by an estimated [point estimate, natural units] (95% CI
+> [low, high]; effect size [d / η² / OR / RR]). The difference is [statistically significant / not significant]
+> at the [level]. Because the data are [observational / experimental], this is [an association / a causal
+> effect]; [name a limitation — confounding, self-selection, a single site, synthetic data]. The result does not
+> support [the overreach you are explicitly declining to make].*
+
+Filled in for Dataset G:
+
+> *On these data, final exam scores were higher among support-center users by an estimated 6.0 points (95% CI
+> 1.3 to 10.7; Cohen's $d \approx 0.53$, a medium effect). The difference is statistically significant at the 5%
+> level ($p \approx 0.013$). Because students self-selected into the support center, this is an **association,
+> not a causal effect** — motivated students may both seek help and score well. The estimate is imprecise (the
+> interval reaches nearly to zero), and these data are synthetic. The result does not support the claim that the
+> support center *raises* scores.*
+
+Notice what the paragraph never does: it never leads with the p-value, never reports a bare verdict, never says
+"caused," and never hides the wide interval. That is the whole guide in one paragraph.
+
+## A common mistake — the bare-verdict write-up
+
+The single most frequent reporting error is the sentence "the result was significant ($p < 0.05$), so the
+[treatment] works." It commits three of the course's named errors at once: it reports a **bare p-value** (no
+estimate, no interval, no effect size), it confuses **statistical with practical significance** (significant ≠
+large), and it asserts **causation from observational data** ("works"). The fix is the blueprint: lead with the
+estimate and interval, attach the effect size, separate the significance judgment from the size judgment, and
+match the causal language to the design. If you catch yourself writing "significant, therefore important,
+therefore it works," stop and rewrite all three clauses.
+
+## The AI Use Note — and why verification is load-bearing
+
+When you use an AI tool to help draft code, interpret output, or polish a write-up, disclose it in a short
+**Tool / Purpose / Verification** table, the same one the labs and the
+[week-14 report workshop](../notes/week-14-applied-analysis-report-workshop.qmd) require. The format:
+
+| Tool | Purpose | Verification |
+|---|---|---|
+| (e.g.) a chat assistant | drafted the `t.test()` call and an interpretation paragraph | re-ran the fit; checked the CI and $d$ against the output by hand; confirmed the causal language matches the observational design |
+| (e.g.) a coding assistant | suggested the `glm(..., family = binomial)` syntax and how to exponentiate coefficients | confirmed $e^{b}$ gives the OR, not the RR; checked the predicted probability against the S-curve |
+
+The **Verification** column is the load-bearing one, and here is why it matters more in *this* course than in
+most. An AI tool will fluently produce the exact errors this guide is built to retire: it will hand you a bare
+p-value, it will call an observational association "an effect" or say a program "improved" an outcome, it will
+report an odds ratio as if it were a relative risk, and it will read a logistic coefficient as a probability.
+These outputs *look* authoritative and are wrong in precisely the load-bearing places. So the verification step
+is not box-ticking — it is where the blueprint actually gets applied: you re-check that the **estimate** matches
+the output, that the **interval** is reported, that the **causal language** matches the design, and that the
+**effect size** is the right one for the table. An unverified AI paragraph is exactly the bare-verdict,
+causation-overstating write-up this page exists to prevent. Show the work so a reader can trust it — that is what
+verification buys.
+
+## Evidence and verification status
+
+**verified: false.** The reporting logic, the blueprint framing, and the phrasing templates on this page are
+course-authored, but every numeric value referenced here — Dataset P's $\bar d = +6$, $d_z \approx 0.67$, and CI
+$(2.6, 9.4)$; Dataset G's 6-point difference, $p \approx 0.013$, $d \approx 0.53$, and CI $(1.3, 10.7)$; Dataset
+F's $\eta^2 \approx 0.19$; Dataset R's slopes ($1.6 \to 1.1$), $R^2 \approx 0.30/0.46$, risk difference $0.30$,
+relative risk $\approx 1.67$, odds ratios ($\approx 3.67$ raw, $\approx 2.72$ adjusted), and predicted
+probabilities ($\approx 0.56$, $\approx 0.05$) — is **drafted, synthetic** (seed `set.seed(35203)`), **and not
+independently checked**. **R is not executed in this build.** These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
+
+## Public vs. graded
+
+These notes, the examples, and the practice here are **public and ungraded** — study material only. No graded
+prompts, answer keys, rubrics, point values, or due dates appear on this site. Graded applied-methods
+checkpoints, weekly quizzes, homework and analysis memos, applied analysis labs, the midterm, the applied
+methods project, and the final exam live in **Blackboard (the LMS)**, which is authoritative for due dates,
+submissions, and grades. If this page and Blackboard ever disagree, follow Blackboard.
+
+## See also
+
+- [Method chooser (decision guide)](method-chooser.qmd) — the question → structure → method step that precedes
+  everything on this page.
+- [Assumptions & diagnostics guide](assumptions-and-diagnostics-guide.qmd) — blueprint step 4: what each method
+  assumes and how to check it before you report.
+- [Methods glossary](methods-glossary.qmd) — the vocabulary behind every term used here.
+- [Week 3 — estimation, uncertainty & practical significance](../notes/week-03-estimation-uncertainty-and-practical-significance.qmd)
+  — step 5 in miniature, on Dataset G.
+- [Week 14 — applied analysis report workshop](../notes/week-14-applied-analysis-report-workshop.qmd) — taking one
+  dataset end-to-end through the blueprint and writing the report.

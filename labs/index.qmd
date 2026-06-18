@@ -1,0 +1,105 @@
+---
+title: "Labs"
+subtitle: "The hands-on companion strand — running, reading, and reporting a real analysis"
+page-type: orientation
+toc: true
+---
+
+The labs are where a method stops being a name on a slide and becomes something you *do*. Four short labs in R
+and Quarto take a method from the week notes and walk it the whole way down the **analysis blueprint** — name the
+question, lay out the data structure, fit the matching method, check what it assumes, and read what it *estimates*
+with its uncertainty, never as a bare verdict. You will run a two-group comparison and report a mean difference
+with its confidence interval and an effect size; fit a one-way ANOVA and control the error rate across many
+comparisons; build and *check* a regression and watch a slope move under adjustment; and fit a logistic model and
+read an odds ratio and a predicted probability rather than a raw log-odds coefficient. The code is shown for study
+and is **not executed on this site** — R is not run in this build — so you run it in your own R session, where the
+output comes alive and the numbers become concrete.
+
+A reminder that holds for every lab: this is a **draft course site**. Every dataset is **synthetic**,
+generated with `set.seed(35203)`, and every number you will reproduce is **drafted and provisional** — the worked values are provisional, so treat the locked values as targets to reproduce, not as confirmed
+facts about any real student.
+
+## How the labs work
+
+Each lab is the hands-on companion to one specific week's note, and every lab follows the same shape, so once you
+have done one you know the rhythm of all four:
+
+- **Purpose.** A short blockquote linking the companion week note and stating, in one breath, what you will build
+  and which step of the blueprint the lab makes concrete.
+- **The idea.** The method's logic in plain language — what is being compared, explained, or predicted; what the
+  method *estimates*; and which assumption is most worth checking. This is the "why this method, not a neighbor"
+  conversation, before any code.
+- **Goal, Setup, Steps.** A fixed seed (`set.seed(35203)`), the synthetic dataset for that week, then three or
+  more steps that build the analysis one move at a time, with shown R at each step. The steps always end on the
+  same beat: an **estimate reported with its uncertainty** — a mean difference and its interval, a contrast and
+  its interval, a slope and its interval, an odds ratio and its interval — never a lone p-value.
+- **Verify.** A checklist that reconciles your output against the companion note's **locked numbers**. A mismatch
+  is a bug in your code or your seed, not a discovery about the world — the synthetic world is fixed, so your run
+  should land on the same drafted figures.
+- **AI use note.** A Tool / Purpose / Verification table, because in this course verification is the load-bearing
+  habit: an estimate you cannot check, and a conclusion you cannot bound, do not count.
+
+Two disciplines run through every lab, the same two that run through every note. **Report the estimate, not just a
+verdict** — each lab closes on an effect size and a confidence interval, not on whether $p$ cleared a threshold.
+And **keep statistical significance, practical significance, and causation distinct** — a small $p$ does not make a
+six-point gain practically large, and because four of the five datasets are **observational** (students chose
+their support, their format, their program), a real association is still **association, not causation**. Each lab
+names which of those it can and cannot claim.
+
+## The four labs
+
+Each lab is the companion to its week's note — do the note first for the method logic, then the lab to run it
+yourself. The links are relative; the slugs encode the companion week.
+
+1. [Lab 5 — Two-group comparison and effect size](lab-05-two-group-comparison-and-effect-size.qmd) — the companion
+   to **Week 5**. Using **Dataset G** (final scores for Support vs Self-guided students), fit a two-sample
+   comparison, default to **Welch's** $t$, and report the mean difference of $6.0$ points **with its 95%
+   confidence interval $(1.3, 10.7)$** and Cohen's $d \approx 0.53$ — then say plainly why this self-selected,
+   observational gap is *association, not causation*.
+2. [Lab 8 — ANOVA with multiple comparisons](lab-08-anova-with-multiple-comparisons.qmd) — the companion to
+   **Week 8**. Using **Dataset F** (final score by instructional format), fit a one-way ANOVA ($F \approx 7.61$,
+   $\eta^2 \approx 0.19$), then control the family-wise error rate with **Tukey HSD** and contrast a **planned**
+   "hands-on vs delivered-only" comparison ($\hat\psi = 8$ points). The lab's point is that an unadjusted sweep of
+   pairwise tests inflates the error rate; multiplicity control and a pre-specified contrast do not.
+3. [Lab 10 — Building and checking a regression](lab-10-building-and-checking-a-regression.qmd) — the companion to
+   **Week 10**. Using **Dataset R**, fit a simple regression of final score on study hours (slope $\approx 1.6$),
+   then a multiple regression adding attendance and pretest, and watch the hours slope **drop $1.6 \to 1.1$ under
+   adjustment** (confounding). You will read residual and leverage diagnostics and report each slope **with its
+   confidence interval**, distinguishing the simple from the partial (adjusted) slope.
+4. [Lab 13 — Logistic regression and odds ratios](lab-13-logistic-regression-and-odds-ratios.qmd) — the companion
+   to **Week 13**. Using **Dataset R** with the binary `pass` outcome, fit a logistic model with `glm(..., family
+   = binomial)`, **exponentiate** the coefficients to odds ratios (OR per study-hour $\approx 1.25$; OR Structured
+   vs None $\approx 2.72$, shrunk from the raw $3.67$ after adjustment), and read a **predicted probability** off
+   the S-curve — never the raw logit — as the conclusion, keeping $\mathrm{OR} \ne \mathrm{RR}$ straight.
+
+Each lab walks all six blueprint steps — Question, Structure, Method, Assumptions and diagnostics, Estimate and
+uncertainty, Conclusion — so by the fourth lab the steps are a habit, not a checklist, and you can carry them to a
+method the course never named.
+
+## Software
+
+You need only R (via RStudio or Posit Cloud) and, optionally, Quarto to knit a report. The labs use base R plus a
+small number of widely available functions and idioms — `t.test()` for the two-group comparison, `aov()` with
+`summary()` and `TukeyHSD()` for the ANOVA, `lm()` with `summary()`, `confint()`, and the standard residual plots
+for the regression, and `glm(..., family = binomial)` for the logistic fit. Where a helper package is mentioned
+(for example `emmeans` for adjusted means or contrasts, or `car` for a Levene test or VIFs), the lab names it; you
+can follow the logic without it. Every chunk that draws randomness starts with `set.seed(35203)`, so your run
+reproduces the companion note's locked numbers — and, again, those numbers are **synthetic and provisional** in
+this draft site. On this site the code is shown **for study and is not executed**; the live computation happens in
+your session.
+
+## See also
+
+- [Week 5 — Two-group comparisons](../notes/week-05-two-group-comparisons.qmd) and its lab above.
+- [Week 8 — Multiple comparisons and planned contrasts](../notes/week-08-multiple-comparisons-and-planned-contrasts.qmd).
+- [Week 10 — Simple and multiple regression review](../notes/week-10-simple-and-multiple-regression-review.qmd).
+- [Week 13 — Logistic regression for binary outcomes](../notes/week-13-logistic-regression-for-binary-outcomes.qmd).
+- [Method chooser](../resources/method-chooser.qmd) — the question → structure → method decision guide, useful
+  before any lab.
+- [Reporting and interpretation guide](../resources/reporting-and-interpretation-guide.qmd) — effect sizes,
+  confidence intervals, and the statistical-vs-practical-vs-causal distinctions each lab closes on.
+
+## Public vs. graded
+
+The graded lab deliverables, their rubrics, and their due dates live in **Blackboard (the LMS)** — these pages are
+study and practice only.

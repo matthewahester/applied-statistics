@@ -1,0 +1,92 @@
+---
+title: "Schedule (topic flow)"
+subtitle: "A 15-week pacing plan — Blackboard is authoritative for dates and deadlines"
+toc: true
+---
+
+::: {.callout-important}
+This is a **pacing plan, not a calendar**. It shows the order in which the methods unfold and roughly when, so
+you can read ahead and see how the pieces connect. It is **not** the authoritative calendar: exact dates,
+deadlines, and any mid-term adjustments live in **Blackboard (the LMS)**, which is authoritative. A few fixed
+semester dates are noted below for orientation only — confirm everything against Blackboard.
+:::
+
+The course runs fifteen weeks in four parts. Every week is one pass through the same **analysis blueprint** —
+ask the question, read the data structure, choose the method, check assumptions, report the **estimate with its
+uncertainty**, and draw a conclusion that keeps statistical significance, practical significance, and causation
+distinct. The methods change week to week; the six-step move does not. Each part below lists its weeks, the
+theme for each week, and the throughline — the question that carries the week. The **theme** links to that
+week's note.
+
+This is a **draft course site**: the example numbers in the linked notes come from one synthetic
+world (the Cypress Ridge College Student-Success Study, generated with `set.seed(35203)`) and are **provisional
+and unverified** — they illustrate the reasoning, not real findings.
+
+## Part I — Questions, structure, and the estimate (Weeks 1–3)
+
+We set the frame the whole course runs on: turn a vague question into a sharp statistical one, read the data
+structure that decides the method, and learn to report an **estimate with its uncertainty** instead of a bare
+verdict. No named test is the point yet — the blueprint is.
+
+| Week | Theme | The throughline |
+|------|-------|-----------------|
+| 1 | [Statistical questions, data structure & applied workflow](notes/week-01-statistical-questions-and-data-structure.qmd) | Are we comparing, explaining, or predicting — and what is the unit, the response, and the design? |
+| 2 | [Exploratory analysis & graphical comparison](notes/week-02-exploratory-analysis-and-graphical-comparison.qmd) | What do we see in the data — its shape, spread, and group differences — before we fit anything? |
+| 3 | [Estimation, uncertainty & practical significance](notes/week-03-estimation-uncertainty-and-practical-significance.qmd) | What does the analysis estimate, how uncertain is it, and is the effect big enough to matter? |
+
+*Note: **Labor Day (Mon, Sep 7)** falls in Week 3 — no class that Monday, so the week runs Wednesday and Friday
+(compressed).*
+
+## Part II — Comparing groups: means, factors, and assumptions (Weeks 4–9)
+
+The core of the course. We work through comparisons of growing structure — paired, two-group, many-group, and
+two-factor — and on the way learn to check what each method assumes, control error rates across multiple
+comparisons, and read an interaction. Every method is one instance of the blueprint, never a standalone recipe.
+
+| Week | Theme | The throughline |
+|------|-------|-----------------|
+| 4 | [One-sample & paired comparisons](notes/week-04-one-sample-and-paired-comparisons.qmd) | When each unit is its own control, how does pairing remove between-unit variation — and what do we estimate? |
+| 5 | [Two-group comparisons](notes/week-05-two-group-comparisons.qmd) | With independent groups, what is the mean difference, its interval, and why is this only an association? |
+| 6 | [Many-group comparisons & one-way ANOVA](notes/week-06-many-group-comparisons-and-one-way-anova.qmd) | When several group means differ, how does ANOVA test them together, and what does $F$ actually compare? |
+| 7 | [Assumptions, diagnostics & the midterm](notes/week-07-assumptions-diagnostics-and-the-midterm.qmd) | What does the model assume, how do we check it, and what do we do with an outlier we shouldn't auto-delete? |
+| 8 | [Multiple comparisons & planned contrasts](notes/week-08-multiple-comparisons-and-planned-contrasts.qmd) | Once ANOVA is significant, which means differ — and how do we ask without inflating the error rate? |
+| 9 | [Two-way ANOVA & interaction](notes/week-09-two-way-anova-and-interaction.qmd) | With two factors, when is an effect conditional — and why do we read the interaction before the main effects? |
+
+*Note: the **midterm is Friday, Oct 9** (in class), during Week 7. It covers the applied workflow, exploratory
+analysis, estimation and uncertainty, practical significance, and the comparisons through assumptions and
+diagnostics — Weeks 1–7. No graded content appears on this public site — see Blackboard.*
+
+## Part III — Models, covariates, and categorical outcomes (Weeks 10–13)
+
+We turn to models that explain and adjust. Regression introduces the partial (adjusted) slope; ANCOVA brings
+the same adjustment idea to group comparisons; then the outcome itself goes categorical — contingency tables and
+logistic regression for a binary result. The recurring thread is **confounding → adjustment → association vs
+causation**: adjusting for a covariate changes the estimate, and observational data still buy only association.
+
+| Week | Theme | The throughline |
+|------|-------|-----------------|
+| 10 | [Simple & multiple regression review](notes/week-10-simple-and-multiple-regression-review.qmd) | What does a slope estimate, and why does it change once we hold other variables fixed (the partial slope)? |
+| 11 | [ANCOVA & adjustment](notes/week-11-ancova-and-adjustment.qmd) | How do we compare group means *at the same baseline* by adjusting for a covariate — and what must hold? |
+| 12 | [Categorical outcomes & contingency tables](notes/week-12-categorical-outcomes-and-contingency-tables.qmd) | When the outcome is a category, how do we measure and test association — risk difference, relative risk, odds? |
+| 13 | [Logistic regression for binary outcomes](notes/week-13-logistic-regression-for-binary-outcomes.qmd) | How does a model on the log-odds scale give an odds ratio and a predicted probability — and why isn't OR an RR? |
+
+*Note: **fall break is Nov 22–28** (no classes), falling between Weeks 13 and 14.*
+
+## Part IV — Reporting and synthesis (Weeks 14–15)
+
+We bring it together: take one dataset end-to-end through the blueprint and write an honestly-bounded report,
+then step back and see the whole course as one repeated move across the five data structures.
+
+| Week | Theme | The throughline |
+|------|-------|-----------------|
+| 14 | [Applied analysis report workshop](notes/week-14-applied-analysis-report-workshop.qmd) | How do you carry a real analysis from question to conclusion and report the estimate, the uncertainty, and the limits? |
+| 15 | [Applied methods synthesis & review](notes/week-15-applied-methods-synthesis-and-review.qmd) | How did one blueprint generate the paired $t$, ANOVA, regression, ANCOVA, chi-square, and logistic regression? |
+
+*Note: the **last class is Mon, Dec 7** (the Week 15 synthesis meeting), the **consultation day is Dec 8**, and
+the **final-exam window is Dec 9–15** (the exact block is set via Blackboard).*
+
+::: {.callout-note}
+Again: this page is a pacing plan to help you read ahead and see where the course is going. For the real
+calendar — every date, every deadline, the midterm and final blocks, and any adjustment during the term —
+**Blackboard (the LMS) is authoritative**. If this page and Blackboard ever disagree, follow Blackboard.
+:::

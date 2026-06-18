@@ -1,0 +1,365 @@
+---
+title: "Assumptions & diagnostics guide"
+subtitle: "What each method assumes, and how to check it"
+page-type: reference
+verified: false
+toc: true
+---
+
+Keep this page open while you fit anything. It is the fourth step of the **analysis blueprint** —
+**Question → Structure → Method → Assumptions & diagnostics → Estimate & uncertainty → Conclusion** — pulled
+out into one reference. Every method in this course (the paired and two-sample $t$, one-way and two-way ANOVA,
+simple and multiple regression, ANCOVA, chi-square, and logistic regression) buys you an **estimate with a
+confidence interval** only when the structure it assumes is roughly the structure your data actually have. The
+diagnostics below are how you earn the estimate; they are not box-checking before a verdict.
+
+Three disciplines run through the whole page and you should be able to recite them:
+
+1. **Report the estimate with its uncertainty, not a bare verdict.** A diagnostic that passes does not license a
+   lone p-value — it licenses a mean difference, an effect size, a slope, an adjusted mean, or an odds ratio,
+   each *with an interval*. A diagnostic that fails tells you which estimate is no longer trustworthy.
+2. **Keep statistical significance, practical significance, and causation distinct.** No diagnostic upgrades an
+   observational association into a causal claim. Levene's test passing does not mean the support center *caused*
+   the higher scores; a clean QQ plot does not make a $6$-point gain *practically* large. Assumptions buy you a
+   valid estimate, nothing more.
+3. **Investigate, do not auto-delete.** Outliers and influential points are *signals to examine*, never rows to
+   silently drop. A point can be a data-entry slip, a genuine extreme student, or the very case that breaks your
+   model. Deleting it to clean up a plot is the most common way an honest analysis goes quietly wrong. Report
+   the analysis with and without the point and say what changed.
+
+All numbers referenced come from the five synthetic **Cypress Ridge College Student-Success** datasets
+(seed set, `set.seed(35203)`) and are provisional — the worked numbers are provisional pending review. R is shown as **static, non-executed** code; it is not run in this build.
+
+## How to read this guide
+
+Each method gets the same three-column table — the **assumption ladder** for applied methods. Fill these three
+cells in your head before you read any p-value:
+
+| Column | The question it answers |
+|---|---|
+| **Assumes** | What must be (approximately) true for this method's estimate and interval to be trustworthy? |
+| **How to check** | The plot, test, or number you actually look at — what the diagnostic *is*. |
+| **If it fails** | The remedy or the fallback method — what you do instead, never "ignore and report anyway." |
+
+A recurring caution: a **diagnostic test** (Levene, Shapiro–Wilk) answers "is the assumption violated *enough to
+detect*?", which is sensitive to sample size — it can flag a trivial departure in a huge sample and miss a real
+one in a tiny sample. Prefer **pictures** (residual plots, QQ plots, leverage plots) as your primary evidence
+and use the formal test as a supporting number, not the verdict.
+
+## The five datasets, by structure
+
+The same world appears under five structures, and structure is what selects the method — and therefore the
+assumptions. Synthetic; seed set (`set.seed(35203)`).
+
+| Dataset | Structure | Method(s) it carries | Where it teaches |
+|---|---|---|---|
+| **P** | paired pre/post, same $n = 30$ | paired $t$ | [wk 4](../notes/week-04-one-sample-and-paired-comparisons.qmd) |
+| **G** | two independent groups, $n_1 = n_2 = 45$ | two-sample / Welch $t$ | [wk 5](../notes/week-05-two-group-comparisons.qmd) |
+| **F** | four formats, $n = 25$ each ($+$ pretest covariate) | one-way ANOVA; ANCOVA | [wk 6–8](../notes/week-06-many-group-comparisons-and-one-way-anova.qmd), [wk 11](../notes/week-11-ancova-and-adjustment.qmd) |
+| **X** | $2 \times 2$ factorial, $n = 20$ per cell | two-way ANOVA | [wk 9](../notes/week-09-two-way-anova-and-interaction.qmd) |
+| **R** | $n = 120$ predictors → score & pass/fail | regression; chi-square; logistic | [wk 10](../notes/week-10-simple-and-multiple-regression-review.qmd), [wk 12](../notes/week-12-categorical-outcomes-and-contingency-tables.qmd), [wk 13](../notes/week-13-logistic-regression-for-binary-outcomes.qmd) |
+
+## Paired and two-sample $t$-tests
+
+### Paired $t$ (Dataset P, wk 4)
+
+The structure is the assumption that matters most: you have **one measurement twice on each unit** (the same
+$n = 30$ students, pre and post), so you analyze the $30$ paired differences $d_i = \text{post} - \text{pre}$,
+*never* the two columns as independent groups. With $\bar d = +6.0$, $s_d = 9.0$, $\mathrm{SE} = 9/\sqrt{30}
+\approx 1.64$, the paired $t = 6.0/1.64 \approx 3.65$ on $29$ df gives the **95% CI $(2.6, 9.4)$ points** and
+effect size $d_z = 6/9 \approx 0.67$. The interval is the deliverable, not the p-value.
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| The $30$ differences are **independent** across students | Design: one row per student, no shared rooms/sections driving scores | Clustered data needs a mixed model; not covered here — flag it |
+| The **differences** are roughly normal (not the raw pre/post columns) | QQ plot of the $d_i$; histogram; the difference, not each column, must be near-normal | Wilcoxon signed-rank as a fallback; with $n = 30$ the CLT makes the $t$ fairly robust |
+| The pairing is correctly preserved | Confirm each post is matched to its own pre | Mismatched pairs invalidate everything — recheck the merge |
+
+```r
+set.seed(35203)
+# Dataset P: pre/post on the same 30 students -> analyze the differences
+t.test(post, pre, paired = TRUE)            # paired, NOT two independent samples
+#  t = 3.65, df = 29, p-value = 0.001
+#  95 percent confidence interval:  2.6  9.4   (points)
+#  mean of the differences:  6.0
+qqnorm(post - pre); qqline(post - pre)      # check normality of the DIFFERENCES
+```
+
+**The locked contrast.** If you wrongly treated pre and post as two independent samples, the SE would be
+$\sqrt{12^2/30 + 11^2/30} \approx 2.97$ — nearly double the paired $1.64$. Using the wrong design is itself an
+assumption failure: it throws away the between-student variation that pairing removes, and inflates your
+interval.
+
+### Two-sample / Welch $t$ (Dataset G, wk 5)
+
+Here the structure is **two independent groups** (Support $n_1 = 45$ vs Self-guided $n_2 = 45$; different
+students), and the estimate is the difference in means $78 - 72 = 6.0$ points, Welch $\mathrm{SE} \approx 2.38$,
+$t \approx 2.53$, **95% CI $(1.3, 10.7)$**, Cohen's $d = 6/11.27 \approx 0.53$ (medium).
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| The two samples are **independent** (different units, no pairing) | Design: distinct students per group | If paired, switch to the paired $t$ (wk 4) — the designs are not interchangeable |
+| Each group's values are roughly **normal** (or $n$ large enough for the CLT) | QQ plot / histogram within each group | Welch $t$ tolerates mild non-normality at $n = 45$; severe skew → rank-sum |
+| **Equal variance** — only if you use the *pooled* $t$ | Compare group SDs ($10.5$ vs $12.0$); a side-by-side boxplot; Levene's test | Use **Welch** (the safe default), which does not assume equal variance — here pooled and Welch nearly agree because $n_1 = n_2$ |
+
+```r
+set.seed(35203)
+# Dataset G: two independent groups -> Welch is the safe default
+t.test(final ~ group, data = G)             # Welch by default (var.equal = FALSE)
+#  t = 2.53, df = 86, p-value = 0.013
+#  95 percent confidence interval:  1.3  10.7   (points)
+```
+
+**Reach for Welch by default.** Equal-variance (pooled) $t$ is only marginally more efficient and fails badly
+under unequal variance with unequal $n$. **And remember the conclusion ceiling:** because students *chose* the
+support center, this is **association, not causation** — no $t$-test assumption removes that selection.
+
+## One-way ANOVA (Dataset F, wk 6–8)
+
+One-way ANOVA compares the four format means ($L = 74$, $LL = 81$, $O = 70$, $H = 79$; grand mean $76$) and
+estimates how much of the score variance format explains: $F = 616.7/81 \approx 7.61$ on $(3, 96)$,
+$\eta^2 = 1850/9626 \approx 0.19$. The assumptions are checked on the **residuals** (each score minus its group
+mean), because that is what the F-test's denominator $\mathrm{MSE} = 81$ summarizes.
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| **Independence** of observations | Design: different students, no shared influence within a format | Dependence (shared sections) needs a mixed model — flag it |
+| **Normal residuals** | QQ plot of residuals; residuals-vs-fitted for symmetry | Mild non-normality is fine at these $n$; heavy skew → transform or Kruskal–Wallis |
+| **Equal variance** across the four groups (homoscedasticity) | Residuals-vs-fitted (constant band); **Levene's test** | Welch one-way ANOVA, or a variance-stabilizing transform |
+
+For Dataset F the residuals are roughly normal — a near-linear QQ plot with **one mild low outlier**, an Online
+student near $45$. **Investigate, do not auto-delete:** check whether that score is a recording error or a real
+struggling student before deciding anything. Levene's test gives $p \approx 0.40$, so equal variance is
+reasonable (Online is slightly more spread, not alarmingly so), and independence holds by design.
+
+```r
+set.seed(35203)
+fit <- aov(final ~ format, data = F)
+summary(fit)                                 # F = 7.61 on (3, 96), p = 0.0001
+plot(fit, which = 1)                         # residuals vs fitted -> equal-variance band
+plot(fit, which = 2)                         # QQ plot of residuals -> normality
+car::leveneTest(final ~ format, data = F)    # Levene's test  p = 0.40 (equal var OK)
+```
+
+Report $F$ **with $\eta^2 \approx 0.19$** — format explains about $19\%$ of score variance — not the F-statistic
+alone. A significant $F$ says "the means are not all equal"; it does not say *which* differ (that is wk 8) or
+that format *caused* the gap.
+
+## Two-way ANOVA (Dataset X, wk 9)
+
+The $2 \times 2$ design (Delivery × Background, $n = 20$ per cell, $\mathrm{MSE} = 81$ on $76$ df) carries the
+same residual assumptions as one-way ANOVA, plus one reading rule that is really an interpretation discipline.
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| **Independence** of observations | Design: distinct students per cell | mixed model if clustered |
+| **Normal residuals**, **equal variance** across the four cells | Residuals-vs-fitted; QQ of residuals; Levene across cells | transform; Welch-type correction |
+| Adequate, ideally **balanced** cell sizes | Cell counts ($20$ each here, so balanced) | unbalanced designs need Type II/III sums of squares — name which you used |
+
+```r
+set.seed(35203)
+fit2 <- aov(final ~ delivery * background, data = X)
+summary(fit2)
+#  delivery               F = 10.4   p = 0.002
+#  background             F = 67.2   p < 0.001
+#  delivery:background    F = 5.0    p = 0.028   <- read this FIRST
+interaction.plot(X$background, X$delivery, X$final)   # non-parallel lines
+```
+
+**The diagnostic that is really a reading rule:** the interaction $F \approx 5.0$ ($p \approx 0.028$) is
+significant, so **read the interaction first**. The In-person advantage is $73 - 62 = 11$ points for
+weak-background students but only $85 - 83 = 2$ for strong-background students. With a real interaction the main
+effects are **conditional** — do not report "Online is $6.5$ points worse" as if it applied uniformly. Look at
+the interaction plot (non-parallel lines) *before* the main-effect table.
+
+## Simple and multiple regression (Dataset R, wk 10)
+
+Simple regression gives $\widehat{\text{final}} = 55 + 1.6\cdot\text{hours}$ ($R^2 \approx 0.30$, slope
+$\mathrm{SE} \approx 0.22$, 95% CI $(1.16, 2.04)$); multiple regression gives $\widehat{\text{final}} = 30 +
+1.1\cdot\text{hours} + 0.25\cdot\text{att} + 0.30\cdot\text{pretest}$ ($R^2 \approx 0.46$). The hours slope
+drops $1.6 \to 1.1$ after adjustment — that drop *is* confounding, and the partial slope means "holding
+attendance and pretest fixed." Regression has the richest diagnostic kit in the course.
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| **Linearity** — $Y$ is linear in each predictor | Residuals-vs-fitted (no curve); component-plus-residual plots | add a term, transform $X$, or use a nonlinear fit |
+| **Independent residuals** | Design; for ordered data, residual-vs-order plot | dependence needs time-series / mixed methods |
+| **Constant-variance (homoscedastic) residuals** | Residuals-vs-fitted (even band, no funnel); scale–location plot | transform $Y$ (e.g. log); robust/weighted SEs |
+| **Roughly normal residuals** (for the interval and CI) | QQ plot of residuals | large $n$ helps; transform if severe |
+| **No severe multicollinearity** | **VIF** for each predictor | drop/combine redundant predictors; here hours–attendance $r \approx 0.45$, VIF $\approx 1.3$, fine |
+| **No single point distorting the fit** (influence) | residual-vs-leverage plot; Cook's distance; hat values | investigate; refit with and without — do not auto-delete |
+
+```r
+set.seed(35203)
+fit <- lm(final ~ hours + attendance + pretest, data = R)
+summary(fit)                                 # R^2 = 0.46; hours slope 1.1 (was 1.6 simple)
+plot(fit, which = 1)                         # residuals vs fitted -> linearity + equal variance
+plot(fit, which = 2)                         # QQ -> residual normality
+plot(fit, which = 5)                         # residuals vs leverage -> influence (Cook's D)
+car::vif(fit)                                # all VIF ~ 1.3, well below the rule-of-thumb 5
+```
+
+For Dataset R the residuals are roughly normal with **mild heteroscedasticity**, VIFs are near $1.3$ (no
+collinearity problem), and there is **one high-leverage student**. **Investigate, do not drop** — a
+high-leverage point sits at an extreme $x$ and can swing the slope, but it may be a perfectly real
+high-effort student. Refit with and without it and report whether the slope and its interval move. A
+**high-leverage** point ($x$ unusual) is not the same as a large-residual **outlier** ($y$ far from the line);
+an **influential** point is one that actually moves the fit (high leverage *and* a large residual) — Cook's
+distance is the single number that combines them.
+
+Report the slope **with its 95% CI** $(1.16, 2.04)$ for hours in the simple fit, and read the partial slope as
+adjusted — "each extra study-hour per week is associated with about $+1.1$ final points, holding attendance and
+pretest fixed." Observational predictors buy **association**; "holding fixed" is a modeling statement, not a
+controlled experiment.
+
+## ANCOVA (Dataset F + pretest, wk 11)
+
+ANCOVA compares the format means **adjusted for the pretest covariate** — putting the formats "at the same
+baseline." Adjusting (common slope $b \approx 0.45$) shrinks the gaps: adjusted means $L\,74.5$, $LL\,80.6$,
+$O\,70.9$, $H\,78.1$; the format effect after adjustment is $F \approx 6.2$ on $(3, 95)$, $\eta^2_{\text{partial}}
+\approx 0.16$ (down from the unadjusted $0.19$ — some apparent format advantage was baseline). ANCOVA carries
+all the regression/ANOVA residual assumptions **plus two of its own**.
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| All ANOVA residual assumptions (independence, normal residuals, equal variance) | residual plots, QQ, Levene — as above | as above |
+| **Parallel slopes** / homogeneity of regression — the covariate's slope is the same in every group | Test the **format × pretest interaction**; plot fitted lines per group | If slopes differ, a single adjusted mean is misleading — report group-specific slopes instead |
+| The covariate is **measured before treatment** (pre-treatment), not affected by it | Timeline: pretest is baseline readiness, taken first | Adjusting for a *post*-treatment covariate removes part of the effect you wanted — do not do it |
+
+```r
+set.seed(35203)
+# Parallel-slopes check FIRST: is the format x pretest interaction needed?
+anova(lm(final ~ format * pretest, data = F))   # interaction NS, p = 0.5  -> slopes parallel
+# Valid ANCOVA: common-slope adjustment
+fitc <- lm(final ~ pretest + format, data = F)
+anova(fitc)                                      # covariate F = 30 (p<0.001); format F = 6.2
+emmeans::emmeans(fitc, "format")                 # adjusted means: 74.5, 80.6, 70.9, 78.1
+```
+
+For Dataset F the format × pretest interaction is **non-significant** ($p \approx 0.5$), so the parallel-slopes
+assumption holds and the single common slope is valid; the covariate is genuinely pre-treatment (baseline
+readiness). The **pre-treatment** rule is load-bearing: adjusting for something measured *after* the formats
+acted would erase part of the very format effect you are estimating. Report the **adjusted means** with their
+intervals, and read them as "formats compared at the same baseline" — still observational, still association.
+
+## Chi-square test of independence (Dataset R, wk 12)
+
+The $3 \times 2$ table (pass × support program) has counts None $18/22$, Drop-in $24/16$, Structured $30/10$,
+giving $\chi^2 = 7.5$ on $2$ df ($p \approx 0.024$), with expected pass per program $= 40(0.6) = 24$. The
+chi-square has fewer assumptions than the mean-based methods, but they are easy to violate in small tables.
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| **Expected counts $\ge 5$** in (essentially) every cell | Inspect the expected-count table, not the observed | Combine sparse categories, or use **Fisher's exact test** |
+| **Independence** of observations — each student counted **once** | Design: one row per student, no double-counting | Repeated measures invalidate the $\chi^2$ — restructure the data |
+| The table holds **counts**, not percentages or means | Confirm cells are frequencies | Re-tabulate from raw counts |
+
+```r
+set.seed(35203)
+tab <- table(R$program, R$pass)
+chisq.test(tab)                              # X-squared = 7.5, df = 2, p = 0.024
+chisq.test(tab)$expected                     # all expected counts >= 5 (24 each here) -> OK
+```
+
+Here every expected count is $24 \ge 5$, so the approximation is safe, and each student appears once.
+**Report an effect, not just the $\chi^2$:** Structured vs None gives a **risk difference** $0.75 - 0.45 =
+0.30$, a **relative risk** $0.75/0.45 \approx 1.67$, and an **odds ratio** $\approx 3.67$. And because students
+**self-select** into programs, a significant association is **not** evidence the program *caused* passing — the
+conclusion ceiling again.
+
+## Logistic regression (Dataset R, wk 13)
+
+For a binary outcome (pass $= \text{final} \ge 70$), logistic regression models the log-odds:
+$\mathrm{logit}(\hat p) = b_0 + 0.22\cdot\text{hours} + 0.04\cdot\text{pretest} + 0.6\,[\text{Drop-in}] +
+1.0\,[\text{Structured}]$. The OR per study-hour is $e^{0.22} \approx 1.25$; the **adjusted** Structured-vs-None
+OR is $e^{1.0} \approx 2.72$ — **shrunk from the raw $3.67$** once hours and pretest are held fixed (confounding,
+yet again). Its assumptions differ from the linear models'.
+
+| Assumes | How to check | If it fails |
+|---|---|---|
+| **Correct link** — log-odds is linear in the predictors | binned-residual plot; compare to a flexible fit | add interactions/splines; try a different link |
+| **Independence** of observations | Design: one row per student | clustered → mixed/GEE logistic |
+| **Linearity of the logit** in each continuous predictor | plot smoothed log-odds vs the predictor (e.g. hours) | transform the predictor; add a quadratic term |
+| **No severe separation** — no predictor perfectly splits pass/fail | Watch for huge coefficients with enormous SEs; warnings on fit | penalized (Firth) logistic; combine categories |
+| **No severe multicollinearity** | VIF on the predictors | drop/combine, as in linear regression |
+
+```r
+set.seed(35203)
+fitg <- glm(pass ~ hours + pretest + program, data = R, family = binomial)
+summary(fitg)                                # watch for huge coef + huge SE (separation)
+exp(coef(fitg))                              # ORs: hours 1.25; Structured vs None 2.72 (adjusted)
+exp(confint(fitg))                           # report each OR WITH its interval
+```
+
+Two locked discipline points live in the diagnostics. First, **coefficients are on the log-odds scale** —
+exponentiate to an odds ratio ($e^{0.22} \approx 1.25$ per hour), and read a **predicted probability** (the
+S-curve $p = 1/(1+e^{-\eta})$, e.g. $\approx 0.56$ for a high-effort Structured student vs $\approx 0.05$ for a
+low-effort None student) as the conclusion — *never* the raw logit. Second, $\mathrm{OR} \ne \mathrm{RR}$: do
+not report the $2.72$ odds ratio as if it were a $2.72$-times risk. And separation is the silent killer — a
+coefficient that blows up with an enormous standard error means a predictor perfectly separated the outcome, so
+the estimate is unstable; switch to a penalized fit rather than trusting it.
+
+## The investigate-do-not-delete rule, in one place
+
+Every method above can produce an unusual point, and the response is always the same workflow, never deletion:
+
+| Point type | What it is | The diagnostic | The honest move |
+|---|---|---|---|
+| **Outlier** ($y$) | response far from the model's prediction | large standardized residual; QQ plot tail | examine the case; report with and without |
+| **High-leverage** ($x$) | predictor value far from the others | hat value; residual-vs-leverage plot | check it is real; see if the slope moves |
+| **Influential** | actually changes the fit (leverage $+$ residual) | **Cook's distance** | refit both ways; state what changed |
+
+A point that is unusual but **correct and real** stays in — it is part of the population you are describing.
+A point that is a **demonstrable error** can be corrected or removed *with a documented reason*. What you never
+do is delete a point because it spoils a plot or a p-value. The data cannot tell you which kind it is; your
+investigation does.
+
+## A few drifts to resist
+
+| Drift | The disciplined move |
+|---|---|
+| trusting Levene/Shapiro over the picture | read the **plot** first; use the test as a supporting number, mindful it scales with $n$ |
+| checking normality of the raw columns in a paired test | check normality of the **differences** |
+| pooled $t$ by default | use **Welch** unless equal variance is genuinely justified |
+| reporting main effects when the interaction is significant | read the **interaction first**; main effects are conditional |
+| reading a logit coefficient as a probability | exponentiate to an OR, and report a **predicted probability** |
+| deleting an influential point | **investigate, do not auto-delete**; refit both ways |
+| treating a passed diagnostic as a causal license | assumptions buy a valid **estimate**, not **causation** |
+
+When the assumptions genuinely hold, the parametric method is the efficient, correct choice and you report its
+estimate with its interval plainly. When a diagnostic fails, it is telling you which estimate to stop trusting
+and which fallback to reach for — that is the whole point of step 4 of the blueprint.
+
+## Evidence and verification status
+
+**verified: false.** The assumption ladders, the diagnostics, and the investigate-do-not-delete logic on this
+page are course-authored, but every numeric value referenced here — P's $\bar d = 6$ with paired $t \approx
+3.65$ and CI $(2.6, 9.4)$; G's difference $6$ with Welch $t \approx 2.53$, CI $(1.3, 10.7)$, $d \approx 0.53$;
+F's $F \approx 7.61$, $\eta^2 \approx 0.19$, Levene $p \approx 0.40$; X's interaction $F \approx 5.0$; R's
+regression slopes $1.6 \to 1.1$, $R^2 \approx 0.46$, VIF $\approx 1.3$; the ANCOVA adjusted means
+($74.5, 80.6, 70.9, 78.1$) and slope $0.45$; the chi-square $\chi^2 \approx 7.5$ with RR $\approx 1.67$ and
+OR $\approx 3.67$; and the logistic ORs ($1.25$ per hour, $2.72$ adjusted) — is **drafted, synthetic, and not
+independently checked**; **R is not executed in this build**; the worked numbers are provisional and not independently verified.
+
+## Public vs. graded
+
+These notes, the examples, and the practice here are **public and ungraded** — study material only. No graded
+prompts, answer keys, rubrics, point values, or due dates appear on this site. Graded applied-methods
+checkpoints, weekly quizzes, homework and analysis memos, applied analysis labs, the midterm, the applied
+methods project, and the final exam live in **Blackboard (the LMS)**, which is authoritative for due dates,
+submissions, and grades. If this page and Blackboard ever disagree, follow Blackboard.
+
+## See also
+
+- [Method chooser (decision guide)](method-chooser.qmd) — from a data shape and a question to the matching
+  method, before you reach the assumptions here.
+- [Methods glossary](methods-glossary.qmd) — residual, leverage, influence, homoscedasticity, VIF, Levene's
+  test, separation, and the rest of the vocabulary used above.
+- [Reporting & interpretation guide](reporting-and-interpretation-guide.qmd) — once the diagnostics pass, how to
+  report the estimate with its interval and keep statistical, practical, and causal claims distinct.
+- [Week 7 — Assumptions, diagnostics & the midterm](../notes/week-07-assumptions-diagnostics-and-the-midterm.qmd)
+  — the Dataset F residual / QQ / Levene workflow this page generalizes.
+- [Week 10 — Simple & multiple regression review](../notes/week-10-simple-and-multiple-regression-review.qmd)
+  — the residual / leverage / VIF / influence diagnostics for a fitted line.
+- [Week 11 — ANCOVA & adjustment](../notes/week-11-ancova-and-adjustment.qmd)
+  — the parallel-slopes and pre-treatment-covariate checks.
