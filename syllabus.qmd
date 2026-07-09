@@ -148,9 +148,9 @@ estimated, what assumptions remain, and how the output supports the conclusion �
 but the method logic is the message.
 
 All example data on this site are **synthetic, with the seed set** (`set.seed(35203)`) so results are
-reproducible — they are not real student records. Because this is a **draft course site**, the R
-code on the public pages is shown as **static, non-executed** examples (R is not run in this build), and every
-numeric value here is **drafted and provisional** until it is independently checked. Setup instructions for
+reproducible — they are not real student records. The R
+code on the public pages is shown as **static, non-executed** examples (R is not run on this site), and every
+numeric value here is a **synthetic instructional example**. Setup instructions for
 running R yourself live on the resource pages.
 
 ## AI use (summary)

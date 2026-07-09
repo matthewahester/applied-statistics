@@ -4,7 +4,6 @@ subtitle: "One-way ANOVA, Tukey HSD, and a planned contrast in R"
 page_mode: software_lab_week
 week_contract: software_note_lab
 source_mode: source-informed
-verified: false
 toc: true
 ---
 
@@ -190,6 +189,8 @@ means are not the locked four, stop and fix the Setup chunk — the recenter ste
 force each group mean onto its target. The means are what the ANOVA partitions; if they are wrong, the
 $F$ statistic will be wrong in a way that *looks* like a real result, which is exactly the trap to avoid.
 
+![**The `aov()` input — four formats, one response.** Side-by-side boxplots of Dataset F final score show the four instructional formats with their locked group means marked as white diamonds: Lecture $74$, Lecture+Lab $81$, Online $70$, Hybrid $79$, scattered around the dashed grand mean of $76$. Lecture+Lab (hatched) sits highest and Online lowest; the boxes have visibly different centers but roughly comparable spreads — the balanced, near-equal-variance layout a one-way ANOVA assumes. This is the picture to confirm *before* fitting anything: if these four centers are not the locked means, the $F$ that follows is wrong in a way that looks real. Synthetic; seed 35203.](../assets/figures/lab08_boxplots_by_format.png){#fig-lab08-boxplots fig-alt="Four vertical boxplots of final exam score, one per instructional format: Lecture, Lecture plus Lab, Online, and Hybrid. A white diamond marks and labels each group mean at 74, 81, 70, and 79 respectively. The Lecture plus Lab box is drawn with diagonal hatching as the highest group and Online is the lowest. A red dashed horizontal line marks the grand mean at 76. The four boxes have visibly different centers but similar heights, showing comparable within-group spread."}
+
 ### Step 2 — Fit the one-way ANOVA and read the omnibus F and η²
 
 Now fit the model. `aov(score ~ format)` partitions the total variation in score into a **between-format**
@@ -224,6 +225,8 @@ effect — but $\eta^2$ alone still does not tell you *which* formats differ, an
 are for. And keep the causal discipline in view: a large $F$ on observational data is strong evidence the
 formats are *associated* with different scores, not proof that switching a student's format would *cause*
 the gap.
+
+![**The estimate behind the omnibus $F$.** The four format means with $95\%$ confidence intervals: Lecture+Lab ($81$) and Hybrid ($79$) sit above the dashed grand mean of $76$, Online ($70$) below, and Lecture ($74$) between. Each interval is the mean $\pm 3.6$ (standard error $1.8$ with $n = 25$ per group), so the roughly $11$-point Online-to-Lecture+Lab spread is comfortably wider than the intervals — the estimate-with-uncertainty picture behind $F \approx 7.61$ and $\eta^2 \approx 0.19$. The chart shows *that* the formats differ and by about how much; it does not yet say which specific pairs are distinguishable, which is what Steps 3 and 4 are for. Synthetic; seed 35203.](../assets/figures/lab08_group_means_ci.png){#fig-lab08-means fig-alt="A bar chart of four mean final exam scores with error bars. Lecture is 74, Lecture plus Lab is 81 and drawn with diagonal hatching as the highest, Online is 70 and the lowest, Hybrid is 79. Each bar carries a printed value label and a 95 percent confidence interval error bar of about plus or minus 3.6. A red dashed horizontal line marks the grand mean at 76. A caption notes the interval equals the mean plus or minus 3.6 with standard error 1.8 and n equals 25 per group, and that the Online to Lecture plus Lab spread is 11."}
 
 ### Step 3 — Tukey HSD: which pairs honestly differ?
 
@@ -263,6 +266,8 @@ estimate-with-uncertainty discipline applied to multiplicity. The classic error 
 running six **unadjusted** $t$-tests would wrongly flag H–L ($5$) or L–O ($4$) as significant, because at
 $5\%$ each, six tests give roughly a $1 - 0.95^6 \approx 26\%$ chance of at least one false alarm. Tukey's
 wider yardstick is the price of asking six questions at once and still trusting the answer.
+
+![**Six pairwise gaps against one honest yardstick.** Each of the six Tukey pairwise differences is drawn with its simultaneous $95\%$ confidence interval of $\pm 6.64$ — the honest-significant difference $q_{.05,4,96}\sqrt{81/25} = 3.69 \times 1.8 \approx 6.64$. A pair is honestly significant when its interval clears zero: LL–O $= 11$, H–O $= 9$, and LL–L $= 7$ (solid lines, filled points, "clears 6.64") do; H–L $= 5$, L–O $= 4$, and LL–H $= 2$ (dashed lines, open points, "within 6.64") do not. Holding the family-wise error at $5\%$ is exactly what stops the three small gaps from being read as real differences. Synthetic; seed 35203.](../assets/figures/lab08_tukey_ci_ladder.png){#fig-lab08-tukey fig-alt="A horizontal chart of six Tukey pairwise mean differences, largest at the top. For each pair a point marks the difference with a horizontal confidence interval of plus or minus 6.64 and a bold vertical line marks zero. LL minus O is 11, H minus O is 9, and LL minus L is 7, each drawn as a solid line with a filled point whose interval stays right of zero and labeled clears 6.64. H minus L is 5, L minus O is 4, and LL minus H is 2, each drawn as a dashed line with an open point whose interval crosses zero and labeled within 6.64."}
 
 ### Step 4 — A planned contrast: hands-on versus delivered-only
 
@@ -315,11 +320,13 @@ honest only if you wrote them down before looking. And once more the causal boun
 observational data is an **association** between format and score, not evidence that assigning a student
 to a hands-on format would *cause* an $8$-point gain.
 
+![**One directed question, full power.** The planned contrast pools the two hands-on formats (Lecture+Lab $81$ and Hybrid $79$, hatched) against the two delivered-only formats (Lecture $74$ and Online $70$): the hands-on average of $80$ minus the delivered-only average of $72$ gives $\hat\psi = 8$. With standard error $\sqrt{81(1.0/25)} = 1.8$, that is $t = 8/1.8 \approx 4.44$ on $96$ df, $p < 0.001$ — a sharper result than any single Tukey pair, because one pre-specified question spends none of its power on multiplicity control. The double arrow marks the $8$-point gap between the two format-group averages; the contrast is legitimate *only* because it was written down before the data were seen. Synthetic; seed 35203.](../assets/figures/lab08_planned_contrast.png){#fig-lab08-contrast fig-alt="A bar chart of the four format means, Lecture 74, Lecture plus Lab 81, Online 70, Hybrid 79. The two hands-on formats, Lecture plus Lab and Hybrid, are drawn with diagonal hatching. A dashed line marks the hands-on average at 80 and a second dashed line marks the delivered-only average at 72, with a double-headed vertical arrow between them labeled psi-hat equals 8. A caption states psi-hat equals 80 minus 72 equals 8, standard error 1.8, t equals 8 over 1.8 which is about 4.44, p less than 0.001."}
+
 ## Verify
 
 This is the moment where your R run and the week-8 reasoning are supposed to meet. Check each item against
 the note, and treat any mismatch as a **bug in your code, not a discovery about the world** — every target
-value is the locked, synthetic Dataset F slice (provisional).
+value is the locked, synthetic Dataset F slice (illustrative).
 
 - **The four group means are $74$, $81$, $70$, $79$.** `tapply(datF$score, datF$format, mean)` should
   return $L = 74$, $LL = 81$, $O = 70$, $H = 79$, and `mean(datF$score)` should return $76$. If they
@@ -352,7 +359,7 @@ value is the locked, synthetic Dataset F slice (provisional).
 
 A small honest note on what is and is not exact. The omnibus $F$, $\eta^2$, the Tukey critical difference,
 and the contrast $t$ are all locked, drafted, **synthetic** targets — they are what the week-8 note
-reports, not values re-derived live (R is not executed in this build). Because the Setup chunk recenters
+reports, not values re-derived live (R is not executed on this site). Because the Setup chunk recenters
 each group to its locked mean, your group means should match *to the digit*; the $F$ and contrast then
 follow from those means plus the locked $\mathrm{MSE} = 81$. If a number is off, the fix is almost always
 upstream in the data build, not in the model call.

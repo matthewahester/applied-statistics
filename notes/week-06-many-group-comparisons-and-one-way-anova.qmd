@@ -4,7 +4,6 @@ subtitle: "Comparing several groups at once without inflating the error rate"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), comparing many means (ANOVA) — supports the one-way ANOVA"
   - "ModernDive (Ismay, Kim & Valdivia), modeling with a categorical predictor — supports the R workflow"
@@ -143,6 +142,8 @@ so $F$ hovers near $1$. If the format means genuinely differ, $\mathrm{MS}_{\tex
 while $\mathrm{MSE}$ does not, and $F$ grows. A large $F$ — far out in the right tail of the
 $F(k-1, N-k)$ distribution — is the evidence that some means differ.
 
+![**Signal over noise — what the $F$-ratio compares.** Each format's $25$ synthetic final scores scatter around its own group mean (the black bar): Lecture $74$, Lecture+Lab $81$, Online $70$, Hybrid $79$. How far those four bars sit from the dashed **grand mean** $76$ is the *between-group signal* ($\mathrm{SS}_{\text{between}} = 1850$ on $3$ df); how widely the dots spread within each column is the *within-group noise* ($\mathrm{MSE} = 81$ on $96$ df). The $F$-ratio $616.7/81 \approx 7.61$ is exactly signal variance over noise variance. Synthetic; seed 35203.](../assets/figures/wk06_variance_partition.png){#fig-wk06-variance fig-alt="A dot-and-line chart with four columns labeled Lecture, Lecture plus Lab, Online, and Hybrid. Each column shows about twenty-five faint scattered points and one bold horizontal line at the group mean: 74, 81, 70, and 79 respectively. A red dashed horizontal line marks the grand mean at 76. Dotted vertical ticks connect each group mean to the grand-mean line, showing how far each format sits from the overall average. A caption below reads SS between equals 1850, signal on 3 df, versus MSE equals 81, noise on 96 df, giving F equals 7.61."}
+
 Build it from the locked Dataset F numbers. The four format means are $L = 74$, $LL = 81$, $O = 70$,
 $H = 79$, with grand mean $\bar{\bar x} = 76$ and $n = 25$ per group ($N = 100$, $k = 4$). The
 between-group sum of squares weights each squared mean-gap by its group size:
@@ -166,6 +167,8 @@ near $1$ you would expect if the formats were interchangeable — so the omnibus
 four equal means. The estimate here is not the $p$-value; the $p$-value is the verdict. The estimate of
 *how much* comes next.
 
+![**The observed $F$ sits far out in the null distribution's tail.** The curve is the $F(3,96)$ sampling distribution the omnibus test would follow *if all four format means were equal* — it piles up near $1$. The observed $F = 7.61$ (red line) lands far to the right, in a region the null almost never reaches: the shaded tail beyond it holds only about $p \approx 0.0001$ of the distribution. That tiny tail share is why the test rejects "four equal means." The picture is a statement about surprise under the null, not a measure of how large the format effect is. Synthetic; seed 35203.](../assets/figures/wk06_f_distribution.png){#fig-wk06-fdist fig-alt="A density curve for the F distribution with 3 and 96 degrees of freedom. It rises steeply from zero to a peak below F equals 1, then falls off through a long right tail that is nearly flat by F equals 4. A faint shaded band covers the tail beyond F equals 3. A bold red vertical line stands at F equals 7.61, far to the right of the bulk of the curve, labeled observed F equals 7.61. A caption notes the far-right tail beyond 7.61 holds about p equals 0.0001 of the null distribution."}
+
 ### eta-squared as the effect size: what a significant F does and does not tell you
 
 A small $p$ says "some difference exists." It is silent on **how big**. For that you report the effect
@@ -182,8 +185,7 @@ student-to-student variation within formats. That single sentence is the estimat
 the course demands — never report $F \approx 7.61$, $p \approx 0.0001$ and stop, because a bare
 significant $p$ can mask a trivial effect when $N$ is large, or hide a large effect that simply missed
 the cutoff when $N$ is small. Naming $\eta^2 \approx 0.19$ tells a reader the format effect is
-substantively non-trivial, not just detectable. (You can report $\eta^2$ with an interval too; the
-draft here quotes the point value.)
+substantively non-trivial, not just detectable. (You can report $\eta^2$ with an interval too; here we quote the point value.)
 
 Now the bright line. A significant $F$ tells you **some** format means differ. It does **not** tell you
 **which** — not L versus O, not LL versus H, none of the six pairs by itself. Reading "which" off the
@@ -221,8 +223,7 @@ and Levene's test — is week 7's business; this week you flag the assumptions a
 | Within (Residual) | $7776$ | $96$ | $81$ | | |
 | Total | $9626$ | $99$ | | | |
 
-The static R below shows the idiom an analyst would run; it is **teaching code and is not executed** in
-this build (R is not installed). The key output is shown as a comment.
+The static R below shows the idiom an analyst would run; it is **teaching code and is not executed** on this site. The key output is shown as a comment.
 
 ```r
 set.seed(35203)
@@ -251,6 +252,8 @@ so you reject the null that all four format means are equal. Reported as an esti
 verdict: format explains $\eta^2 = 1850/9626 \approx 0.19$ — about $19\%$ — of the variation in final
 scores. The means themselves ($74$, $81$, $70$, $79$) describe the direction; LL and H sit highest, O
 lowest, with a $\approx 11$-point spread between the extreme group means.
+
+![**The four format means, each with its 95% confidence interval.** Lecture+Lab ($81$) and Hybrid ($79$) sit above the dashed grand mean of $76$; Online ($70$) sits below, with Lecture ($74$) between. Each interval is the mean $\pm 3.6$ points (standard error $1.8$ with $n = 25$ per group), so the $11$-point spread from Online to Lecture+Lab is comfortably larger than the intervals — the picture behind the significant omnibus $F$. The plot shows *that* the formats differ and by roughly how much; it does not say which specific pairs are distinguishable. Synthetic; seed 35203.](../assets/figures/wk06_group_means_ci.png){#fig-wk06-means fig-alt="A bar chart of four mean final exam scores with error bars. Lecture is 74, Lecture plus Lab is 81 and drawn with diagonal hatching as the highest, Online is 70 and the lowest, Hybrid is 79. Each bar carries a printed value label and a 95 percent confidence interval error bar of about plus or minus 3.6 points. A red dashed horizontal line marks the grand mean at 76. A caption notes the confidence interval equals the mean plus or minus 3.6 with standard error 1.8 and n equals 25 per group, and that the spread from Lecture to Lecture plus Lab is 11 points."}
 
 **The interpretation.** Some formats differ in mean final score, and the difference is substantively
 non-trivial (a $\approx 19\%$ variance share, not a sliver). But two boundaries hold firmly. First, the
@@ -291,6 +294,8 @@ $$
 an $F$ well above $1$, so the omnibus test would flag that *some* fertilizer mean differs. The effect
 size is $\eta^2 = 540/(540 + 3132) = 540/3672 \approx 0.15$ — fertilizer explains about $15\%$ of yield
 variance.
+
+![**The same design move in a new context.** Three fertilizer formulations give mean yields of $A = 52$, $B = 58$, $C = 55$ bushels per plot around a grand mean of $55$, each with a $95\%$ interval of about $\pm 2.2$ (standard error $1.1$, $n = 30$ per plot-group). The one-way ANOVA machinery is identical to Dataset F — signal between the group means over noise within them, $F = 7.5$ on $(2, 87)$, $\eta^2 \approx 0.15$ — only the units and numbers change. What *does* change is the warrant: the plots were **randomly assigned**, so a real difference here can support a causal reading, unlike the self-selected formats. Synthetic; illustrative, distinct from Dataset F.](../assets/figures/wk06_fertilizer_transfer.png){#fig-wk06-fertilizer fig-alt="A bar chart of three mean crop yields with error bars. Fertilizer A is 52, fertilizer B is 58 and drawn with diagonal hatching as the highest, fertilizer C is 55. Each bar carries a printed value label and a 95 percent confidence interval error bar of about plus or minus 2.2 bushels. A red dashed horizontal line marks the grand mean at 55. A caption notes the same one-way ANOVA move gives F equals 7.5 on 2 and 87 degrees of freedom, eta squared about 0.15, and that random assignment supplies a causal warrant."}
 
 ```r
 set.seed(35203)
@@ -333,6 +338,8 @@ a multiplicity-controlled procedure (Tukey HSD, Bonferroni, or a planned contras
 question — week 8. Reaching straight for six bare $t$-tests means your "significant" pairs are running
 at an advertised rate you never actually held. Run the omnibus gate first; control the family rate
 before you trust any pair.
+
+![**Why six unadjusted tests is not a $5\%$ procedure.** Each added pairwise $t$-test at the $5\%$ level is another chance for a false alarm, so the probability that *at least one* of them fires by luck — even when every format is truly identical — climbs as $1 - 0.95^{m}$. By the $m = 6$ comparisons among four formats it has already reached about $0.26$ (red point), five times the $0.05$ you advertised (dashed line). Running the omnibus ANOVA first, then a multiplicity-controlled follow-up, is what keeps the family-wise rate at the level you claimed. Synthetic; illustrative.](../assets/figures/wk06_familywise_inflation.png){#fig-wk06-familywise fig-alt="A rising line chart. The horizontal axis is the number of unadjusted pairwise tests from 1 to 10; the vertical axis is the probability of at least one false alarm. The line starts near 0.05 for one test and rises steadily, following one minus 0.95 to the power of the number of tests. A red dashed horizontal line marks the advertised 0.05 level. A large red point is highlighted at six tests, where the probability is about 0.26, labeled six pairs among four formats, one minus 0.95 to the sixth power is about 0.26."}
 
 The **second** is **reporting $F$ with no effect size** — writing "$F = 7.61$, $p \approx 0.0001$,
 significant" and stopping. That is a bare verdict, and this course never accepts a bare verdict. A
@@ -379,19 +386,6 @@ and the **ModernDive** (Ismay, Kim & Valdivia) treatment of **modeling with a ca
 for the R workflow that fits the model and reads the output table. *These notes are the course's own
 synthesis, grounded in but not copied from the sources.* No prose, examples, exercises, figures, or
 solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The method logic on this page — the omnibus rationale, the between/within variance
-partition, the $F$-ratio, and the $\eta^2$ effect size — is course-authored, but **every numeric value
-here is drafted, synthetic, and not independently checked.** The load-bearing numbers are the Dataset F
-slice: the four format means ($L = 74$, $LL = 81$, $O = 70$, $H = 79$) and grand mean $76$; the ANOVA
-table ($\mathrm{SS}_{\text{between}} = 1850$ on $3$ df, $\mathrm{MS} = 616.7$; $\mathrm{SS}_{\text{within}}
-= 7776$ on $96$ df, $\mathrm{MSE} = 81$); the omnibus $F \approx 7.61$ on $(3, 96)$ df with
-$p \approx 0.0001$; and the effect size $\eta^2 \approx 0.19$ — together with the illustrative fertilizer
-transfer values ($F = 7.5$ on $(2, 87)$, $\eta^2 \approx 0.15$). All example data are synthetic with
-`set.seed(35203)`, and **R is not executed in this build** — the shown `aov`/`summary` output is teaching
-code, not a real run. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

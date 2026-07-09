@@ -4,7 +4,6 @@ subtitle: "Estimate a group difference, its interval, and Cohen's d in R"
 page_mode: software_lab_week
 week_contract: software_note_lab
 source_mode: source-informed
-verified: false
 toc: true
 ---
 
@@ -111,7 +110,7 @@ You need only base R for the comparison itself; the optional Cohen's $d$ shortcu
 `effsize` package, but Step 4 also shows the by-hand computation so you can run the whole lab with no
 packages at all. Every chunk that draws randomness starts with `set.seed(35203)`, the course-wide seed,
 so your synthetic Dataset G reproduces the **locked** numbers the week-5 note reports. The data are
-**synthetic; seed set** — these are not real student records, and the worked numbers are provisional, so treat every value below as a drafted target, not a confirmed reference.
+**synthetic; seed set** — these are not real student records, so treat every value below as a drafted target, not a confirmed reference.
 
 Fix the design facts before any code runs, because the method and every number follow from them:
 
@@ -240,6 +239,17 @@ size. Third, the **spreads differ a little**, which is the concrete reason to pr
 $t$ would assume equal variances, and there is no reason to force that here. Looking first is what keeps
 you from running a test whose assumptions the data quietly violate.
 
+![**Look before you fit — the two groups side by side.** Boxplots of the synthetic Dataset G final
+scores: Support (mean $78$, SD $10.5$, $n=45$) sits about $6$ points above Self-guided (mean $72$,
+SD $12.0$, $n=45$), but the boxes overlap heavily and Self-guided is a little more spread. That visible
+overlap is the warning that a $6$-point gap is modest relative to within-group variation, and the
+slightly unequal spreads are exactly why **Welch**, not the pooled $t$, is the safe default.
+Synthetic; seed 35203.](../assets/figures/lab05_group_boxplots.png){#fig-lab05-boxplots fig-alt="Two
+side-by-side box plots of final exam score for Dataset G. The Support group box is centered near a mean
+of 78 with a diamond marker labeled mean 78 and a spread labeled SD 10.5; the Self-guided group box is
+centered near a mean of 72 with a diamond marker labeled mean 72 and a wider spread labeled SD 12.0. The
+two boxes overlap substantially across the middle of the score range, and each group has 45 students."}
+
 ### Step 3 — Run the Welch two-sample t-test and read the estimate
 
 Now fit the method that matches the structure. `t.test(score ~ group)` runs the **Welch** two-sample
@@ -282,6 +292,17 @@ that is the estimate-with-uncertainty discipline. A bare "$p = 0.013$, significa
 two most useful numbers (how big and how precise) and is exactly the classic error the course warns
 against.
 
+![**The Welch two-sample $t$-test as a picture: report the difference, not a verdict.** The two group
+means, Support $78$ and Self-guided $72$, differ by $+6$ points — the estimate the whole analysis is
+about. The Welch test gives $t=2.53$ on about $86$ degrees of freedom with $p=0.013$ and a standard error
+of the difference of $2.38$, so the $+6$ is statistically distinguishable from zero. Read the $+6$ (with
+its interval, next) rather than a bare significant-or-not verdict.
+Synthetic; seed 35203.](../assets/figures/lab05_means_test.png){#fig-lab05-means fig-alt="A bar chart of
+two mean final exam scores: Support at 78, drawn with diagonal hatching as the higher bar, and Self-guided
+at 72, each bar carrying its printed value label. A double-headed arrow on the right spans from 72 up to
+78 and is labeled difference equals plus 6 points. A caption below states the Welch t equals 2.53 on 86
+degrees of freedom, p equals 0.013, and standard error of the difference 2.38."}
+
 ### Step 4 — Compute Cohen's d and write the three-register conclusion
 
 The interval tells you the difference in the response's own units (points); **Cohen's $d$** re-expresses
@@ -308,6 +329,18 @@ library(effsize)
 cohen.d(score ~ group, data = g)               # -> estimate ~ 0.53, magnitude: medium
 ```
 
+![**Cohen's $d\approx0.53$ is a medium separation, not a clean split.** Re-expressing the $+6$-point gap
+in standard-deviation units gives $d = 6/11.27 \approx 0.53$ (pooled SD $11.27$). Drawn as two score
+distributions — Self-guided centered at $72$, Support at $78$ — the curves overlap heavily: half a
+standard deviation apart is a moderate, not dramatic, effect. The small $p$-value says the gap is unlikely
+to be zero; this picture says it is only *medium* in size.
+Synthetic; seed 35203.](../assets/figures/lab05_effect_overlap.png){#fig-lab05-overlap fig-alt="Two
+overlapping bell-shaped distribution curves of final exam score with a common pooled standard deviation of
+11.27. The Self-guided curve is a solid slate-blue line centered at 72; the Support curve is a dashed
+brown line with diagonal hatching centered at 78. A double-headed arrow between the two means is labeled d
+equals 6 over 11.27 equals 0.53 standard deviations, medium. The curves overlap across most of their
+range."}
+
 The pooled within-group SD comes out $s_p \approx 11.27$, and the standardized difference is
 $d = 6.0 / 11.27 \approx 0.53$ — about half a standard deviation, a **medium** effect by the usual rough
 convention. The `effsize` call returns the same $0.53$ and labels it "medium," a useful cross-check that
@@ -332,8 +365,20 @@ explicitly separate:
 
 This is the moment where your simulation and the week-5 reasoning are supposed to meet. Check each item
 against the companion note, and treat any mismatch as a **bug in your code, not a discovery about the
-world** — every target value is the locked, synthetic Dataset G slice (provisional, R not executed
-in this build).
+world** — every target value is the locked, synthetic Dataset G slice (illustrative, R not executed
+on this site).
+
+![**Significant is not the same as large, and neither is causal.** The estimated Support-minus-Self-guided
+difference is $+6$ points with a $95\%$ confidence interval of $(1.3, 10.7)$. Because the interval
+excludes $0$ (the dashed null line), $p=0.013$ is statistically significant — but the interval is wide,
+Cohen's $d\approx0.53$ is only *medium*, and the design is observational, so this is an **association**,
+not evidence the support center *caused* the gain.
+Synthetic; seed 35203.](../assets/figures/lab05_difference_ci.png){#fig-lab05-diffci fig-alt="A horizontal
+number line showing the difference in mean final score, Support minus Self-guided, in points. A diamond
+marker at plus 6 is labeled estimate plus 6, with a 95 percent confidence interval error bar running from
+1.3 on the left to 10.7 on the right. A red dashed vertical line at 0 is labeled 0 equals no difference,
+the null; the confidence interval lies entirely to the right of it. A caption notes the interval excludes
+0 so p equals 0.013 is significant, but d equals 0.53 is only medium and the design is observational."}
 
 - **The group means are $78$ and $72$.** `tapply(g$score, g$group, mean)` should return Support $78.0$
   and Self-guided $72.0$. If they drift, the re-centering lines in Setup were altered or the seed was

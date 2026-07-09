@@ -4,7 +4,6 @@ subtitle: "Comparing two independent groups: difference, uncertainty, effect siz
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), inference for comparing two means — supports the two-group comparison"
   - "ModernDive (Ismay, Kim & Valdivia), comparing two groups in R — supports the workflow"
@@ -129,6 +128,13 @@ the Support group scoring $6$ points higher *on average*. That number is the poi
 is only half an answer; the blueprint's step 5 demands its uncertainty too, which is what the next two
 subsections build.
 
+![**The two groups overlap far more than their means differ.** Plotting the Support distribution (mean $78$,
+SD $10.5$) against the Self-guided distribution (mean $72$, SD $12$) shows the story a single mean gap
+hides: the $6$-point gap between the two centers is small next to the $10.5$- and $12$-point within-group
+spreads, so the two curves sit almost on top of each other. Plenty of Self-guided students outscore plenty
+of Support students. A difference in *means* is real without being a difference in every *student* — which
+is exactly why you need a standard error, not just the gap. Synthetic; seed 35203.](../assets/figures/wk05_group_distributions.png){#fig-wk05-distributions fig-alt="Two overlapping bell-shaped density curves on a final-exam-score axis from 40 to 110. The Self-guided curve is a dashed blue line centered at 72 with the wider spread, standard deviation 12; the Support curve is a solid brown line with diagonal hatching centered at 78 with a slightly narrower spread, standard deviation 10.5. Dotted vertical lines mark the two means at 72 and 78, and a short double-headed arrow between them at the top is labeled gap in means equals 6. The two curves overlap across most of their range, so the six-point gap between centers is small next to the within-group spread."}
+
 ### Pooled versus Welch — and why Welch is the safe default
 
 To put uncertainty on the $6$-point gap you need the **standard error of the difference**, and here a real
@@ -172,6 +178,13 @@ when variances are equal and protects you when they are not**, so it is the safe
 runs Welch unless you explicitly ask for the pooled version with `var.equal = TRUE`. The honest move is to
 let Welch run, and only switch to pooled if you have a real reason — design, prior knowledge, or a
 variance check — to defend equal variances.
+
+![**With equal group sizes, pooled and Welch give the same standard error.** Because Dataset G has
+$n_1 = n_2 = 45$, the pooled standard error and the Welch standard error come out to the same $\approx 2.38$
+points, so both tests land on $t \approx 2.53$ and $p \approx 0.013$; they differ only in their degrees of
+freedom ($88$ pooled versus $86$ Welch). The lesson is not that the choice never matters — it is that Welch
+is nearly free when the variances are equal and protects you when they are not. That asymmetry is why it is
+the default. Synthetic; seed 35203.](../assets/figures/wk05_pooled_vs_welch.png){#fig-wk05-pooled-welch fig-alt="A bar chart comparing the standard error of the difference under two methods. The pooled-t bar, solid blue with degrees of freedom 88, and the Welch-t bar, brown with diagonal hatching and degrees of freedom 86, both reach 2.38 and are each labeled with the value 2.38. A boxed note reads n one equals n two equals 45, so the two standard errors coincide. A caption states that either way t is about 2.53 and p is about 0.013, and that Welch costs almost nothing here while protecting you when variances differ."}
 
 ### The estimate with its interval and effect size — and the observational caveat
 
@@ -275,6 +288,14 @@ own. So report it as: *support-center use is associated with a roughly $6$-point
 the support center caused the gap.* Three readings, kept distinct: significant, meaningful, and causally
 ambiguous.
 
+![**The Dataset G estimate with its uncertainty, in one picture.** The Support mean ($78$) sits about $6$
+points above the Self-guided mean ($72$), and the bracket shows what the whole analysis is built to report:
+a difference of $6.0$ points with a $95\%$ confidence interval of $(1.3, 10.7)$. The Welch $t \approx 2.53$
+on df $\approx 86$ gives $p \approx 0.013$, and Cohen's $d \approx 0.53$ marks it a medium effect. Each bar
+also carries its *own* $95\%$ interval; notice these nearly touch even though the *difference* is clearly
+significant — overlapping group intervals are a different question from a significant gap, and reading
+"not significant" off them is a common error. Synthetic; seed 35203.](../assets/figures/wk05_group_means_ci.png){#fig-wk05-means fig-alt="A bar chart of two group means with error bars. The Support bar, brown with diagonal hatching, reaches 78; the Self-guided bar, blue, reaches 72; each bar is labeled with its value and carries a 95 percent confidence interval whisker. A bracket across the top links the two bars and is labeled difference equals 6.0, 95 percent CI 1.3 to 10.7. A caption states Welch t about 2.53 on df about 86, p about 0.013, and Cohen's d about 0.53. The two individual confidence intervals nearly touch even though the difference is significant."}
+
 ### Worked example — a randomized two-app study (transfer, new context)
 
 **The question and structure.** A learning-design team wants to know whether two study apps lead to
@@ -354,6 +375,13 @@ into the support center, so the groups differ in more than support-center use, a
 or "raises" or "improves," whenever the grouping was chosen rather than randomly assigned. Causal verbs
 are earned by random assignment (the two-app study), not by a small p-value.
 
+![**The picture behind "association, not causation."** Because students *chose* whether to use the support
+center, an unmeasured confounder — motivation, preparation, time available — can drive both the choice to
+use the center and the higher final score, producing the $6$-point gap on its own (the two solid arrows).
+The dashed arrow from center-use to higher score is only an *association*; the observational design cannot
+prove it is causal. Random assignment is exactly what would cut the two solid arrows and license a causal
+reading — which the two-app transfer example has and Dataset G does not. Synthetic; seed 35203.](../assets/figures/wk05_confounding.png){#fig-wk05-confounding fig-alt="A flow diagram with three labeled boxes. A top box reads motivation slash preparation, an unmeasured confounder. Two solid arrows labeled drives run down from it to a lower-left brown box reading uses the support center and a lower-right blue box reading higher final score plus 6 gap. A dashed red arrow runs from the support-center box to the higher-score box, labeled association only, not proven causal. A caption notes that because students chose the support center a hidden confounder can produce the gap on its own, and that random assignment would license a causal claim."}
+
 ## Low-stakes self-checks (ungraded)
 
 These are for your own practice — ungraded, no submission. Graded work lives in Blackboard (the LMS).
@@ -385,17 +413,6 @@ The applied framing of the comparison draws on **ISLBS** (Vu & Harrington), **a 
 applied setting**, which the companion lab develops further. *These notes are the course's own synthesis,
 grounded in but not copied from the sources.* No prose, examples, exercises, figures, or solutions are
 reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The two-group method logic on this page is course-authored, but every numeric value
-here is **drafted, synthetic, and not independently checked**. The load-bearing numbers are the Dataset G
-slice — the difference in means $\bar x_1 - \bar x_2 = 6.0$ points, the pooled SD $s_p \approx 11.27$, the
-Welch standard error $\approx 2.38$, the Welch $t \approx 2.53$ on df $\approx 86$, the p-value $\approx
-0.013$, the 95% confidence interval $(1.3, 10.7)$ points, and Cohen's $d \approx 0.53$ — together with the
-illustrative randomized two-app transfer values (a $6$-point gap, $d \approx 0.63$). All example data are
-synthetic with `set.seed(35203)`, and **R is not executed in this build** (the code blocks are static
-teaching code). These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

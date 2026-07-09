@@ -64,11 +64,11 @@ compared, what is assumed, what is estimated, and what can be concluded.
 
 Every numeric value mentioned on these pages — and across the weekly notes — comes from the course's synthetic
 **Cypress Ridge College Student-Success** datasets (the five related structures P, G, F, X, and R, all generated
-with `set.seed(35203)`) and is **provisional pending review**. This is a draft course site: R is not executed
+with `set.seed(35203)`) and is a **synthetic instructional example**. R is not executed
 here, the example data are not real records, and every drafted statistic — the means and SDs, the paired and
 two-sample $t$'s and their confidence intervals, the ANOVA $F$-ratios and $\eta^2$, the Tukey and contrast
 estimates, the regression slopes and $R^2$, the ANCOVA adjusted means, the chi-square, the risk difference and
-relative risk, and the logistic odds ratios — is provisional and not independently checked. Use the
+relative risk, and the logistic odds ratios — is illustrative and not independently verified. Use the
 resources for the vocabulary and the reasoning, not as a table of certified results.
 
 ## Public vs. graded

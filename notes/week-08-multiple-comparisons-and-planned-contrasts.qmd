@@ -4,7 +4,6 @@ subtitle: "After a significant ANOVA: which groups, and at what error rate?"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Cetinkaya-Rundel & Hardin), multiple comparisons after ANOVA — supports Tukey and error-rate control"
   - "ISLBS (Vu & Harrington), post-hoc comparisons in an applied setting — optional applied reference"
@@ -159,6 +158,8 @@ controlled threshold." And the bounded conclusion: this is an *association* betw
 observational study, so even the clean $11$-point gap is not proof that lab-based instruction *caused* the
 higher score — motivated or better-prepared students may have selected those formats.
 
+![**The six pairwise gaps, each with its simultaneous $95\%$ Tukey interval.** The three large gaps clear the critical difference of $\approx 6.64$ — their intervals sit entirely to the right of zero: $LL - O = 11$, $H - O = 9$, and $LL - L = 7$ (filled markers, solid intervals). The three small gaps do not — $H - L = 5$, $L - O = 4$, and $LL - H = 2$ each have an interval that still straddles zero (open markers, dashed intervals). The interval half-width *is* the critical difference $6.64 = 3.69\sqrt{81/25}$, so "clears Tukey" and "the CI excludes zero" are the same statement. Synthetic; seed 35203.](../assets/figures/wk08_tukey_ci_ladder.png){#fig-wk08-tukey-ladder fig-alt="A horizontal forest plot of six pairwise mean differences with error bars, largest at the top. LL minus O is 11, H minus O is 9, and LL minus L is 7, each drawn as a filled circle with a solid confidence interval that lies entirely to the right of a bold vertical line at zero, and each labeled clears CD. H minus L is 5, L minus O is 4, and LL minus H is 2, each drawn as an open circle with a dashed confidence interval that crosses the zero line, and each labeled within CD. Every interval has a half-width of about 6.64. A caption states the Tukey critical difference equals q times the square root of 81 over 25, which is 3.69 times 1.8, about 6.64, and that a pair is significant when its interval excludes zero."}
+
 ### Planned contrasts: ask the one question you came with
 
 Tukey is the right tool when you genuinely want to scan **all** pairs. But often you do not. Suppose the
@@ -205,6 +206,8 @@ corresponding post-hoc comparison: it can detect the camp-level difference even 
 and $L - O = 4$ were *not* individually significant under Tukey. Pooling LL with H and L with O concentrates
 the signal.
 
+![**One pre-specified question, one number.** Grouping the four formats into two camps turns the planned contrast into a single comparison of averages: the hands-on formats Lecture+Lab ($81$) and Hybrid ($79$) average $80$, the delivered-only formats Lecture ($74$) and Online ($70$) average $72$, so $\hat\psi = 80 - 72 = 8$ points. Its standard error uses the same pooled $\mathrm{MSE} = 81$: $\mathrm{SE} = \sqrt{81(1.0/25)} = 1.8$, giving $t = 8/1.8 \approx 4.44$ ($p < 0.001$). Because you asked one question rather than sweeping six pairs, the contrast pays almost no multiplicity tax and stays powerful. Synthetic; seed 35203.](../assets/figures/wk08_planned_contrast.png){#fig-wk08-contrast fig-alt="A bar chart of four format mean final exam scores: Lecture 74 and Online 70 in slate blue, and Lecture plus Lab 81 and Hybrid 79 in terracotta with diagonal hatching to mark the hands-on camp. Each bar carries a printed value label. A terracotta dashed line at 80 marks the hands-on average of Lecture plus Lab and Hybrid; a slate dashed line at 72 marks the delivered-only average of Lecture and Online. A vertical double-headed arrow between the two dashed lines is labeled psi-hat equals 8. A caption states psi-hat equals the mean of 81 and 79 minus the mean of 74 and 70, which is 80 minus 72 equals 8, with standard error the square root of 81 times one over 25 equals 1.8, and t equals 8 over 1.8, about 4.44, with p below 0.001."}
+
 Two contrasts with the planned approach. First, **Bonferroni** as the conservative alternative: if you had
 several planned contrasts, you would simply test each at $\alpha/m$ — dead simple, but it over-corrects and
 can miss real effects, so prefer Tukey for the all-pairs case and reserve Bonferroni for a small handful of
@@ -238,7 +241,7 @@ pooled error term across all comparisons.
 the bar (**significant**); $H - L = 5$, $L - O = 4$, and $LL - H = 2$ do not (**not significant**). The
 planned contrast for hands-on vs delivered-only gives $\hat\psi = 80 - 72 = 8$ points, $\mathrm{SE} = 1.8$,
 $t = 8/1.8 \approx 4.44$ on $96$ df, $p < 0.001$. The static R below shows the idioms; it is **not executed**
-in this build.
+on this site.
 
 ```r
 set.seed(35203)
@@ -279,6 +282,8 @@ $1.8$, $t \approx 4.44$, $p < 0.001$)**, a difference that is both statistically
 exam — **practically meaningful** (roughly $0.9$ within-group SD). But hold the line on causation: students
 **chose** their formats, so this is an *association*, not evidence that hands-on instruction *caused* the
 gain. The blueprint closes where it always does — an estimate, its uncertainty, and a bounded claim.
+
+![**What multiplicity control actually changes.** Judged one at a time at $\alpha = 0.05$, five of the six pairs would be flagged "significant" — including the small $H - L = 5$ and $L - O = 4$ gaps. Once the family-wise rate is controlled, Tukey keeps only the three large gaps ($LL - O = 11$, $H - O = 9$, $LL - L = 7$) and drops those two as *false flags* (the shaded rows). The verdict flips for exactly the pairs that could not clear the critical difference of $6.64$; the honest procedure refuses to over-read them. Synthetic; seed 35203.](../assets/figures/wk08_unadjusted_vs_tukey.png){#fig-wk08-unadjusted-vs-tukey fig-alt="A horizontal bar chart of the six pairwise mean differences (11, 9, 7, 5, 4, 2) beside two columns of verdict badges labeled Unadjusted per-test point-oh-five and Tukey family-wise point-oh-five. A filled square means significant and an open crossed-out square means not significant. Under the unadjusted column, LL minus O, H minus O, LL minus L, H minus L, and L minus O are all filled, while LL minus H is open. Under the Tukey column, only LL minus O, H minus O, and LL minus L stay filled; H minus L and L minus O become open. The H minus L and L minus O rows are shaded and annotated false flags removed. A caption states that controlling the family-wise rate removes two false flags, H minus L equals 5 and L minus O equals 4, while the three large gaps 11, 9, and 7 survive."}
 
 ### Worked example — three doses versus a control (transfer, new context)
 
@@ -366,6 +371,8 @@ contrast against the rest. A contrast is only planned if it was written down bef
 it from the data and calling it planned is post-hoc dressed as pre-registered, and it must pay the full
 multiplicity tax. Decide your question first; let the method, not the means, set the threshold.
 
+![**The eye grabs the biggest gap; the honest test still applies the same bar.** Scanning the four format means, the biggest raw gap jumps out — $LL - O = 11$ points — and it does clear the multiplicity-controlled critical difference of $6.64$, so it is genuinely significant. But that gap was the *largest of six* you looked at, and the trap is judging it (or any pair) by eye instead of against $6.64$: the $H - L = 5$ gap also "looks real," yet it falls **within** $6.64$ and is not significant. The reference ruler on the left shows how tall the honest $6.64$ bar is relative to the score scale. Synthetic; seed 35203.](../assets/figures/wk08_biggest_gap.png){#fig-wk08-biggest-gap fig-alt="A bar chart of four format mean final exam scores in ascending order: Online 70 and Lecture plus Lab 81 in terracotta with diagonal hatching as the two extremes, and Lecture 74 and Hybrid 79 in slate blue between them, each with a printed value label. A wide terracotta bracket spans Online to Lecture plus Lab, labeled biggest raw gap equals 11, LL minus O, clears 6.64, so significant. A narrower dashed bracket spans Lecture to Hybrid, labeled H minus L equals 5, looks real, within 6.64, not significant. A short vertical ruler on the far left marks a length of 6.64 labeled Tukey bar. A caption warns against reading a raw gap or just the biggest as significant by eye, and states every one of the six pairs must clear the multiplicity-controlled 6.64: the 11-point gap does, the 5-point gap does not."}
+
 ## Low-stakes self-checks (ungraded)
 
 These are for your own practice — ungraded, no submission.
@@ -397,18 +404,6 @@ rate. **ISLBS** (Vu & Harrington) is named as an **optional applied reference** 
 a health-flavored setting; it is not required. *These notes are the course's own synthesis, grounded in but
 not copied from the sources.* No prose, examples, exercises, figures, or solutions are reproduced from any
 source.
-
-## Evidence and verification status
-
-**verified: false.** The method logic on this page — the multiple-comparisons problem, Tukey HSD, and
-planned contrasts — is course-authored, but every numeric value here is **drafted, synthetic, and not
-independently checked**. The load-bearing numbers are the Dataset F slice: the **Tukey HSD critical
-difference $\approx 6.64$ points** ($q_{.05,4,96}\sqrt{81/25} = 3.69 \times 1.8$); the **significant pairs**
-$LL - O = 11$, $H - O = 9$, $LL - L = 7$ and the **non-significant pairs** $H - L = 5$, $L - O = 4$,
-$LL - H = 2$; and the **planned contrast** "hands-on (LL, H) vs delivered-only (L, O)" with $\hat\psi = 8$
-points, $\mathrm{SE} = 1.8$, $t \approx 4.44$, and $p < 0.001$ — together with the illustrative
-dose-study transfer values ($\hat\psi \approx 6.3$, $t \approx 3.05$). All example data are synthetic with
-`set.seed(35203)`; **R is not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

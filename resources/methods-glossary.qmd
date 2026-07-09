@@ -2,7 +2,6 @@
 title: "Methods glossary"
 subtitle: "The applied-methods vocabulary, organized by theme"
 page-type: reference
-verified: false
 toc: true
 ---
 
@@ -17,8 +16,7 @@ causation** distinct. Two habits live inside the blueprint and recur on every pa
 just a verdict**, and remember that **observational data buy association, not causation**. Name both every time.
 
 All numeric values mentioned come from the five synthetic **Cypress Ridge College Student-Success Study**
-datasets (P, G, F, X, R), generated with `set.seed(35203)`, and are **provisional pending review**
-(R is not executed in this build). Use them
+datasets (P, G, F, X, R), generated with `set.seed(35203)`, and are illustrative, not independently verified. Use them
 to learn the vocabulary; do not treat any figure as a confirmed reference.
 
 The five datasets are referenced throughout by their **structure**, because structure — not subject matter — is
@@ -205,19 +203,6 @@ steps, and the point is to see the connections:
 When the structure and the question are clear, the right method usually names itself, and the estimate it
 produces — reported with its uncertainty, bounded by what the design can support — is the whole point of the
 analysis. That is the blueprint, and it is the same on every page.
-
-## Evidence and verification status
-
-**verified: false.** The blueprint framing, the vocabulary, and the organization on this page are
-course-authored, but every numeric value referenced here — Dataset P's paired difference $+6.0$, SE $\approx
-1.64$, paired $t \approx 3.65$, CI $(2.6, 9.4)$, and $d_z \approx 0.67$; Dataset G's difference $6.0$, $s_p
-\approx 11.27$, $t \approx 2.53$, $p \approx 0.013$, CI $(1.3, 10.7)$, and $d \approx 0.53$; Dataset F's $F
-\approx 7.61$, $\eta^2 \approx 0.19$, Tukey critical difference $\approx 6.64$, contrast $= 8$, and the adjusted
-means $L\,74.5$ / $LL\,80.6$ / $O\,70.9$ / $H\,78.1$; Dataset X's cell means, the main-effect gaps, and the
-interaction $F \approx 5.0$; and Dataset R's slopes ($1.6$, $1.1$), $R^2$ ($0.30$, $0.46$), $\chi^2 = 7.5$, risk
-difference $0.30$, RR $\approx 1.67$, OR $3.67$ raw and $e^{1.0} \approx 2.72$ adjusted, and the predicted
-probabilities ($\approx 0.56$, $\approx 0.05$) — is **drafted, synthetic** (`set.seed(35203)`), **and not
-independently checked**; **R is not executed in this build**; the worked numbers are provisional and not independently verified.
 
 ## Public vs. graded
 

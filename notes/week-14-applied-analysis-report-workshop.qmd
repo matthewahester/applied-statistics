@@ -4,7 +4,6 @@ subtitle: "Turning an analysis into a clear, honestly-bounded report"
 page_mode: software_lab_week
 week_contract: software_note_lab
 source_mode: source-informed
-verified: false
 readings:
   - "ModernDive (Ismay, Kim & Valdivia), reproducible reporting with R/Quarto — supports the analysis-report workflow"
 toc: true
@@ -56,6 +55,8 @@ that prints a $p$-value and calls it a finding, throws away exactly the reasonin
 to teach. So every report ends by naming its own limits, and every report reports an interval, not a
 verdict.
 
+![**The applied report is the six-step blueprint, written down.** A report is not a new structure — it is Question, then Structure, then Method, then Assumptions and diagnostics, then Estimate with uncertainty, then Conclusion with limits, each a findable section a reader can check in order. The two hatched steps — reporting the estimate *with a confidence interval* rather than a bare $p$-value, and bounding the conclusion (statistical vs practical, association vs causation) — are where the report's honesty lives. A structural diagram; no synthetic data are shown.](../assets/figures/wk14_report_pipeline.png){#fig-wk14-pipeline fig-alt="A vertical flow diagram of six stacked boxes connected by downward arrows, labeled in order: 1 Question, what is compared explained or predicted and the outcome; 2 Structure, unit, response versus predictor grouping or covariate, outcome type, and design; 3 Method, the analysis the structure calls for and why this one not a neighbor; 4 Assumptions and diagnostics, what the method assumes and how you checked it; 5 Estimate and uncertainty, the effect with a confidence interval never a bare p-value; and 6 Conclusion with limits, statistical versus practical and association versus causation. Boxes five and six are drawn with a thick border and diagonal hatching to mark them as where the report's honesty lives."}
+
 This is a **`software_note_lab`** week — a workshop. The deliverable is not a new statistic but a
 **reproducible report file**, and most of the page below is about how to build, run, and bound that
 file. Your dataset numbers stay the locked synthetic ones from the course world (Dataset R from the
@@ -81,6 +82,8 @@ report does **not** stop at "$p < 0.001$." It says: each extra study-hour per we
 about $+1.6$ final points on average, and we are 95% confident the true slope is between $1.16$ and
 $2.04$ points per hour. That is an estimate with its uncertainty — the blueprint's step 5, written for a
 reader.
+
+![**What belongs in the report: the estimate with its uncertainty.** The simple-regression fit on Dataset R estimates that each extra study-hour per week is associated with about $+1.6$ final-exam points, and the whole 95% confidence interval $(1.16,\ 2.04)$ sits above zero, so the association is clearly positive ($R^2 \approx 0.30$). A report shows *this* — a point estimate with an interval on a real scale — not a lone $p < 0.001$. The interval is the honesty: it says how far the estimate could plausibly move. Synthetic; seed 35203.](../assets/figures/wk14_estimate_with_ci.png){#fig-wk14-estimate fig-alt="A horizontal estimate-with-interval plot. A dashed vertical reference line marks zero, labeled 0 equals no association. A brown diamond sits at 1.6 on the horizontal axis, which is labeled change in final exam score per extra study-hour per week, with a black horizontal error bar running from 1.16 to 2.04 and a light shaded band over the same span. The value labels 1.6, 1.16, and 2.04 are printed. The whole interval lies to the right of zero. A caption below notes slope 1.6, 95 percent confidence interval 1.16 to 2.04, and R squared about 0.30."}
 
 ### A shown report-build sequence
 
@@ -111,7 +114,7 @@ and a report whose data are synthetic must say so — every report this week fla
 You will work one full report this week on **Dataset R** — taking the final-score regression and the
 pass/fail logistic model end-to-end through the blueprint — and then one report on a dataset you choose.
 Each report follows the six-step backbone. Here is the practice sequence; the static R/Quarto idioms are
-shown as teaching, not executed here (R is not installed in this build).
+shown as teaching, not executed on this site (R is not run here).
 
 **Step 1 — Set up the report file.** Create one `.qmd` file for the report, open it with
 `set.seed(35203)` so any synthetic draw is reproducible, and read in the (synthetic) Dataset R. One
@@ -233,8 +236,8 @@ your exact numbers.
 
 - **One `.qmd` per analysis.** Each report is a single Quarto document that holds the question, the
   code, the output, and the prose conclusion together — no loose scripts whose output you pasted in by
-  hand. (In the live course the code chunks run; in this static draft the R is shown as
-  non-executed `r` fences so the site renders R-free.)
+  hand. (The R is shown as non-executed `r` fences so the page renders without R; run the chunks
+  yourself in your own R session.)
 - **`set.seed(35203)` at the top.** Every report that draws randomness — a synthetic-data report always
   does — fixes the seed once, near the top, so any simulated values and any resampled interval are
   reproducible to the digit. A result you cannot reproduce is a result you cannot defend.
@@ -263,6 +266,8 @@ your *reasoning* — the part that actually varies — instead of decoding your 
 bureaucracy; it is what makes the honesty checkable, because the **Estimate** section always shows an
 interval, and the **Conclusion** section always names what the analysis cannot support.
 
+![**One reproducible file, one re-runnable report.** The convention is a single self-contained `.qmd` — opened with `set.seed(35203)`, holding the six blueprint sections (Question, Structure, Method, Diagnostics, Estimate, Conclusion) — that renders to one report file a reader can re-run and get your exact numbers. One file, one analysis, one seed: a result you cannot reproduce is a result you cannot defend. A structural diagram; no synthetic data are shown.](../assets/figures/wk14_reproducible_flow.png){#fig-wk14-reproducible fig-alt="A left-to-right flow diagram of three boxes joined by arrows. The first box reads synthetic Dataset R plus set dot seed of 35203. An arrow leads to a middle box, drawn with a thick border and diagonal hatching, labeled report dash R dot qmd and listing its sections Question, Structure, Method, Diagnostics, Estimate, Conclusion. An arrow labeled render leads to the third box, rendered report, reproducible to the digit. A note below reads one file, one analysis, one seed, same numbers every run."}
+
 ## Debugging
 
 The failures in this week are not syntax errors — the code runs fine. They are
@@ -274,6 +279,8 @@ common ones and the fix.
 verdict; it says nothing about *how much*. *Fix:* report the **estimate with its interval** — the slope
 $1.6$ points per study-hour, 95% CI $(1.16,\ 2.04)$ — and interpret it in a sentence. The interval is
 the honesty; the $p$-value alone is a verdict the course explicitly refuses.
+
+![**The same fit, reported two ways.** On the left, a bare verdict — "study hours significantly predict final score, $p < 0.001$" — names significance but not magnitude, so a reader cannot tell *how much*. On the right, the honest revision puts the estimate on a scale: about $+1.6$ final-exam points per study-hour with a 95% confidence interval of $(1.16,\ 2.04)$. Same model, same data; only the second version reports the estimate and its uncertainty the course asks for. Synthetic; seed 35203.](../assets/figures/wk14_pvalue_vs_estimate.png){#fig-wk14-report-lines fig-alt="A two-panel comparison. The left panel, titled verdict only, thin, contains the quoted sentence study hours significantly predict final score, p less than 0.001, and beneath it the note how much? not reported, a screening verdict with no magnitude. An arrow labeled revise points from the left panel to the right panel, which is titled estimate plus interval, honest, and drawn with a thick border. The right panel shows a small number line with a brown diamond at 1.6 and an interval bar from 1.16 to 2.04, and the sentence plus 1.6 final-exam points per study-hour, 95 percent confidence interval 1.16 to 2.04."}
 
 **Failure 2 — sliding into causal language from observational data (this week's classic mistake).** The
 report writes "studying more *raises* final scores," or "the Structured program *causes* more students
@@ -329,16 +336,6 @@ reporting with R/Quarto** for the report workflow — the reproducible Quarto po
 of letting the data structure drive the method choice and the write-up. *These notes are the course's
 own synthesis, grounded in but not copied from the sources.* No prose, examples, exercises, figures, or
 solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The report workflow and the blueprint reasoning on this page are course-authored,
-but every numeric value here is **drafted, synthetic, and not independently checked** — the Dataset R
-load-bearing figures reused in the worked report: the simple-regression slope $1.6$ with 95% CI
-$(1.16,\ 2.04)$ and $R^2 \approx 0.30$, the adjusted slope $1.1$ with multiple $R^2 \approx 0.46$, and
-the logistic odds ratios ($e^{0.22} \approx 1.25$ per study-hour, $e^{1.0} \approx 2.72$ for Structured
-versus None, shrunk from the raw $3.67$). All data are synthetic with `set.seed(35203)`, and **R is not
-executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

@@ -4,7 +4,6 @@ subtitle: "Checking the conditions an analysis rests on — before you trust it"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), checking conditions for inference and ANOVA — supports diagnostics"
 toc: true
@@ -145,6 +144,13 @@ at the bottom-left** end — exactly the fingerprint of one mild outlier sitting
 looking set of residuals. One point off the end of an otherwise straight line is a *mild* departure, not
 a reason to abandon the model.
 
+![**A near-straight QQ plot with one low point — the normality check on Dataset F.** The $100$ residuals
+(each score minus its group mean) fall close to the dashed reference line a normal distribution would
+produce, so the bulk of the residuals is **approximately normal**. The single diamond at the bottom-left
+is the one mild outlier — an Online student scoring near $45$, a residual near $-25$ — pulling away from
+the line. One point off the end of an otherwise straight line is a *mild* departure: you investigate it,
+you do not abandon the model. Synthetic; seed 35203.](../assets/figures/wk07_qq_residuals.png){#fig-wk07-qq fig-alt="A normal quantile-quantile plot. About one hundred ordered residuals form a nearly straight band rising from lower-left to upper-right and closely following a dashed reference line, indicating approximately normal residuals. One point is drawn as a large red diamond far below the lower-left end of the line at a residual of about minus 25, labeled the single low Online point, a score of 45. All the other points hug the reference line, and a caption notes this is a mild departure, not a broken model."}
+
 The **spread-versus-group view** — side-by-side boxplots, or the formal **Levene's test** — checks equal
 variance directly. Levene's test takes "all four group variances are equal" as its null and asks whether
 the observed differences in spread are larger than sampling noise would produce. For Dataset F, **Levene's
@@ -155,6 +161,13 @@ Levene's test to flag — $p \approx 0.40$ is nowhere near a threshold like $0.0
 0.40$ does **not prove** the variances are identical; it only says the data do not contradict the
 equal-variance assumption. That distinction is this week's central trap, and it returns in the common
 mistake.
+
+![**Roughly equal spread across the four formats — Levene's equal-variance check.** The within-group SD
+of the residuals is close to $9$ in every format (Lecture $8.6$, Lecture+Lab $8.9$, Online $10.0$, Hybrid
+$8.5$), clustered around the pooled SD of about $9$ (the dashed line, so $\mathrm{MSE} = 81$). Online is
+*slightly* the widest — the hatched bar — but **Levene's test gives $p \approx 0.40$**, no evidence
+against equal variance, so a single pooled $\mathrm{MSE}$ fairly represents all four groups. A large
+$p$-value here does not *prove* the variances are identical. Synthetic; seed 35203.](../assets/figures/wk07_group_spreads.png){#fig-wk07-spreads fig-alt="A bar chart of the within-group standard deviation of residuals for four formats. Lecture is 8.6, Lecture plus Lab is 8.9, Online is 10.0 and drawn with diagonal hatching as the widest, and Hybrid is 8.5. Each bar carries a printed value label. A red dashed horizontal line marks the pooled standard deviation of about 9, corresponding to MSE equals 81. A caption notes Levene's test p is about 0.40, meaning no evidence against equal variance, with Online only slightly wider."}
 
 Put together, the three readings on Dataset F point the same way: residuals near-normal with one mild
 outlier, spread reasonably equal ($p \approx 0.40$), and independence secured by the different-students
@@ -201,7 +214,7 @@ synthetic; seed set.
 roughly equal variance. Independence is checked by **reasoning about the design** — $100$ distinct
 students, no repeated measures, no clustering — so it holds. Normality and equal variance are checked from
 the fit, by plotting the residuals and running Levene's test. The static R below shows the idioms; it is
-teaching code and is **not executed** in this build.
+teaching code and is **not executed** on this site.
 
 ```r
 set.seed(35203)
@@ -223,6 +236,13 @@ car::leveneTest(final_score ~ format, data = dataset_F)
 # group           3   ~0.99    ~0.40    <- p ~ 0.40: NO evidence against equal variance
 #                96
 ```
+
+![**Residuals versus fitted values on Dataset F — even spread, one low point.** For each of the $100$
+students the residual (score minus its format mean) is plotted above its fitted value — the four group
+means $70, 74, 79, 81$. The vertical spread is **about the same over every format** (no funnel, no bend),
+with the Online column slightly wider and holding the single low diamond, a residual of $-25$ from a score
+near $45$. This is the picture behind "constant variance, no pattern," which is why the pooled
+$\mathrm{MSE} = 81$ is a fair summary. Synthetic; seed 35203.](../assets/figures/wk07_resid_vs_fitted.png){#fig-wk07-resid fig-alt="A scatter plot of residuals on the vertical axis against fitted values on the horizontal axis, arranged in four vertical columns at fitted values 70 for Online, 74 for Lecture, 79 for Hybrid, and 81 for Lecture plus Lab. Points scatter roughly evenly above and below a bold horizontal line at zero, with similar vertical spread in each column and no funnel or curve. One large red diamond sits far below the Online column at a residual of about minus 25, labeled a score near 45."}
 
 **The estimate, its uncertainty, and the reading.** The diagnostics are not themselves the scientific
 estimate — that was last week's $F \approx 7.61$, $\eta^2 \approx 0.19$. What they deliver is a verdict on
@@ -300,6 +320,13 @@ is **investigate-do-not-delete**: identify the point, ask whether it is an error
 keep it unless it is a documented error, and if it is influential, **report the analysis with and without
 it** so the dependence is visible.
 
+![**Deleting the outlier changes almost nothing — so investigate, do not delete.** The twenty-five Online
+scores scatter around a mean of $70.0$ (the solid line); the contested low point is the red diamond at
+$45$. Dropping it lifts the Online mean only to $71.0$ (the dashed line) and leaves the ANOVA verdict
+$F \approx 7.61$ essentially unchanged. Because deleting the point neither rescues the result nor is
+needed, the honest move is to **keep it, note it, and report the analysis with and without it** — never a
+silent edit. Synthetic; seed 35203.](../assets/figures/wk07_investigate_not_delete.png){#fig-wk07-investigate fig-alt="A strip plot of twenty-five Online final exam scores scattered vertically around 70. One low score is drawn as a large red diamond at 45, labeled the contested low point. A solid black horizontal line marks the group mean with the point kept, at 70.0; a dashed line just above marks the mean with the point deleted, at 71.0. The two mean lines nearly coincide, showing that removing the point barely moves the fit, and a caption notes F is about 7.61 either way."}
+
 The third — the subtlest — is **treating a non-significant assumption test as proof the assumption holds**.
 Levene's $p \approx 0.40$ does **not** mean "the variances are equal"; it means "the data give no evidence
 *against* equal variance." Those are different statements. A large $p$-value can also come from **low power**
@@ -337,16 +364,6 @@ the residual and QQ plots, Levene's test, and the investigate-do-not-delete rule
 robust the conclusion is to mild departures. *These notes are the course's own synthesis, grounded in but
 not copied from the sources.* No prose, examples, exercises, figures, or solutions are reproduced from any
 source.
-
-## Evidence and verification status
-
-**verified: false.** The diagnostic logic on this page is course-authored, but every numeric value here is
-**drafted, synthetic, and not independently checked**. The load-bearing numbers are the **Dataset F
-diagnostic readings** — **Levene's test $p \approx 0.40$** (no evidence against equal variance), the
-**near-linear normal QQ plot**, and the **mild low Online outlier near $45$** (a residual near $-25$
-against the Online mean of $70$) — together with the prep-time transfer's *illustrative, distinct* values
-(Galley mean $14.0$ / SD $\approx 3.0$, Island mean $11.5$ / SD $\approx 5.4$, Levene $p \approx 0.013$).
-All example data are synthetic with `set.seed(35203)`, and **R is not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

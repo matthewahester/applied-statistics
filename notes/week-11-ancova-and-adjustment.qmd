@@ -4,7 +4,6 @@ subtitle: "Comparing groups fairly by holding a covariate constant"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), regression with a categorical and a quantitative predictor — supports ANCOVA and adjustment"
   - "ISLBS (Vu & Harrington), covariate adjustment in an applied setting — optional applied reference"
@@ -122,6 +121,13 @@ because one started higher will see that part of the gap removed, because the ad
 fixed. The estimate ANCOVA reports is therefore a set of **adjusted format means**, and the format
 $F$-test asks whether *those* differ by more than chance.
 
+![**Parallel slopes — one common pretest-to-final slope for every format.** ANCOVA fits the same slope
+$b \approx 0.45$ to all four formats. The diamonds mark each format's *raw* mean at its own baseline —
+Lecture $74$ at pretest $61$, Lecture+Lab $81$ at $63$, Online $70$ at $60$, Hybrid $79$ at $64$ — and
+the circles, where the lines cross the common pretest $62$, are the *adjusted* means $74.5$, $80.6$,
+$70.9$, $78.1$. Evaluating every format at the *same* baseline is the whole engine: that single vertical
+read-off is what ANCOVA compares. Synthetic; seed 35203.](../assets/figures/wk11_parallel_slopes.png){#fig-wk11-parallel fig-alt="A scatter of final exam score against pretest, with four parallel straight lines of equal slope about 0.45, one per format: Lecture, Lecture plus Lab, Online, and Hybrid, drawn in distinct dash styles. A diamond on each line sits at that format's own pretest mean and recovers its raw final mean: Lecture 74 at pretest 61, Lecture plus Lab 81 at 63, Online 70 at 60, Hybrid 79 at 64. A red dashed vertical line marks the common pretest of 62, and a circle where each format line crosses it gives the adjusted mean, labeled 74.5, 80.6, 70.9, and 78.1. A caption notes the diamonds are raw means at each format's own baseline, the circles are adjusted means at pretest 62, and the common slope is about 0.45."}
+
 ### Why adjust: the formats did not start at the same baseline
 
 Here is the confounding, made concrete. The four formats' students did not arrive with equal baseline
@@ -158,6 +164,14 @@ related to the outcome ($F \approx 30$, $p < 0.001$), which is *why* adjusting f
 that did nothing would leave the comparison unchanged. The honest conclusion is "formats compared at the
 same baseline still differ, but by less than the raw means suggested" — an estimate with its uncertainty,
 not a verdict.
+
+![**Adjustment slides each format mean toward the common baseline.** The open circles are the raw means
+($L\,74$, $LL\,81$, $O\,70$, $H\,79$); the filled circles are the adjusted means ($L\,74.5$, $LL\,80.6$,
+$O\,70.9$, $H\,78.1$); each arrow shows the move. The *direction* is set by where the format started:
+Online and Lecture began *below* the average baseline, so they are pulled **up** (Online $70 \to 70.9$);
+Lecture+Lab and Hybrid began *above* it, so they are pulled **down** toward the pack. That is exactly the
+part of each raw gap that was really a baseline difference being handed back. Synthetic; seed
+35203.](../assets/figures/wk11_adjustment_arrows.png){#fig-wk11-arrows fig-alt="A dot chart with one row per format, Lecture, Lecture plus Lab, Online, and Hybrid, and mean final exam score on the horizontal axis. In each row an open circle marks the raw mean and a filled circle marks the adjusted mean, with an arrow from raw to adjusted. Lecture moves from 74 to 74.5 and Online from 70 to 70.9, both rightward because those formats started below the average pretest of 62; Lecture plus Lab moves from 81 to 80.6 and Hybrid from 79 to 78.1, both leftward because those formats started above it. Each row is annotated with its pretest mean and whether it is above or below average. A caption notes Online is pulled up and Lecture plus Lab and Hybrid are pulled down toward the pack."}
 
 ### The parallel-slopes assumption, and adjust only for a pre-treatment covariate
 
@@ -245,6 +259,14 @@ $O\,70.9$, $H\,78.1$ — each reported, in practice, with a standard error and c
 $p \approx 0.0007$, with $\eta^2_{\text{partial}} \approx 0.16$. The parallel-slopes check passed: the
 format$\times$pretest interaction is not significant, $p \approx 0.5$, so one common slope is legitimate.
 
+![**Raw versus adjusted format means — every gap shrinks.** The unadjusted (raw) means $L\,74$, $LL\,81$,
+$O\,70$, $H\,79$ sit beside the adjusted (baseline-controlled) means $L\,74.5$, $LL\,80.6$, $O\,70.9$,
+$H\,78.1$. The widest gap, Lecture+Lab versus Online, narrows from a raw $81-70 = 11$ points to about
+$80.6-70.9 \approx 9.7$ adjusted, and the effect size falls from $\eta^2 \approx 0.19$ to
+$\eta^2_{\text{partial}} \approx 0.16$. The format effect survives adjustment ($F \approx 6.2$, $p \approx
+0.0007$) — it is just smaller than the raw means implied. Synthetic; seed
+35203.](../assets/figures/wk11_unadjusted_vs_adjusted.png){#fig-wk11-shrink fig-alt="A grouped bar chart with four formats on the horizontal axis, Lecture, Lecture plus Lab, Online, and Hybrid, and mean final exam score on the vertical axis. Each format shows two bars: an unadjusted raw bar and a hatched adjusted bar. The values are Lecture 74 versus 74.5, Lecture plus Lab 81 versus 80.6, Online 70 versus 70.9, and Hybrid 79 versus 78.1, each printed above its bar. The adjusted bars pull the highest groups down and the lowest group up, so the bars sit closer together. A caption notes the Lecture plus Lab to Online gap shrinks from 11 to about 9.7 and the partial eta squared is about 0.16, down from 0.19."}
+
 **The interpretation.** Compared at the same baseline, the formats still differ ($p \approx 0.0007$), but
 the differences are **smaller** than the raw week-6 means implied — the gaps shrank (LL$-$O fell from $11$
 to about $9.7$) and the effect size dropped from $0.19$ to $0.16$ because part of the raw "format" gap was
@@ -296,6 +318,14 @@ slightly (it had an easier, younger panel). The adjusted means can reorder the c
 North — and each would be reported with its confidence interval, with a clinic $F$-test for whether the
 adjusted differences exceed chance.
 
+![**Adjustment can reverse a ranking, not just shrink gaps.** On raw improvement the clinics rank North
+$12$, Central $10$, South $9$, so South looks worst. But South serves markedly *older* patients (intake
+age $\approx 68$ versus North's $\approx 52$), and older patients improve less. Evaluating every clinic at
+a *common* age slides South up from $9$ to about $11.4$ and North down from $12$ to about $11.0$ — the
+adjusted ranking now puts **South ahead of North**. A raw comparison had been crediting North for its
+younger, easier-to-improve panel. Synthetic; illustrative, distinct from Dataset
+F.](../assets/figures/wk11_clinic_reversal.png){#fig-wk11-clinic fig-alt="A dot chart with one row per clinic, North, Central, and South, and mean blood-pressure improvement in points on the horizontal axis. In each row an open circle marks the raw mean and a filled circle marks the age-adjusted mean, with an arrow between them. North moves left from 12 to 11.0, Central moves slightly right from 10 to 10.2, and South moves far right from 9 to 11.4. After adjustment South's filled circle at 11.4 sits to the right of North's at 11.0, so the ranking reverses. A caption notes that South serves older patients around age 68 and rises to pass North, whose younger patients around age 52 pull its adjusted mean down."}
+
 **The interpretation.** This is the headline transfer lesson: **adjustment can reverse a ranking**, not
 just shrink gaps. A raw comparison that ignores who each clinic serves can credit or blame a clinic for its
 *patient mix* rather than its *care*. The same disciplines apply as in Dataset F — check that one age slope
@@ -317,6 +347,14 @@ group, and the format effect genuinely *depends on baseline* — there is no one
 to fit the interaction model **first** (`lm(final ~ pretest * format)`), test `pretest:format`, and only
 proceed to the common-slope ANCOVA if that interaction is negligible. For Dataset F it is ($p \approx 0.5$),
 so we are clear — but the check is what licenses the move, not a hope that the slopes match.
+
+![**Why the parallel-slopes check matters: non-parallel slopes make the gap depend on baseline.** Here
+two illustrative formats have *different* pretest-to-final slopes ($0.20$ versus $0.70$), so their lines
+**cross**. At a low baseline Format A is ahead; at a high baseline Format B is ahead — the very sign of
+the "format effect" flips depending on which baseline you read it at, so no single adjusted mean
+summarizes a group. This is the case a skipped interaction test hides. For Dataset F the interaction is
+negligible ($p \approx 0.5$), so the common slope is safe — but only *because* the check passed. Synthetic;
+illustrative.](../assets/figures/wk11_nonparallel_trap.png){#fig-wk11-trap fig-alt="A line chart of outcome against a covariate baseline with two straight lines of different slopes that cross near a covariate of 70. Format A has a shallow slope of 0.20 and Format B a steep slope of 0.70. A red X marks the crossing point, labeled slopes cross, no stable gap. A dotted vertical line at a low baseline of 55 shows Format A above Format B, annotated at low baseline A is ahead; a dotted vertical line at a high baseline of 85 shows Format B above Format A, annotated at high baseline B is ahead. A caption notes that when the format-by-covariate interaction is real, ANCOVA's single common slope is not valid."}
 
 The second, and most damaging, is **adjusting for a post-treatment covariate**. The whole legitimacy of
 adjustment rests on the covariate being a fixed *starting condition* that the treatment could not have
@@ -367,18 +405,6 @@ covariate together. **ISLBS** (Vu & Harrington) is an **optional applied referen
 adjustment in a health-flavored setting, useful for the clinic-style transfer example. *These notes are the
 course's own synthesis, grounded in but not copied from the sources.* No prose, examples, exercises,
 figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The ANCOVA logic and the adjustment framing on this page are course-authored, but
-every numeric value here is **drafted, synthetic, and not independently checked**. The load-bearing numbers
-are the Dataset F slice — the common pretest slope $b \approx 0.45$, the adjusted format means
-$L\,74.5$ / $LL\,80.6$ / $O\,70.9$ / $H\,78.1$, the format-after-adjustment test $F \approx 6.2$ on
-$(3, 95)$ with $p \approx 0.0007$ and $\eta^2_{\text{partial}} \approx 0.16$, the covariate test
-$F \approx 30$ ($p < 0.001$), and the parallel-slopes check (format$\times$pretest interaction
-$p \approx 0.5$) — together with the illustrative clinic-comparison transfer values (raw improvements
-$12$ / $10$ / $9$, adjusted to reorder South ahead of North). All example data are synthetic with
-`set.seed(35203)`, and **R is not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

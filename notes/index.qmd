@@ -11,9 +11,9 @@ you learn to read one, you can read them all. That shape is not decoration: it *
 the same six-step **analysis blueprint**, applied to a new method, so by the end you are not memorizing a box of
 named tests — you are running one disciplined workflow on whatever data structure lands in front of you.
 
-This is a **draft course site**: the example datasets are synthetic, the numbers are drafted and provisional, and
-R is shown but not executed. Read the methods and the reasoning as the course's own; treat every printed
-statistic as illustrative until the verification sign-off is complete.
+The example datasets are synthetic and the numbers are illustrative, and R is shown but not executed. Read
+the methods and the reasoning as the course's own, and treat every printed statistic as a synthetic
+instructional example.
 
 ## The analysis blueprint — the six questions every note answers
 
@@ -85,9 +85,6 @@ need and study with intent — and each part maps onto a step of the blueprint a
   the Life and Biomedical Sciences* (ISLBS) on the applied-lab weeks; and *Learning Statistics with R* (Navarro)
   named only as an optional pointer — with the reminder that these notes are the course's own synthesis, grounded
   in but not copied from the sources.
-- **Evidence and verification status.** An honest note that every numeric value in the example datasets is
-  drafted, synthetic ($\texttt{set.seed(35203)}$), and not independently checked — R is not executed in this
-  build, and the worked numbers are provisional and not independently verified.
 - **Looking ahead.** A sentence or two connecting this week to the next, so the arc stays visible.
 
 Keep the [methods glossary](../resources/methods-glossary.qmd), the

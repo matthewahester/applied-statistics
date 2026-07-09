@@ -12,11 +12,11 @@ with its uncertainty, never as a bare verdict. You will run a two-group comparis
 with its confidence interval and an effect size; fit a one-way ANOVA and control the error rate across many
 comparisons; build and *check* a regression and watch a slope move under adjustment; and fit a logistic model and
 read an odds ratio and a predicted probability rather than a raw log-odds coefficient. The code is shown for study
-and is **not executed on this site** — R is not run in this build — so you run it in your own R session, where the
+and is **not executed on this site** — so you run it in your own R session, where the
 output comes alive and the numbers become concrete.
 
-A reminder that holds for every lab: this is a **draft course site**. Every dataset is **synthetic**,
-generated with `set.seed(35203)`, and every number you will reproduce is **drafted and provisional** — the worked values are provisional, so treat the locked values as targets to reproduce, not as confirmed
+A reminder that holds for every lab: every dataset is **synthetic**,
+generated with `set.seed(35203)`, and every number you will reproduce is a **synthetic instructional example** — so treat the locked values as targets to reproduce, not as confirmed
 facts about any real student.
 
 ## How the labs work
@@ -84,8 +84,7 @@ small number of widely available functions and idioms — `t.test()` for the two
 for the regression, and `glm(..., family = binomial)` for the logistic fit. Where a helper package is mentioned
 (for example `emmeans` for adjusted means or contrasts, or `car` for a Levene test or VIFs), the lab names it; you
 can follow the logic without it. Every chunk that draws randomness starts with `set.seed(35203)`, so your run
-reproduces the companion note's locked numbers — and, again, those numbers are **synthetic and provisional** in
-this draft site. On this site the code is shown **for study and is not executed**; the live computation happens in
+reproduces the companion note's locked numbers — and, again, those numbers are a **synthetic instructional example**. On this site the code is shown **for study and is not executed**; the live computation happens in
 your session.
 
 ## See also

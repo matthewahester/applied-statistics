@@ -4,7 +4,6 @@ subtitle: "From a question to variables, a method, an estimate, and a bounded co
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Cetinkaya-Rundel & Hardin), data basics & exploratory analysis intro — supports framing questions and identifying variables"
 toc: true
@@ -133,6 +132,8 @@ The verb is step 1 of the blueprint. The blueprint then continues, and the order
 6. **Conclusion** — statistical vs **practical** significance; **association vs causation**; what the
    analysis can and cannot support.
 
+![**The analysis blueprint: six ordered steps, walked on every method.** Every method this term — the paired $t$, the two-sample $t$, one-way and two-way ANOVA, ANCOVA, regression, chi-square, logistic regression — is these *same* six steps applied to a different data structure. Step 2 (**Structure**, highlighted) is the load-bearing one: the shape of the data *names* the method in step 3, which is why you read the structure before you reach for a test. The blueprint is the course's spine, meant to become automatic, not a checklist to memorize.](../assets/figures/wk01_blueprint_flow.png){#fig-wk01-blueprint fig-alt="A left-to-right flow diagram of six labeled boxes: 1 Question, 2 Structure, 3 Method, 4 Assumptions, 5 Estimate, 6 Conclusion, connected by arrows. Under each box a short descriptor: Question is compare, explain, or predict; Structure is units, variables, design; Method is the matching analysis; Assumptions is check on the data; Estimate is value with uncertainty; Conclusion is statistical versus practical and association versus cause. The Structure box is emphasized with a filled terracotta background and diagonal hatching, and a bold arrow labeled structure names the method runs from Structure to Method. A caption reads: read step 2 Structure before naming step 3 Method; the shape of the data chooses the analysis."}
+
 The load-bearing claim of the whole course is that **step 2 determines step 3**. You do not pick a method
 and then bend the data to fit; you read the structure and let it *name* the method. That is why this week
 spends its energy on reading structures rather than running tests.
@@ -200,6 +201,8 @@ Data are **synthetic; seed set** with `set.seed(35203)`; they are not real recor
 load-bearing statistics this week** — the only thing we lock is each dataset's *structure* and the method
 it will call for. We are practicing steps 1–3 only: name the question, read the structure, name the method.
 
+![**One study, five structures.** The Cypress Ridge world arrives as five datasets whose *shapes* differ, and it is the shape — not the topic — that calls for each method. **P** is paired: the **same** $n = 30$ students measured twice (pre linked to post). **G** is two independent groups ($45 + 45$ different students). **F** is one factor with four formats ($n = 25$ each). **X** crosses two factors in a $2\times2$ design ($n = 20$ per cell). **R** relates a quantitative predictor to an outcome ($n = 120$). Read the shape first; the method follows. Synthetic; seed 35203.](../assets/figures/wk01_five_structures.png){#fig-wk01-structures fig-alt="Five schematic panels side by side, one per dataset. P, paired: four pairs of dots, a pre dot linked by a short line to a post dot, labeled same n equals 30 measured twice. G, two groups: two separate clusters of dots labeled Support and Self-guided, n equals 45 plus 45. F, four formats: four colored bars labeled L, LL, O, H, n equals 25 each. X, two-by-two factorial: a two-by-two grid of cells with columns In-person and Online and rows Weak and Strong, n equals 20 per cell. R, regression: a scatter of points with a rising fitted line, horizontal axis hours and vertical axis final, n equals 120."}
+
 Walk each dataset:
 
 - **P — paired pre/post readiness.** *Question:* did readiness change after the support module
@@ -240,6 +243,8 @@ A compact map is the cleanest way to hold this:
 | **F** | one factor, four formats ($n=25$ each); quantitative | **one-way ANOVA** |
 | **X** | two crossed factors ($2\times2$, $n=20$/cell); quantitative | **two-way ANOVA** (interaction) |
 | **R** | predictors + program; quantitative *and* binary responses | **regression · chi-square · logistic** |
+
+![**Structure names the method.** The same map sits behind every week of the course: each data structure on the left (step 2) generates exactly one analysis on the right (step 3). Paired data call for the paired $t$; two independent groups for the two-sample (Welch) $t$; one factor with more than two groups for one-way ANOVA; two crossed factors for two-way ANOVA with an interaction check; a quantitative predictor for regression; a categorical or binary outcome for chi-square or logistic regression. The letters P, G, F, X, R tag the five Cypress Ridge datasets, so each row is a week you will meet. Synthetic; seed 35203.](../assets/figures/wk01_structure_method_map.png){#fig-wk01-map fig-alt="A two-column map. The left column, headed Structure step 2, lists six boxes: paired same units measured twice; two independent groups; one factor more than two groups; two crossed factors two-by-two; quantitative predictor; categorical or binary outcome. The right column, headed Method step 3, lists six boxes joined one-to-one by arrows: paired t; two-sample t Welch; one-way ANOVA; two-way ANOVA with interaction; regression; chi-square or logistic. Each left box is tagged with a dataset letter P, G, F, X, R, R."}
 
 Now make the structure literally visible. The static R below inspects the *shape* of two of these tables —
 the kind of look you take before naming any method. It is teaching code and is **not executed** here.
@@ -331,6 +336,8 @@ each student serves as their own control and between-student variation is remove
 the **unit**: if one row carries *both* numbers for *one* student, the measurements are paired. Read the
 unit, and the design announces itself.
 
+![**One reflex, two structures — only one of them fits.** "Two columns of scores" tempts the reflex to just run a two-sample $t$ (top). That is *correct* for Dataset G, where the two columns are different, independent students. But it is **wrong** for Dataset P, whose two columns are the **same** 30 students measured twice: applied to P, the two-sample $t$ ignores the pairing, and the standard error nearly doubles (the paired analysis is the more powerful one). The two designs look identical on the page; only reading the structure at step 2 tells them apart. Synthetic; seed 35203.](../assets/figures/wk01_wrong_method_trap.png){#fig-wk01-trap fig-alt="A branching diagram. At the top, a box holds the reflex two columns of scores, just run a two-sample t, labeled the reflex, skips step 2. Two gray arrows lead down to two structure boxes: Dataset P, same 30 students measured twice, paired; and Dataset G, two groups of different students, independent. From each structure a solid dark arrow points to its correct method: P to paired t, G to two-sample t. A bold red dashed diagonal arrow runs from Dataset P across to the two-sample t box, passing through a red-outlined callout that reads WRONG, two-sample t on P ignores the pairing, standard error nearly doubles. A caption notes the two-sample t is right for G but wrong for P."}
+
 Both shapes have the same cure and the same diagnostic. The cure: **never let your hand reach step 3
 before your head has finished step 2.** The diagnostic: if you cannot state, in one sentence each, the
 unit of analysis, which variable is the response, and whether the design is paired or independent,
@@ -365,20 +372,6 @@ variables, and variable types (numerical vs categorical). IMS grounds the *conce
 reading a data table; the blueprint and the dataset world are the course's own architecture. *These notes
 are the course's own synthesis, grounded in but not copied from the sources.* No prose, examples,
 exercises, figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The method logic and the analysis blueprint on this page are course-authored, but the
-page makes essentially no *numeric* claims to verify: this week introduces only the **structural
-classification** of the five Cypress Ridge datasets, not their statistics. The page's load-bearing content
-is therefore the structure-to-method mapping — P → paired $t$, G → two-sample $t$, F → one-way ANOVA, X →
-two-way ANOVA, R → regression / chi-square / logistic — together with each dataset's unit, response type,
-and design. The few descriptive figures shown (group sizes $n = 30$, $45 + 45$, $25$ per format, $20$ per
-cell, $n = 120$, four formats, a $2\times2$ crossing) are **drafted, synthetic, and not independently
-checked**; **no statistical results (means, differences, t/F statistics, p-values, confidence intervals,
-effect sizes, slopes, odds ratios) appear on this page**, and those that arrive in later weeks are likewise
-unverified. All example data are synthetic with `set.seed(35203)`. **R is not executed in this build**, and
-These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

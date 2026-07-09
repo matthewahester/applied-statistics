@@ -4,7 +4,6 @@ subtitle: "Two factors at once — and why the interaction comes first"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Cetinkaya-Rundel & Hardin), models with two categorical predictors — supports two-way ANOVA and interaction"
   - "ISLBS (Vu & Harrington), factorial designs in an applied setting — optional applied reference"
@@ -138,6 +137,8 @@ together: Strong students outscore Weak students by a lot, and In-person edges O
 that reading loosely — the next subsection is about whether those marginal numbers can be trusted to mean
 what they appear to mean.
 
+![**The two main effects, read as marginal means.** Averaging over Background, In-person ($79$) beats Online ($72.5$) by a Delivery gap of $6.5$ points; averaging over Delivery, Strong ($84$) beats Weak ($67.5$) by a Background gap of $16.5$ points, both around the grand mean $75.75$ (dotted). On a shared scale the Background gap dwarfs the Delivery gap — but each bar is an *average over the other factor*, so once the interaction proves real (next subsection) each of these marginals must be read as **conditional**, not as a uniform effect. Synthetic; seed 35203.](../assets/figures/wk09_marginal_means.png){#fig-wk09-marginals fig-alt="Two side-by-side bar charts on a shared vertical axis of mean final exam score from 55 to 96. The left chart, Delivery marginal means, has In-person at 79 with diagonal hatching and Online at 72.5, annotated gap 6.5, with a dotted grand-mean line at 75.75. The right chart, Background marginal means, has Weak at 67.5 and Strong at 84 with diagonal hatching, annotated gap 16.5. The Background gap of 16.5 is visibly much larger than the Delivery gap of 6.5. A caption notes each marginal averages over a real interaction and must be read as conditional."}
+
 ### The interaction: non-additivity and non-parallel lines
 
 A main-effect-only ("additive") model claims the four cell means can be rebuilt by **adding** a Delivery
@@ -168,6 +169,8 @@ put Background on the axis and draw one line for In-person and one for Online: t
 lines **fan apart** as you move from Strong toward Weak rather than running parallel. **Parallel lines mean
 no interaction; these lines are clearly non-parallel.** The picture and the contrast say the same thing in
 two languages — there is no single "Delivery effect," there are two, one per Background level.
+
+![**The interaction plot: two non-parallel Delivery lines.** With Background on the axis, the In-person line runs from $73$ (Weak) to $85$ (Strong) and the Online line from $62$ (Weak) to $83$ (Strong). The vertical gap between the lines — the In-person advantage — is a wide $11$ points at Weak but a narrow $2$ points at Strong, so the lines **fan apart** rather than running parallel. That inequality *is* the interaction; its one-number summary is the contrast $11 - 2 = 9$. The picture says what the numbers say: moving Online costs weak-background students far more than strong-background ones. Synthetic; seed 35203.](../assets/figures/wk09_interaction_plot.png){#fig-wk09-interaction fig-alt="An interaction line plot with Prior background on the horizontal axis, levels Weak and Strong, and mean final exam score on the vertical axis. A solid brown line with circle markers labeled In-person rises from 73 at Weak to 85 at Strong. A dashed blue line with square markers labeled Online rises from 62 at Weak to 83 at Strong. A red double-headed arrow at Weak marks the In-person advantage of 11 points; a smaller marker at Strong shows the advantage is only 2 points. The two lines are clearly non-parallel and converge toward Strong. A caption states the interaction contrast is 11 minus 2 equals 9."}
 
 ### Reading the interaction first — and why the main effects are conditional
 
@@ -244,6 +247,8 @@ interaction.plot(x$background, x$delivery, x$score,
 # In-person advantage is 11 pts for Weak but only 2 pts for Strong.
 ```
 
+![**What "no interaction" versus "interaction" looks like.** The left panel is the *additive* prediction — the cell means you would get if Delivery moved every student by the same amount — and its two Delivery lines run **parallel**, an In-person advantage of a constant $6.5$ at both backgrounds. The right panel is Dataset X as observed ($73, 85, 62, 83$): the lines **fan apart**, an $11$-point advantage for Weak collapsing to $2$ for Strong. Same margins, two worlds — and the plot, not the table, is what tells you which one you are in. Synthetic; seed 35203.](../assets/figures/wk09_parallel_vs_nonparallel.png){#fig-wk09-parallel fig-alt="Two side-by-side interaction line plots on a shared vertical axis of mean final exam score, each with Prior background Weak and Strong on the horizontal axis and In-person and Online Delivery lines. The left panel, titled if additive, shows the two lines exactly parallel, annotated as an advantage of 6.5 that is the same at both backgrounds. The right panel, titled observed, shows the In-person line at 73 then 85 and the Online line at 62 then 83, with the lines fanning apart and an annotation that the In-person advantage is 11 at Weak but 2 at Strong. The contrast between parallel and non-parallel is the visual point."}
+
 **The estimate with its uncertainty.** The headline estimates are the four cell means and the
 **interaction contrast of $9$ points** — the difference between the $11$-point In-person advantage for
 Weak students and the $2$-point advantage for Strong students. That contrast is what the interaction
@@ -310,6 +315,8 @@ that exists only on the margin. When the interaction term is significant — her
 $p \approx 0.028$ — the marginal main effect is **conditional**, and a flat statement about it
 misrepresents the data to anyone who reads it.
 
+![**A single $6.5$-point Online penalty misreads both groups.** The marginal claim treats the Online penalty as a uniform $6.5$ points (hatched bars) for everyone. But the *actual* penalty — how far Online sits below In-person within each background — is $11$ points for Weak-background students and only $2$ for Strong-background students (solid bars). The flat $6.5$ therefore **under-states** the real penalty for weak students and **over-states** it for strong students; it describes no real student at all. Read the interaction first, and the marginal dissolves into two honest conditional numbers. Synthetic; seed 35203.](../assets/figures/wk09_uniform_vs_conditional.png){#fig-wk09-mistake fig-alt="A grouped bar chart with two groups, Weak background and Strong background, and a vertical axis of Online penalty in points below In-person from 0 to about 13. In each group a hatched bar labeled Reported as uniform stands at 6.5. Beside it a solid bar labeled Actual Online penalty stands at 11 for Weak background and at 2 for Strong background. Annotations note the flat 6.5 under-states the real 11 for weak students and over-states the real 2 for strong students. A caption says to read the interaction first because the 6.5 marginal describes no real student."}
+
 The deeper version of the mistake is **never looking at the cell-means plot**. The ANOVA table can tell
 you an interaction is significant, but only the plot shows you its **shape** — which group the online
 penalty lands on, and how steeply the lines fan. A student who reads the table but skips the plot might
@@ -354,18 +361,6 @@ named here only as an **optional applied reference** for factorial designs in a 
 is not a primary text and nothing is reproduced from it. *These notes are the course's own synthesis,
 grounded in but not copied from the sources.* No prose, examples, exercises, figures, or solutions are
 reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The two-way-ANOVA logic on this page is course-authored, but every numeric value here
-is **drafted, synthetic, and not independently checked**. The load-bearing numbers are the Dataset X cell
-means — In-person/Weak $= 73$, In-person/Strong $= 85$, Online/Weak $= 62$, Online/Strong $= 83$ (grand
-mean $75.75$) — the marginal means ($79$ vs $72.5$ for Delivery; $67.5$ vs $84$ for Background), the three
-two-way $F$-tests (**Delivery** $F \approx 10.4$, $p \approx 0.002$; **Background** $F \approx 67.2$,
-$p < 0.001$; **Interaction** $F \approx 5.0$, $p \approx 0.028$), and the **interaction contrast of $9$
-points** ($11 - 2$), together with the illustrative drug$\times$diet transfer values (cell means in the
-$124$–$134$ mmHg range; contrasts $0$ and $4$). All example data are synthetic with `set.seed(35203)`;
-**R is not executed in this build.** These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

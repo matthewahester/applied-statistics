@@ -18,9 +18,9 @@ distinct. The methods change week to week; the six-step move does not. Each part
 theme for each week, and the throughline — the question that carries the week. The **theme** links to that
 week's note.
 
-This is a **draft course site**: the example numbers in the linked notes come from one synthetic
-world (the Cypress Ridge College Student-Success Study, generated with `set.seed(35203)`) and are **provisional
-and unverified** — they illustrate the reasoning, not real findings.
+The example numbers in the linked notes come from one synthetic
+world (the Cypress Ridge College Student-Success Study, generated with `set.seed(35203)`) and are **synthetic
+instructional examples** — they illustrate the reasoning, not real findings.
 
 ## Part I — Questions, structure, and the estimate (Weeks 1–3)
 

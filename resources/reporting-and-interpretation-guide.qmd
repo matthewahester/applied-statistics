@@ -2,7 +2,6 @@
 title: "Reporting & interpretation guide"
 subtitle: "Effect sizes, intervals, and honest applied conclusions"
 page-type: reference
-verified: false
 toc: true
 ---
 
@@ -17,8 +16,7 @@ and causation distinct** — observational data buy you association, not causati
 write up a result.
 
 All numeric values below come from the synthetic **Cypress Ridge College Student-Success Study** datasets (seed
-set, `set.seed(35203)`) and are provisional — **R is not
-run in this build**. The numbers are drafted "as if observed," and you should treat them as worked illustrations
+set, `set.seed(35203)`) and are illustrative, not independently verified — **R is not run on this site**. The numbers are drafted "as if observed," and you should treat them as worked illustrations
 of *how to phrase a result*, not as confirmed reference values.
 
 ## Why reporting is a blueprint step, not an afterthought
@@ -253,16 +251,6 @@ the output, that the **interval** is reported, that the **causal language** matc
 **effect size** is the right one for the table. An unverified AI paragraph is exactly the bare-verdict,
 causation-overstating write-up this page exists to prevent. Show the work so a reader can trust it — that is what
 verification buys.
-
-## Evidence and verification status
-
-**verified: false.** The reporting logic, the blueprint framing, and the phrasing templates on this page are
-course-authored, but every numeric value referenced here — Dataset P's $\bar d = +6$, $d_z \approx 0.67$, and CI
-$(2.6, 9.4)$; Dataset G's 6-point difference, $p \approx 0.013$, $d \approx 0.53$, and CI $(1.3, 10.7)$; Dataset
-F's $\eta^2 \approx 0.19$; Dataset R's slopes ($1.6 \to 1.1$), $R^2 \approx 0.30/0.46$, risk difference $0.30$,
-relative risk $\approx 1.67$, odds ratios ($\approx 3.67$ raw, $\approx 2.72$ adjusted), and predicted
-probabilities ($\approx 0.56$, $\approx 0.05$) — is **drafted, synthetic** (seed `set.seed(35203)`), **and not
-independently checked**. **R is not executed in this build.** These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

@@ -4,7 +4,6 @@ subtitle: "Modeling a yes/no outcome: odds, odds ratios, and predicted probabili
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), logistic regression — supports modeling a binary outcome"
   - "ModernDive (Ismay, Kim & Valdivia), generalized linear models in R — supports the glm workflow"
@@ -144,6 +143,13 @@ the model built for precisely that structure. It is not a different universe fro
 is the same "response as a linear function of predictors" idea, moved onto the log-odds scale so it fits a
 yes/no outcome.
 
+![**Predicted probability is a bounded S-curve, not a straight line.** Running the linear predictor back
+through the inverse logit $\hat p = 1/(1 + e^{-\hat\eta})$ traces a curve that is flat near $0$, flat near
+$1$, and steep in the middle — exactly the tapering a probability needs so it never leaves $(0, 1)$. Two
+students from the worked example sit far apart on it: a low-effort None student ($3$ study hours) lands at
+$\hat p \approx 0.05$, and a high-effort Structured student ($16$ hours) at $\hat p \approx 0.56$. A straight
+line would have run off past $1$ or below $0$ instead of bending. Synthetic; illustrative.](../assets/figures/wk13_logistic_scurve.png){#fig-wk13-scurve fig-alt="A smooth S-shaped logistic curve rising from just above 0 at zero study hours per week to about 0.77 at twenty hours, flat near the bottom and top and steepest in the middle. Two points are marked on it: a circle at three hours where the predicted probability of passing is 0.05, labeled low-effort None student, and a square at sixteen hours where the predicted probability is 0.56, labeled high-effort Structured student. Dotted guide lines mark the 0 and 1 bounds, and a caption notes the predicted probability equals one over one plus e to the minus eta and stays inside the open interval from 0 to 1."}
+
 ### Coefficients are log-odds; exponentiate to odds ratios; the probability is a curve
 
 Here is the locked Dataset R model, with **pass** as the outcome and **None** as the reference program:
@@ -206,6 +212,14 @@ slope fell from $1.6$ to $1.1$ after adjustment, and when the ANCOVA format gaps
 was controlled. The mechanism repeats because the world repeats: in observational data, the groups you
 compare differ in more than the label you care about.
 
+![**Adjusting for hours and pretest shrinks the raw odds ratio from $3.67$ to $2.72$.** The left bar is
+week 12's *unadjusted* odds ratio for Structured versus None, built from **program alone**; the right bar is
+this week's *adjusted* odds ratio, once study hours and pretest join the model. Both sit well above the
+$\mathrm{OR} = 1$ no-association line, but the drop from $3.67$ to $2.72$ is confounding — the same story as
+the regression slope's $1.6 \to 1.1$ fall — because Structured students also studied more and started higher,
+and the raw table quietly credited that to the program. The adjusted $2.72$ is an **odds** ratio, not a
+relative risk, describing a look-alike association rather than a cause. Synthetic; seed 35203.](../assets/figures/wk13_or_adjustment.png){#fig-wk13-or fig-alt="A bar chart of two odds ratios for Structured versus None on the vertical axis. The left bar, labeled raw OR from the week 12 program-alone table, reaches 3.67. The right bar, labeled adjusted OR after adding hours and pretest, is drawn with diagonal hatching and reaches 2.72. A red dashed horizontal line marks odds ratio equals 1, no association, well below both bars. A downward arrow from the taller raw bar to the shorter adjusted bar is labeled shrinks, confounding by hours and pretest. A caption notes it is an odds ratio, not a relative risk, and describes a look-alike association, not a cause."}
+
 Two cautions ride along, and both belong in the report. First, **$\mathrm{OR} \ne \mathrm{RR}$.** The odds
 ratio of $2.72$ is *not* "Structured students pass $2.72$ times as often." Because passing is common here
 (not a rare event), the relative risk is much closer to $1$ than the odds ratio is — last week's relative
@@ -237,7 +251,7 @@ with grouped or smoothed residual plots and watch for separation (a predictor th
 from fail), influential points, and sparse cells. None of those flags trip here.
 
 **The computation.** Fit the model and read the coefficients on the log-odds scale, then exponentiate. The
-static R below shows the idiom; it is teaching code and is **not executed** in this build.
+static R below shows the idiom; it is teaching code and is **not executed** on this site.
 
 ```r
 set.seed(35203)
@@ -282,6 +296,13 @@ two concrete students. A **high-effort Structured** student ($16$ hours, pretest
 probability $\hat p \approx 0.56$; a **low-effort None** student ($3$ hours, pretest $50$) has $\hat p
 \approx 0.05$. Those two probabilities — far apart, and both safely inside $(0, 1)$ — are the conclusion a
 reader can actually use, far more than the raw logit ever could be.
+
+![**Two concrete students, two predicted probabilities.** Running each profile through the inverse logit
+turns the model into numbers a reader can act on: a low-effort None student ($3$ study hours, pretest $50$)
+has predicted pass probability $\hat p \approx 0.05$, while a high-effort Structured student ($16$ hours,
+pretest $80$) has $\hat p \approx 0.56$. Both stay inside $(0, 1)$, and only the second clears the $0.50$
+line. The wide $0.05$-to-$0.56$ gap is the combined effect of effort and program made concrete — far more
+usable than the raw log-odds coefficients that produced it. Synthetic; illustrative.](../assets/figures/wk13_predicted_probabilities.png){#fig-wk13-probs fig-alt="A bar chart of two predicted probabilities of passing. The left bar, labeled low-effort None student at three hours and pretest fifty, reaches 0.05. The right bar, labeled high-effort Structured student at sixteen hours and pretest eighty, is drawn with diagonal hatching and reaches 0.56. A dashed horizontal reference line marks probability 0.50, which only the second bar exceeds. Each bar carries its printed value, and a caption notes the 0.05 versus 0.56 gap is what a reader can use."}
 
 **The interpretation and what it cannot support.** The model says effort and program both move the odds of
 passing in the expected direction, and the predicted-probability gap ($0.56$ vs $0.05$) makes the combined
@@ -366,6 +387,14 @@ through the S-curve to talk about a **probability** at a specific profile. You c
 fixed probability change to a predictor, because the same odds ratio moves probability a lot in the steep
 middle of the curve and almost nothing near $0$ or $1$.
 
+![**A coefficient is a step in log-odds, not a fixed change in probability.** The same $+1$ on the log-odds
+scale produces very different probability moves depending on where you sit on the S-curve: near the steep
+middle ($\hat\eta$ from $0$ to $1$) it lifts the probability by about $0.23$, but out in the flat tail
+($\hat\eta$ from $3$ to $4$) the identical $+1$ moves it only about $0.03$. That is exactly why you cannot
+read "$0.22$ for hours" as "$0.22$ more probability" — instead exponentiate to an odds ratio ($e^{0.22}
+\approx 1.25$), or pick a specific profile and read a predicted probability off the curve. Synthetic;
+illustrative.](../assets/figures/wk13_logodds_vs_prob.png){#fig-wk13-logodds fig-alt="A logistic S-curve with the linear predictor eta, the log-odds, on the horizontal axis from minus five to five and predicted probability on the vertical axis. Two equal steps of plus one in eta are drawn as arrows. Near the middle, from eta zero to one, the probability rises from 0.50 to about 0.73, a change of about 0.23. Out in the right tail, from eta three to four, the probability rises from about 0.95 to 0.98, a change of only about 0.03. A caption notes the same plus one on the log-odds scale moves probability by 0.23 in the middle but only 0.03 in the tail."}
+
 The second flavor is **reporting the odds ratio as if it were a relative risk.** Someone reads "$\mathrm{OR}
 \approx 2.72$" and writes "Structured students are $2.72$ times as likely to pass." That sentence describes
 a **relative risk**, not an odds ratio, and the two diverge whenever the outcome is common — which passing
@@ -413,17 +442,6 @@ outcome on the log-odds scale and reading exponentiated coefficients — and the
 Valdivia) material on **generalized linear models in R** for the `glm(..., family = binomial)` fitting and
 reporting workflow shown in the static code. *These notes are the course's own synthesis, grounded in but not
 copied from the sources.* No prose, examples, exercises, figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The logistic-regression logic on this page is course-authored, but every numeric value
-here is **drafted, synthetic, and not independently checked**. The load-bearing numbers are the Dataset R
-logistic coefficients ($b_1 = 0.22$ for hours, $0.04$ for pretest, $0.6$ for Drop-in, $1.0$ for Structured),
-the exponentiated odds ratios — **OR per study-hour $\approx 1.25$** and the **adjusted OR Structured vs None
-$\approx 2.72$** (which shrinks from the **raw $3.67$** of week 12) — and the two illustrative **predicted
-probabilities, $\approx 0.56$ and $\approx 0.05$**, together with the transfer-example loan-default values
-($\mathrm{OR}\approx 0.67$, $\hat p \approx 0.001$). All example data are synthetic with `set.seed(35203)`,
-and **R is not executed in this build** — the code blocks are static teaching idioms. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

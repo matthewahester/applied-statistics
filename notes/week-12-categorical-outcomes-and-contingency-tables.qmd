@@ -4,7 +4,6 @@ subtitle: "Counts, proportions, and association — without overclaiming"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), inference for two proportions and the chi-square test — supports contingency tables"
   - "ISLBS (Vu & Harrington), categorical data in an applied/health setting — optional applied reference"
@@ -137,6 +136,13 @@ rate **climbs** across the programs, which is the pattern the rest of the week q
 groups are equal-sized at $40$ each, so the raw counts and the rates tell the same story; when group
 sizes differ, always convert to rates before comparing — the counts alone mislead.)
 
+![**The pass rate climbs across the three support programs.** Reading the row pass rates off the
+$3\times 2$ table, $45\%$ of the None group passed ($18$ of $40$), $60\%$ of Drop-in ($24$ of $40$),
+and $75\%$ of Structured ($30$ of $40$), against an overall pass rate of $0.60$ (the dashed line).
+That steady climb is the association the chi-square test and the effect measures spend the rest of the
+week quantifying — but because students chose or were advised into their programs, it is association,
+not causation. Synthetic; seed 35203.](../assets/figures/wk12_pass_by_program.png){#fig-wk12-passrate fig-alt="A bar chart of pass rate by support program. None is 45 percent with 18 of 40 students passing, Drop-in is 60 percent with 24 of 40, and Structured is 75 percent with 30 of 40 and is drawn with diagonal hatching as the highest. A red dashed horizontal line marks the overall pass rate of 0.60. Each bar carries a printed percent label and the count of students who passed inside it. A caption notes the design is observational, so the climbing pass rate is an association, not a cause."}
+
 Now ask what the table **would** look like if program made no difference — the **null of
 independence**. Under independence the pass rate in every program equals the overall pass rate,
 $72/120 = 0.60$. So each program's **expected pass count** is
@@ -181,6 +187,13 @@ $$
 
 on $(3-1)(2-1) = 2$ degrees of freedom. Read against the $\chi^2_2$ distribution, this gives
 $p \approx 0.024$.
+
+![**Where the chi-square comes from: observed pass counts against what independence predicts.** Under
+independence every program would expect $24$ passes (the dotted bars); the observed passes (solid) are
+$18$ for None, exactly $24$ for Drop-in, and $30$ for Structured. Squaring each gap, scaling by the
+expected count, and adding the mirrored fail-cell gaps makes the three programs contribute $3.75$, $0$,
+and $3.75$, so $\chi^2 = 3.75 + 0 + 3.75 = 7.5$ on $2$ degrees of freedom ($p \approx 0.024$). Every
+expected count ($24$ or $16$) clears $5$, so the test is valid. Synthetic; seed 35203.](../assets/figures/wk12_observed_vs_expected.png){#fig-wk12-obsexp fig-alt="A grouped bar chart comparing observed and expected pass counts for three programs. For None the observed passes are 18 versus 24 expected; for Drop-in observed and expected are both 24; for Structured observed is 30 versus 24 expected. The expected bars are drawn with a dotted fill to distinguish them from the solid observed bars, and each carries a printed value label. Above each program a label gives its contribution to the chi-square statistic: 3.75 for None, 0.00 for Drop-in, and 3.75 for Structured. A caption states the chi-square is 3.75 plus 0 plus 3.75 equals 7.5 on 2 degrees of freedom with p about 0.024, and that every expected count is at least 5."}
 
 Interpret it precisely, because this is where the week's first discipline bites. A $p$-value of
 $0.024$ means: **if** pass and program were truly independent, a table this far from the expected
@@ -235,6 +248,13 @@ statement overstates the effect**. The odds ratio earns its keep in **logistic r
 it is the natural currency there and survives adjustment cleanly — but as a plain-English effect size,
 the risk difference and relative risk are easier to read honestly. Whichever you report, **say which
 one it is**.
+
+![**Three effect measures, all built from the same two pass rates.** Comparing Structured ($0.75$)
+against None ($0.45$) gives a **risk difference** of $0.30$ on the probability scale (absolute), a
+**relative risk** of $0.75/0.45 \approx 1.67$ (times as likely), and an **odds ratio** of
+$3.0/0.818 \approx 3.67$ (a ratio of odds, not of probabilities). The picture makes the week's trap
+concrete: the odds ratio $3.67$ is **not** the relative risk $1.67$ — it sits farther from $1$ — so
+reporting it as "times as likely" overstates the effect by more than double. Synthetic; seed 35203.](../assets/figures/wk12_effect_measures.png){#fig-wk12-effects fig-alt="A chart with two pass-rate bars, None at 0.45 and Structured at 0.75 with the higher bar hatched, on a probability axis. A double-headed arrow between the two bar tops is labeled risk difference, 0.75 minus 0.45 equals 0.30, absolute. Two call-out boxes to the right give the relative risk, 0.75 divided by 0.45 equals 1.67, times as likely, and the odds ratio, 3.0 divided by 0.818 equals 3.67, labeled not 1.67 and farther from 1. The figure shows all three measures come from the same two pass rates but live on different scales."}
 
 Then close with the blueprint's sixth step, the observational caveat. Every effect measure above is
 **large** — a $30$-point gap, a $1.67\times$ rate, a $3.67$-fold odds — and the chi-square says the
@@ -421,6 +441,14 @@ three things separate every time: statistical significance ($p \approx 0.024$), 
 (a $30$-point gap), and causation (**not** licensed by an observational table). Reserve the causal verb
 for a randomized design, as the recovery-trial example shows.
 
+![**Why an observational table stops at association.** The same climbing pass rate ($45\% \to 60\% \to
+75\%$; $\chi^2 = 7.5$, df $= 2$, $p \approx 0.024$) has two live explanations the counts cannot tell
+apart: that the program itself raises pass probability (a real causal effect), or that motivated,
+better-prepared students self-selected into the Structured program. Because the data are observational,
+both explanations survive, so the honest conclusion is **association, not causation** — only a
+randomized assignment would license the causal verb, exactly the contrast the recovery-trial example
+draws. Synthetic; seed 35203.](../assets/figures/wk12_association_vs_causation.png){#fig-wk12-causation fig-alt="A flow diagram. A top box states the observed association: pass rate rising 45 to 60 to 75 percent across None, Drop-in, and Structured, with chi-square 7.5, 2 degrees of freedom, p about 0.024. Two arrows lead down to two boxes: Explanation A, the program raises pass probability as a real causal effect; and Explanation B, self-selection, where motivated and better-prepared students choose the Structured program. Both arrows then converge on a bottom box stating that observational counts cannot separate A from B, so the conclusion is association not causation, and only a randomized assignment would license the word caused."}
+
 ## Low-stakes self-checks (ungraded)
 
 These are for your own practice — ungraded, no submission.
@@ -455,18 +483,6 @@ The **ISLBS** (Vu & Harrington) treatment of **categorical data in an applied/he
 **optional** applied reference for the risk/odds vocabulary and worked categorical examples. *These
 notes are the course's own synthesis, grounded in but not copied from the sources.* No prose, examples,
 exercises, figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The categorical-data logic on this page is course-authored, but every numeric
-value here is **drafted, synthetic, and not independently checked**. The load-bearing numbers are the
-Dataset R contingency table — the program counts $18/24/30$ passes out of $40$ (pass rates $0.45$,
-$0.60$, $0.75$; totals $72$ pass / $48$ fail), the expected count $24$ pass per program, the
-**chi-square $\approx 7.5$ on $2$ df with $p \approx 0.024$**, and the Structured-vs-None effect
-measures — **risk difference $0.30$, relative risk $\approx 1.67$, odds ratio $\approx 3.67$** —
-together with the illustrative recovery-trial transfer values (risk difference $0.20$, relative risk
-$1.50$, odds ratio $\approx 2.25$). All example data are synthetic with `set.seed(35203)`, and **R is
-not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

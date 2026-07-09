@@ -4,7 +4,6 @@ subtitle: "When each unit is its own control: differences, not groups"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Cetinkaya-Rundel & Hardin), inference for a single mean and paired data — supports one-sample and paired comparisons"
   - "Navarro, Learning Statistics with R — optional reference for the paired t-test"
@@ -150,6 +149,12 @@ names.
 For Dataset P, the differences have mean $\bar d = +6.0$ points with standard deviation $s_d = 9.0$. That
 $\bar d = +6$ is the estimate; everything downstream is its uncertainty and its interpretation.
 
+![**Each student is measured twice — the pairing is the whole design.** All $n = 30$ students carry a
+pre-score and a post-score joined by a line; most rise (26 of 30 here), and the bold line tracks the group
+mean climbing from $62$ to $68$ — the locked $\bar d = +6$ gain. This is exactly why you collapse each pair
+to one within-student change $d_i = \text{post}_i - \text{pre}_i$ and analyze that single column, rather
+than comparing two clouds of numbers. Synthetic; seed 35203.](../assets/figures/wk04_paired_slopegraph.png){#fig-wk04-slopegraph fig-alt="A slope chart with two vertical positions, Pre on the left and Post on the right, and a readiness score axis from 30 to 100. Thirty thin lines each connect one student's pre-score to their post-score; twenty-six rise as solid lines and four fall as dashed lines. A thick black line runs from the pre mean of 62 up to the post mean of 68, labeled mean gain d-bar equals plus 6. A caption notes the same thirty students, most rising, and that each pair collapses to one change d equals post minus pre."}
+
 ### Why pairing reduces variability and raises power
 
 Here is the payoff, and it is worth seeing as a number, not a slogan. The standard error of the mean
@@ -175,6 +180,12 @@ between-student variation** and leaves only the within-student noise. A smaller 
 and a larger $t$, so pairing — when the design genuinely is paired — is the more powerful analysis. The
 naive independent SE is not just a different number; it is the *wrong* number for this design, and quoting
 it would understate the precision the pairing actually earned.
+
+![**Pairing nearly halves the standard error.** The same $+6$-point estimate is shown twice: with the
+correct paired standard error ($\pm 1.64$) and with the wrongly-independent one ($\pm 2.97$). The naive
+independent bar is nearly twice as wide for the very same data, because it carries the full between-student
+spread twice while the paired SE carries only the spread of the *changes*. The locked paired 95% interval
+is the narrow one, $(2.6, 9.4)$. Synthetic; seed 35203.](../assets/figures/wk04_pairing_se_comparison.png){#fig-wk04-se-comparison fig-alt="A chart with two horizontal error bars, both centered on a mean readiness change of plus 6 score points. The upper bar, labeled paired and correct, spans plus or minus 1.64. The lower bar, labeled naive independent and wrong, spans plus or minus 2.97 and is nearly twice as wide. A dotted vertical line marks the common estimate of 6. A caption notes the paired SE about 1.64 versus the naive independent SE about 2.97, nearly double, and that the paired 95 percent confidence interval is 2.6 to 9.4."}
 
 With the paired SE in hand, the paired $t$-statistic is
 
@@ -230,6 +241,12 @@ $\mathrm{SE} = 9/\sqrt{30} \approx 1.64$, giving $t = 6.0/1.64 \approx 3.65$ on 
 and a 95% CI of $(2.6, 9.4)$ points. The standardized effect size is $d_z = 6/9 \approx 0.67$. The static R
 below shows both ways to get there — the paired call and the equivalent one-sample call on the
 differences. It is teaching code and is **not executed** here.
+
+![**The paired estimate carried with its uncertainty.** The point estimate is $\bar d = +6.0$ readiness
+points, and the 95% confidence interval runs from $2.6$ to $9.4$ — the whole interval sits above the dashed
+no-change line at $0$, so "no gain" is implausible. Reading the *interval*, not a lone $p$-value, is the
+discipline: plausible mean gains run from about three to about nine points ($\mathrm{SE} \approx 1.64$,
+$t \approx 3.65$ on $29$ df, $p \approx 0.001$, $d_z \approx 0.67$). Synthetic; seed 35203.](../assets/figures/wk04_mean_difference_ci.png){#fig-wk04-estimate-ci fig-alt="A dot-and-whisker chart on a horizontal axis of mean readiness change in score points. A filled point sits at plus 6.0, with a confidence interval whisker running from 2.6 on the left to 9.4 on the right, both endpoints labeled. A red dashed vertical line marks no change at zero, well to the left of the interval, annotated that the 95 percent confidence interval excludes zero. A caption gives the standard error about 1.64, t about 3.65 on 29 degrees of freedom, p about 0.001, and effect size d sub z about 0.67."}
 
 ```r
 set.seed(35203)
@@ -326,6 +343,13 @@ memorize; it is to *read the structure first*. Ask the diagnostic question: **is
 given pre-score the same unit's later reading?** If yes, the design is paired, you analyze the differences,
 and you use the one-sample SE on those differences. The design tells you the method.
 
+![**Why the naive independent SE balloons.** The paired standard error is built from a single spread — the
+spread of the *changes*, $s_d = 9$ — giving $\mathrm{SE} \approx 1.64$. The independent-samples formula
+instead re-adds the full between-student spreads, $s_{\text{pre}} = 12$ and $s_{\text{post}} = 11$ (the
+hatched bars), the very variation pairing was designed to cancel, giving $\mathrm{SE} \approx 2.97$. Same
+data, nearly double the standard error — that is the cost of misreading the design as two independent
+groups. Synthetic; seed 35203.](../assets/figures/wk04_independent_se_inflation.png){#fig-wk04-se-inflation fig-alt="A bar chart of the standard deviations that feed each standard error. On the left, one solid bar labeled s sub d equals 9, the change spread, under the heading paired analysis with SE equals 9 over root 30, about 1.64. On the right, two hatched bars labeled s sub pre equals 12 and s sub post equals 11 under the heading naive independent with SE equals root of 12 squared over 30 plus 11 squared over 30, about 2.97. A caption notes pairing keeps only the change spread while the independent formula re-adds the full pre and post spreads."}
+
 The mirror flavor is just as damaging: **pairing data that are not actually matched.** If the thirty
 "before" readings and the thirty "after" readings come from *different* students — a fresh cohort each
 time — then there are no genuine pairs, the differences you would compute are meaningless arithmetic
@@ -364,17 +388,6 @@ concept sequence: a point estimate, its standard error, a confidence interval, a
 setup. **Navarro** (Learning Statistics with R) is named only as an **optional reference** for the
 mechanics of the paired $t$-test. *These notes are the course's own synthesis, grounded in but not copied
 from the sources.* No prose, examples, exercises, figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The method logic on this page is course-authored, but every numeric value here is
-**drafted, synthetic, and not independently checked**. The load-bearing numbers are the Dataset P slice —
-the mean paired difference $\bar d = +6$ points, the difference SD $s_d = 9$, the paired
-$\mathrm{SE} \approx 1.64$, the paired $t \approx 3.65$ on $29$ df, $p \approx 0.001$, the 95% confidence
-interval $(2.6, 9.4)$, and the effect size $d_z \approx 0.67$ — together with the **locked SE contrast**,
-the paired $1.64$ against the naive independent $2.97$, and the illustrative reaction-time transfer values
-($\bar d = -18$ ms, $d_z \approx -0.75$). All example data are synthetic with `set.seed(35203)`, and **R is
-not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

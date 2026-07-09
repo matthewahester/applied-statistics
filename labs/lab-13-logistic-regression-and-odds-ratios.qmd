@@ -4,7 +4,6 @@ subtitle: "Model a binary outcome and read odds ratios and predicted probabiliti
 page_mode: software_lab_week
 week_contract: software_note_lab
 source_mode: source-informed
-verified: false
 toc: true
 ---
 
@@ -64,6 +63,8 @@ talk about probability you pick specific predictor values, form the linear predi
 it through the inverse logit — which is what `predict(type = "response")` does for you. The two students
 in this lab come out at about $0.56$ and about $0.05$: far apart, both safely inside $(0, 1)$, and far
 more useful to a reader than the raw logit ever could be.
+
+![**The whole model in one picture — the fitted logistic S-curve.** Predicted $P(\text{pass})$ climbs with study hours but never leaves $(0, 1)$: it tapers toward the dotted floor and ceiling instead of running past them the way a straight line would. The log-odds slope of $0.22$ per hour (odds ratio $e^{0.22} \approx 1.25$) sets how steep the rise is, and the same slope moves probability *most* in the steep middle and barely at all out near the flat ends. The two lab profiles are marked on it: the high-effort Structured student lands at $\hat p \approx 0.56$ (16 hours), the low-effort None student at $\hat p \approx 0.05$ (3 hours). Synthetic; seed 35203.](../assets/figures/lab13_logistic_scurve.png){#fig-lab13-scurve fig-alt="A line chart with study hours per week from 0 to 20 on the horizontal axis and predicted probability of passing from 0 to 1 on the vertical axis. Two S-shaped curves rise from near zero on the left toward the upper right, tapering below a dotted probability ceiling at 1 and above a dotted floor at 0. A solid brown curve for a Structured student at pretest 80 sits slightly above a dashed blue curve for a None student at pretest 50. A filled marker on the brown curve at 16 hours is labeled predicted probability about 0.56, and a filled marker on the blue curve at 3 hours is labeled predicted probability about 0.05. A caption notes the log-odds slope is 0.22 per hour, giving an odds ratio of about 1.25, and that the curve tapers near the 0 and 1 bounds."}
 
 One framing detail makes this lab the *logistic* climax of the course's confounding throughline rather
 than an isolated model. The adjusted Structured odds ratio of about $2.72$ is **smaller** than the raw
@@ -285,6 +286,8 @@ same story as the week-10 regression slope falling $1.6 \to 1.1$ after adjustmen
 move: the *estimate* is now reportable (an odds ratio with an interval), and the *conclusion* is already
 forming — an **adjusted association**, smaller and more honest than the raw one.
 
+![**Adjustment shrinks the odds ratio from $3.67$ to $2.72$.** The raw week-12 table put the Structured-versus-None odds ratio at $3.67$; the logistic fit, holding **hours** and **pretest** fixed, brings it down to $e^{1.0} \approx 2.72$. Nothing about the $120$ students changed — only the question did, from "what are the odds overall?" to "what are the odds among students with the same hours and pretest?" That drop is confounding made visible: students who landed in Structured also studied more and started higher, the raw table credited those advantages to the program, and adjustment takes the credit back. Both bars still sit well above the dashed no-association line at $\mathrm{OR} = 1$. Synthetic; seed 35203.](../assets/figures/lab13_or_shrinkage.png){#fig-lab13-shrinkage fig-alt="A bar chart with two bars measuring the Structured-versus-None odds ratio. The left bar, labeled raw table odds ratio from week 12, reaches 3.67. The right bar, labeled adjusted odds ratio from the logistic fit and drawn with diagonal hatching, reaches 2.72. A curved arrow runs from the top of the taller raw bar down to the shorter adjusted bar, annotated shrinks after adjusting for hours and pretest. A red dashed horizontal line marks an odds ratio of 1, no association, well below both bars. A caption notes the same 120 students underlie both estimates and that confounding takes the credit back."}
+
 ### Step 4 — Predicted probabilities for two students, on the probability scale
 
 Move to the second honest destination: the **predicted probability**. Pick two specific students, build a
@@ -320,6 +323,8 @@ to *use* `type = "response"` rather than `type = "link"` is the difference betwe
 `link` value is the log-odds $\hat\eta$ (an unbounded number nobody reads), and `response` is that value
 pushed through $\hat p = 1/(1 + e^{-\hat\eta})$ into the bounded probability you report.
 
+![**The two students' predicted probabilities, on the scale a reader wants.** `predict(type = "response")` returns $\hat p \approx 0.05$ for the low-effort None student (3 hours, pretest 50) and $\hat p \approx 0.56$ for the high-effort Structured student (16 hours, pretest 80). Both land safely inside $(0, 1)$ — a line fit to a $0/1$ response could not promise that. The high-effort student clears the dashed even-odds line at $0.50$; the low-effort student sits far below it. These are the conclusion a reader can actually use, computed at specific predictor profiles rather than read off the constant odds ratio. Synthetic; seed 35203.](../assets/figures/lab13_predicted_probs.png){#fig-lab13-predprobs fig-alt="A bar chart of two predicted probabilities of passing. The left bar, for a low-effort None student with 3 hours and pretest 50, reaches 0.05. The right bar, for a high-effort Structured student with 16 hours and pretest 80 and drawn with diagonal hatching, reaches 0.56. Each bar carries a printed value label. A dashed horizontal line marks the even-odds level of 0.50: the high-effort bar rises just above it while the low-effort bar sits far below. A caption notes both predictions fall inside the interval from 0 to 1 and are computed at specific profiles, not read off the odds ratio."}
+
 This pair also makes the **constant-odds-ratio, non-constant-probability** point concrete. One more
 study-hour multiplies *both* students' odds by the same $1.25$, but it would move the first student's
 probability (near the steep middle of the S-curve) far more than the second's (out near the flat floor at
@@ -331,11 +336,13 @@ raw relative risk was only about $1.67$ even though the raw odds ratio was $3.67
 **chose** their programs, the model buys an **adjusted association**, not a causal claim — it cannot tell
 you that *enrolling* a None student in Structured would raise their odds by $2.72$.
 
+![**An odds ratio is not a relative risk.** For the same raw week-12 Structured-versus-None comparison, the odds ratio is $3.67$ but the relative risk is only $1.67$ — Structured students have $3.67$ times the *odds* of passing, yet are only about $1.67$ times as *likely* to pass. The two measures agree only when the outcome is rare; here passing is common (about $60\%$ overall), so the odds ratio sits far above the relative risk and badly overstates "times as likely." Reading the $3.67$ (or the adjusted $2.72$) as a chance is the week's signature error; both bars clear the dashed no-difference line at $1$, but they answer different questions. Synthetic; seed 35203.](../assets/figures/lab13_or_vs_rr.png){#fig-lab13-orvsrr fig-alt="A bar chart comparing two effect measures for the same raw Structured-versus-None comparison from week 12. The left bar, labeled odds ratio, reaches 3.67. The right bar, labeled relative risk and drawn with crosshatching, reaches 1.67. Each bar carries a printed value label. A red dashed horizontal line marks the value 1, no difference, below both bars. A caption notes that the odds are 3.67 times higher while the chance of passing is only 1.67 times higher, because the odds ratio overstates the relative risk when passing is common."}
+
 ## Verify
 
 This is the moment where your R output and the week-13 reasoning are supposed to meet. Check each of
 these against the note, and treat a mismatch as a bug in your code, not a discovery about the world —
-every target value is the locked, synthetic Dataset R slice (provisional), and R is not executed on
+every target value is the locked, synthetic Dataset R slice (illustrative), and R is not executed on
 this site.
 
 - **The program reference is None.** `levels(students$program)` must return `"None" "Drop-in"

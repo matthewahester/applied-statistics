@@ -4,7 +4,6 @@ subtitle: "Seeing distributions, groups, and relationships before fitting anythi
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Cetinkaya-Rundel & Hardin), exploratory data analysis — supports distributions, group comparison, and relationships"
   - "ModernDive (Ismay, Kim & Valdivia), data visualization with ggplot2 — supports the graphical comparison workflow"
@@ -136,10 +135,24 @@ spread is good news for the methods ahead; it is the equal-variance picture a on
 **Unusual observations last:** the **Online** group shows one low point near $45$, flagged below its lower
 whisker. That is the outlier from the distributions section, now visible in context.
 
+![**Side-by-side boxplots let you read center, spread, and outliers in one picture.** The four format
+medians order Online (near $70$) below Lecture ($74$), Hybrid ($79$), and Lecture+Lab ($81$, hatched), with
+the diamonds marking the locked group means and the red dashed line the grand mean $76$. The boxes are of
+comparable height — within-group SD $\approx 9$ — so the formats differ mainly in **center, not spread**;
+the one low Online point near $45$ sits below its whisker as an outlier to **investigate, not delete**. This
+is step 2 (Structure) made visible, before any model is fit. Synthetic; seed 35203.](../assets/figures/wk02_boxplots_by_format.png){#fig-wk02-boxplots fig-alt="Four side-by-side boxplots of final exam score, one per instructional format: Lecture, Lecture plus Lab, Online, and Hybrid. A black diamond with a printed value label marks each locked group mean at 74, 81, 70, and 79; the Lecture plus Lab box is drawn with diagonal hatching as the highest. The boxes are of similar height, showing comparable spread with a within-group standard deviation of about 9. A red dashed horizontal line marks the grand mean at 76. One low Online point near 45 is drawn as a red dot below the Online whisker, annotated as an outlier to investigate, not delete."}
+
 Notice what the boxplots gave you that the four means alone did not: the **spread comparison** and the
 **Online outlier**. Four numbers — $74$, $81$, $70$, $79$ — are a center summary and nothing more. The plot
 is what tells you the groups are comparably variable and that one Online student is unusual. That is the
 whole case for pairing the picture with the numbers: each carries information the other drops.
+
+![**Same four means, opposite honesty.** On the left, a bar-of-means chart of $L = 74$, $LL = 81$, $O = 70$,
+$H = 79$ shows the centers and nothing else — the comparable spread, the shape, and the low Online student
+are all invisible. On the right, side-by-side boxplots of the very same groups restore all three: the
+roughly equal spreads and the Online outlier near $45$ are back in view. This is exactly why the week's rule
+is to pair a graph that shows shape with the numbers that pin down center — a bare bar-of-means quietly drops
+everything the boxplot keeps. Synthetic; seed 35203.](../assets/figures/wk02_good_vs_bad.png){#fig-wk02-compare fig-alt="Two panels sharing the same four Dataset F format means. The left panel is a bar chart of the mean final scores, Lecture 74, Lecture plus Lab 81 hatched, Online 70, Hybrid 79, each with a printed value label and no indication of spread, shape, or outliers. The right panel shows the identical four groups as side-by-side boxplots, revealing comparable box heights and a red dot for the low Online student near 45 below its whisker. A caption notes the bars hide the spread and the low Online student while the boxplots show both."}
 
 ### Relationships: a scatter of two quantitative variables
 
@@ -165,6 +178,13 @@ causation.** Dataset R is observational — students chose how much to study —
 real but cannot, by itself, establish that studying more *causes* higher scores. Motivated students may
 both study more and score higher for reasons the scatter never sees. The picture buys you an association
 and a reason to look further; it does not buy you a cause.
+
+![**A scatter shows direction, strength, and form — and the point a correlation hides.** Study hours and
+final score rise together in a moderate, roughly linear cloud, $r \approx 0.55$ ($R^2 \approx 0.30$). The
+gray dashed line is a *rough upward trend hint only* — deliberately not a fitted model, which waits for
+Week 10. One **high-leverage** student sits at low hours but a high score, off to the left and above the
+trend: flag and investigate, do not delete. Because Dataset R is observational, the upward association is
+real but is **not** a cause. Synthetic; seed 35203.](../assets/figures/wk02_hours_scatter.png){#fig-wk02-scatter fig-alt="A scatterplot of study hours per week on the horizontal axis against final exam score on the vertical axis, for about 120 students. The cloud drifts upward from lower-left to upper-right in a moderate, roughly linear pattern with a correlation of about 0.55. A gray dashed line traces the rough upward trend and is labeled as a trend hint fitted only in Week 10, not a model here. One point is boxed in red at low study hours near 2 but a high score near 88, off to the left and above the trend, labeled a high-leverage point. A caption notes the association is positive with r about 0.55 and R squared about 0.30, and that association is not cause."}
 
 ## Worked examples
 
@@ -287,6 +307,13 @@ fix is to keep three things distinct, every time: a **correlation** (what you se
 (what you would need an experiment or careful adjustment to claim), and the **form** of the relationship
 (what the number alone never shows). Look first; describe honestly; claim only what the design supports.
 
+![**The same gaps, rigged two ways by the y-axis alone.** Both panels plot the identical format means
+$L = 74$, $LL = 81$, $O = 70$, $H = 79$; only the vertical baseline changed. Starting the axis at $68$
+(left) stretches the modest $11$-point Online-to-Lecture+Lab spread into a cliff; starting honestly at $0$
+(right) shows the same differences as real but moderate. There is a fourth failure hiding behind "look
+before you fit": you can look at a *rigged* picture. Always check how a graph was drawn — a truncated axis
+manufactures drama the data do not support. Synthetic; seed 35203.](../assets/figures/wk02_misleading_axis.png){#fig-wk02-axis fig-alt="Two bar charts of the identical four Dataset F format means, Lecture 74, Lecture plus Lab 81 hatched, Online 70, Hybrid 79, each with a printed value label. The left panel truncates the vertical axis to begin at 68, which makes the differences between formats look dramatic. The right panel begins the vertical axis honestly at 0, and the same differences read as real but modest. A caption notes only the y-axis baseline changed, and that a truncated axis inflates an 11-point spread into a cliff."}
+
 ## Low-stakes self-checks (ungraded)
 
 These are for your own practice — ungraded, no submission.
@@ -313,16 +340,6 @@ reading relationships — and **ModernDive** (Ismay, Kim & Valdivia) on **data v
 for the graphical-comparison workflow (boxplots and scatterplots as the tools that make structure visible).
 *These notes are the course's own synthesis, grounded in but not copied from the sources.* No prose,
 examples, exercises, figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The exploratory-analysis logic on this page is course-authored, but every numeric
-value here is **drafted, synthetic, and not independently checked**. The load-bearing numbers are the
-**Dataset F** format means used **descriptively** — $L = 74$, $LL = 81$, $O = 70$, $H = 79$ (grand mean
-$76$, within-group SD $\approx 9$, one mild Online outlier near $45$) — and the **Dataset R** correlation
-$r \approx 0.55$ for study hours versus final score (with one high-leverage low-hours/high-score point),
-together with the illustrative rainfall-by-region transfer values. All example data are synthetic with
-`set.seed(35203)`, and **R is not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

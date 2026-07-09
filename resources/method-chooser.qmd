@@ -2,7 +2,6 @@
 title: "Method chooser (decision guide)"
 subtitle: "From a data shape and a question to a defensible method"
 page-type: reference
-verified: false
 toc: true
 ---
 
@@ -22,7 +21,7 @@ This guide deliberately lays out *candidates* — what each assumes and what eac
 run inside every cell and recur on every page: **report the estimate with its uncertainty, not just a verdict**,
 and **keep statistical significance, practical importance, and a causal claim distinct** — observational data
 buy association, not causation. All numeric values referenced come from the synthetic **Cypress Ridge College
-Student-Success** datasets (seed set, `set.seed(35203)`) and are provisional — the worked numbers are provisional pending review. R is shown only as static, non-executed code.
+Student-Success** datasets (seed set, `set.seed(35203)`) and are illustrative, not independently verified. R is shown only as static, non-executed code.
 
 The five recurring datasets are referenced throughout by their *structure*, because structure — not subject
 matter — is what drives method choice:
@@ -242,8 +241,7 @@ one the course cares about most — it is never a bare p-value.
 | categorical | two categorical variables (R) | chi-square + effect measure | association; RD / RR / OR | expected counts $\ge 5$ | [12](../notes/week-12-categorical-outcomes-and-contingency-tables.qmd) |
 | binary | binary outcome + predictors (R) | logistic regression | odds ratio; predicted probability | linear logit | [13](../notes/week-13-logistic-regression-for-binary-outcomes.qmd) |
 
-A small R idiom for each, shown for the *shape* of the call only — **not executed** in this build (R is not
-installed; `set.seed(35203)` where randomness would enter):
+A small R idiom for each, shown for the *shape* of the call only — **not executed** on this site (R is not run; `set.seed(35203)` where randomness would enter):
 
 ```r
 set.seed(35203)
@@ -287,20 +285,6 @@ When a method's assumptions genuinely hold and its estimate answers your questio
 choice — say *why this one*, report the estimate with its uncertainty, and bound the conclusion to what the
 design (observational vs experimental) can support. Match the method to the question and the structure, not to
 habit.
-
-## Evidence and verification status
-
-**verified: false.** The decision logic and the blueprint framing on this page are course-authored, but every
-numeric value referenced here — P's paired mean difference $+6$, $t \approx 3.65$, CI $(2.6, 9.4)$, $d_z \approx
-0.67$ and the independent-SE contrast $\approx 2.97$; G's difference $6$, Welch $t \approx 2.53$, CI $(1.3,
-10.7)$, $d \approx 0.53$; F's means $L\,74, LL\,81, O\,70, H\,79$, $F \approx 7.61$, $\eta^2 \approx 0.19$, Tukey
-critical difference $\approx 6.64$, contrast $\hat\psi = 8$, and the ANCOVA adjusted means
-($74.5, 80.6, 70.9, 78.1$) with $F \approx 6.2$, $\eta^2_{\text{partial}} \approx 0.16$; X's cell means
-($73, 85, 62, 83$) and $F$'s ($\approx 10.4, 67.2, 5.0$); R's slopes ($1.6 \to 1.1$), $R^2$ ($0.30, 0.46$),
-$\chi^2 = 7.5$ with RD $0.30$ / RR $\approx 1.67$ / OR $\approx 3.67$, and the logistic ORs ($e^{0.22} \approx
-1.25$, $e^{1.0} \approx 2.72$) with predicted probabilities ($\approx 0.56, 0.05$) — is **drafted, synthetic,
-and not independently checked**; the data are simulated with `set.seed(35203)` and **R is not executed in this
-build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

@@ -2,7 +2,6 @@
 title: "Assumptions & diagnostics guide"
 subtitle: "What each method assumes, and how to check it"
 page-type: reference
-verified: false
 toc: true
 ---
 
@@ -28,7 +27,7 @@ Three disciplines run through the whole page and you should be able to recite th
    the analysis with and without the point and say what changed.
 
 All numbers referenced come from the five synthetic **Cypress Ridge College Student-Success** datasets
-(seed set, `set.seed(35203)`) and are provisional — the worked numbers are provisional pending review. R is shown as **static, non-executed** code; it is not run in this build.
+(seed set, `set.seed(35203)`) and are illustrative, not independently verified. R is shown as **static, non-executed** code; it is not run on this site.
 
 ## How to read this guide
 
@@ -329,17 +328,6 @@ investigation does.
 When the assumptions genuinely hold, the parametric method is the efficient, correct choice and you report its
 estimate with its interval plainly. When a diagnostic fails, it is telling you which estimate to stop trusting
 and which fallback to reach for — that is the whole point of step 4 of the blueprint.
-
-## Evidence and verification status
-
-**verified: false.** The assumption ladders, the diagnostics, and the investigate-do-not-delete logic on this
-page are course-authored, but every numeric value referenced here — P's $\bar d = 6$ with paired $t \approx
-3.65$ and CI $(2.6, 9.4)$; G's difference $6$ with Welch $t \approx 2.53$, CI $(1.3, 10.7)$, $d \approx 0.53$;
-F's $F \approx 7.61$, $\eta^2 \approx 0.19$, Levene $p \approx 0.40$; X's interaction $F \approx 5.0$; R's
-regression slopes $1.6 \to 1.1$, $R^2 \approx 0.46$, VIF $\approx 1.3$; the ANCOVA adjusted means
-($74.5, 80.6, 70.9, 78.1$) and slope $0.45$; the chi-square $\chi^2 \approx 7.5$ with RR $\approx 1.67$ and
-OR $\approx 3.67$; and the logistic ORs ($1.25$ per hour, $2.72$ adjusted) — is **drafted, synthetic, and not
-independently checked**; **R is not executed in this build**; the worked numbers are provisional and not independently verified.
 
 ## Public vs. graded
 

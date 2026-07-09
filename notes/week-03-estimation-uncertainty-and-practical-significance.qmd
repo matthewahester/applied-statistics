@@ -4,7 +4,6 @@ subtitle: "A point estimate, an interval, an effect size — and whether the dif
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Cetinkaya-Rundel & Hardin), foundations for inference (confidence intervals, p-values) — supports estimation and uncertainty"
 toc: true
@@ -169,6 +168,18 @@ from a barely-noticeable $1.3$ points up to a substantial $10.7$ points, so whil
 true difference is positive, you are not very precise about its size. That candor is exactly what a lone
 p-value hides.
 
+![**The 6-point difference reported as an estimate with its interval.** The point estimate of the
+Support$-$Self-guided gap is $6.0$ points; its $95\%$ confidence interval runs from $1.3$ to $10.7$ — a
+width of about $9.4$ points. Because the interval excludes the dashed *no-difference* line at $0$, the gap
+is statistically significant ($p \approx 0.013$), yet it is wide enough that the plausible effect ranges
+from barely noticeable to substantial. This one object carries direction, magnitude, and precision at once,
+which a lone p-value cannot. Synthetic; seed 35203.](../assets/figures/wk03_diff_ci.png){#fig-wk03-diff-ci
+fig-alt="A horizontal interval plot. A filled marker sits at 6.0 on an axis of the Support minus
+Self-guided difference in mean final score, with a confidence-interval whisker running from 1.3 on the left
+to 10.7 on the right, a width of about 9.4 points. A red dashed vertical line marks zero, the no-difference
+value, well to the left of the whole interval. Labels read point estimate 6.0, lower endpoint 1.3, upper
+endpoint 10.7, and 95 percent CI width about 9.4 points."}
+
 Now the **p-value**, stated carefully. For Dataset G the two-sample (Welch) test gives
 
 $$
@@ -206,6 +217,19 @@ laws). Read it in words: the Support group's mean is about *half a standard devi
 Self-guided group's mean. That phrasing travels across studies and scales in a way that "$6$ points"
 does not — $6$ points on a wildly variable exam is small, $6$ points on a tightly clustered one is
 huge, and $d$ normalizes for exactly that.
+
+![**Cohen's $d$ as a standardized distance.** Modeling each group as a normal curve with the pooled
+standard deviation $s_p \approx 11.27$, the Support centre ($78$) and the Self-guided centre ($72$) sit
+$6$ points — about $0.53$ standard deviations — apart. That standardized gap *is* the effect size
+$d = 6/11.27 \approx 0.53$, a medium effect. The hatched region shows how much the two distributions still
+overlap: a real, medium difference in group *means* is entirely compatible with heavy overlap among
+individual scores. Synthetic; seed 35203.](../assets/figures/wk03_effect_overlap.png){#fig-wk03-effect-overlap
+fig-alt="Two overlapping bell curves on an axis of final exam score, both with the same spread. A solid
+blue curve is centered at 72 for Self-guided and a dashed brown curve is centered at 78 for Support. Dotted
+vertical lines mark each center, and a short double-headed arrow between them is labeled 6 points equals
+0.53 SD. A hatched shaded region fills the large area where the two curves overlap. A caption reads d equals
+6 over 11.27 approximately 0.53, medium, the centers about half a standard deviation apart with heavy
+overlap."}
 
 Now the distinction this whole week is built around. **Statistical significance** asks: is the
 difference distinguishable from zero? Here yes — $p \approx 0.013$, and the CI $(1.3, 10.7)$ excludes
@@ -254,7 +278,7 @@ $$
 $$
 
 The static R below shows the idiom for producing exactly this report. It is teaching code and is **not
-executed** here (R is not installed in this build).
+executed** here (R is not run on this site).
 
 ```r
 set.seed(35203)
@@ -286,6 +310,18 @@ causation**: motivated students may both seek help and score higher for reasons 
 separate. The blueprint move: the *estimate* is $6$ points, its *uncertainty* is the interval
 $(1.3, 10.7)$, its *magnitude* is $d \approx 0.53$, and its *conclusion* is a sized, uncertain
 association — never a bare "significant."
+
+![**The two group means, each with its own 95% interval.** Support students average $78$ on the final and
+Self-guided students average $72$ — a difference of $6.0$ points. Each group mean is pinned to roughly
+$\pm 3$ points by its own $95\%$ interval (from $n = 45$ per group), so the $6$-point gap between the bars
+is comfortably larger than the wobble in either mean. The chart shows the estimate *and* its uncertainty
+together — the reporting habit the whole course is built on. Synthetic;
+seed 35203.](../assets/figures/wk03_group_means_ci.png){#fig-wk03-group-means fig-alt="A bar chart of two
+mean final exam scores with error bars. The Support bar is 78 and drawn with diagonal hatching; the
+Self-guided bar is 72. Each bar carries a printed value label and a 95 percent confidence interval error bar
+of about plus or minus 3 points, and each axis label notes n equals 45. A double-headed arrow across the
+tops of the two bars is labeled difference equals 6.0 points. A caption notes Support mean 78, Self-guided
+mean 72, each mean pinned to about plus or minus 3 points, and the gap is 6 points."}
 
 ### Worked example — estimating a single mean: study hours with a 95% CI (transfer, new context)
 
@@ -357,6 +393,20 @@ mean nothing. Practical importance is a separate judgment, made on the scale of 
 genuinely large effect because a small, noisy study failed to reach significance. Keep the two questions
 — "distinguishable from zero?" and "big enough to matter?" — visibly separate in the report.
 
+![**Significance is not size.** Both bars are *statistically significant*, yet their effect sizes differ
+almost twentyfold. A trivial $0.3$-point gap on a $100$-point exam becomes significant ($p < 0.001$) once
+the sample is enormous ($n = 10{,}000$), giving a Cohen's $d$ of only about $0.03$ — far below the *small*
+guidepost. Dataset G's real effect, $d \approx 0.53$, reaches the *medium* line. Reading significance off
+the p-value alone would rank these two studies as equal; the effect size is what separates a merely
+detectable gap from an important one. Synthetic;
+illustrative.](../assets/figures/wk03_significance_vs_size.png){#fig-wk03-significance fig-alt="A bar chart
+of Cohen's d for two studies. A gray bar on the left, labeled tiny gap, huge study with n equals 10,000, is
+only 0.03 tall. A hatched brown bar on the right, labeled Dataset G with n equals 45, reaches 0.53. Dashed
+horizontal guidelines mark d equals 0.2 small, 0.5 medium, and 0.8 large. Red arrows label both bars
+statistically significant, the left at p less than 0.001 and the right at p about 0.013. A caption notes a
+trivial d of 0.03 clears significance with huge n while Dataset G's d of about 0.53 is medium, so
+significance is not size."}
+
 The third flavor is **misreading the confidence interval**. Two misreadings recur. One treats the
 interval as a probability statement about the parameter — "there's a $95\%$ chance the true difference
 is between $1.3$ and $10.7$." But the true difference is *fixed*; it is the interval that is random
@@ -395,17 +445,6 @@ Hardin) treatment of the **foundations for inference** — confidence intervals 
 concept sequence: a point estimate, its standard error, an interval read as a procedure, and a p-value
 read for what it is and is not. *These notes are the course's own synthesis, grounded in but not copied
 from the sources.* No prose, examples, exercises, figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The estimation logic and the analysis-blueprint framing on this page are
-course-authored, but every numeric value here is **drafted, synthetic, and not independently checked**.
-The load-bearing numbers are the Dataset G slice — the point-estimate difference $\bar x_1 - \bar x_2 =
-6.0$ points, the standard error $\mathrm{SE} \approx 2.38$, the Welch statistic $t \approx 2.53$, the
-p-value $p \approx 0.013$, the $95\%$ confidence interval $(1.3, 10.7)$ points, and the effect size
-Cohen's $d \approx 0.53$ — together with the illustrative one-sample study-hours transfer values (mean
-$9.0$, SD $4.2$, $n = 36$, CI $7.6$ to $10.4$). All example data are synthetic with `set.seed(35203)`;
-**R is not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

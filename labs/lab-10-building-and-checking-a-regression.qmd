@@ -4,7 +4,6 @@ subtitle: "Fit, interpret, and diagnose a simple and a multiple regression in R"
 page_mode: software_lab_week
 week_contract: software_note_lab
 source_mode: source-informed
-verified: false
 toc: true
 ---
 
@@ -211,6 +210,13 @@ including the attendance and pretest you are about to add. And hold the conclusi
 this is an **association** — students who study more *tend to* score higher — not evidence that adding an
 hour of study *causes* $1.6$ more points, because nobody assigned the hours.
 
+![**The simple regression, drawn.** Each point is one of the $n = 120$ students; the terracotta line is the
+locked fit $\widehat{\text{final}} = 55 + 1.6\cdot\text{hours}$. The cloud rises with hours — a moderate
+positive association, $r \approx 0.55$, so $R^2 \approx 0.30$ — with real scatter around the trend
+(residual SD $\approx 10$). The slope $1.6$ is the **marginal** answer: two students one study-hour per
+week apart differ by about $1.6$ final points on average, nothing held fixed. The lone diamond far to the
+right is the one high-leverage student you will flag in Step 4. Synthetic; seed 35203.](../assets/figures/lab10_scatter_fit.png){#fig-lab10-scatter fig-alt="A scatter plot of final exam score against study hours per week for 120 students. The points form a moderately rising cloud from lower-left to upper-right. A thick terracotta line runs through them, labeled fit final equals 55 plus 1.6 times hours, rising from 55 at zero hours to about 87 at 20 hours; an arrow labels its slope as plus 1.6 per hour. A single dark-red diamond marker sits far to the right at about 19 hours and final 74, labeled high-leverage student, Step 4. A caption reads n equals 120, r about 0.55, R squared about 0.30 for hours alone, residual SD about 10."}
+
 ### Step 3 — Fit the multiple regression and read the partial slope
 
 Add attendance and pretest and refit. Watch the hours slope move. The same coefficient now answers a
@@ -252,6 +258,13 @@ fourth unmeasured thing (motivation, say) could move both hours and final, and t
 leaves that door open. Adjustment narrows the confounding you measured; it cannot close the confounding you
 did not.
 
+![**The same variable carries two different slopes.** The **marginal** slope from the simple fit is $1.6$
+final points per hour, with its locked $95\%$ confidence interval $(1.16, 2.04)$ shown as the error bar;
+the **partial** slope from the multiple fit is $1.1$, once attendance and pretest are held fixed. The red
+arrow marks the drop of about $0.5$ — the portion of the raw "hours effect" that was really the attendance
+and higher pretest heavy studiers carry, i.e. confounding, not study. Adding those two adjusters also lifts
+$R^2$ from $0.30$ to $0.46$. Synthetic; seed 35203.](../assets/figures/lab10_slope_shift.png){#fig-lab10-slope-shift fig-alt="A bar chart comparing two estimated hours slopes in final points per hour. The left bar, labeled marginal simple hours only, is drawn with diagonal hatching at height 1.6 and carries an error bar spanning its 95 percent confidence interval from 1.16 to 2.04. The right bar, labeled partial adjusted plus attendance plus pretest, is shorter at height 1.1. A red downward arrow between them is labeled minus 0.5, confounding removed by adjustment. A caption reads R squared rises 0.30 to 0.46 as attendance and pretest enter; the shrink 1.6 to 1.1 is confounding, not study."}
+
 ### Step 4 — Diagnose the fit: residuals, leverage, and VIF
 
 A slope you cannot trust is worse than no slope. Before you believe either model, check the assumptions
@@ -286,6 +299,13 @@ normal, so the confidence intervals you reported are trustworthy. The **Scale-Lo
 equal spread, and the **Residuals vs Leverage** panel is where you hunt for a single student bending the
 fit.
 
+![**Residuals vs fitted — the equal-spread check.** Plotting each residual against its fitted value, the
+band sits centred on the dashed zero line with no bend, so the **linearity** assumption holds. The dotted
+envelope traces $\pm 2$ times the local spread: it widens gently from left to right — the **mild
+heteroscedasticity** the week-10 note flags as present and tolerable, around an overall residual SD of about
+$10$. This is what "check the assumptions before you trust the slope" looks like: no alarming funnel, no
+curved trend, just a slightly uneven band. Synthetic; seed 35203.](../assets/figures/lab10_resid_fitted.png){#fig-lab10-resid fig-alt="A scatter plot of residuals, observed minus fitted, on the vertical axis against fitted final score on the horizontal axis. The points form a roughly even band centred on a heavy dashed horizontal line at zero, with no curve. Two dotted lines trace an envelope at plus and minus two times the local spread; the envelope is narrow at the left near fitted 57 and widens toward the right near fitted 86, and an arrow labels this spread widens slightly at high fitted. A caption notes the band is centred on zero so linearity holds, and the mild funnel is tolerable heteroscedasticity with residual SD about 10."}
+
 `car::vif()` returns variance-inflation factors near **$1.3$** for every predictor. A VIF of $1.3$ means
 each slope's standard error is inflated by only $\sqrt{1.3} \approx 1.14$ — about $14\%$ — by its overlap
 with the other predictors. That is **fine**: the rule-of-thumb alarms start around $5$, and well past it at
@@ -302,11 +322,19 @@ it change the slopes much? — and you *report what you find*, including whether
 that one row. Silently dropping an inconvenient point to tidy a plot is one of the classic regression sins,
 because it lets the data fit your preferred line rather than the other way around.
 
+![**One student sits far out in leverage — investigate, do not delete.** Leverage (the hat value $h_{ii}$)
+measures how unusual a student's predictor profile is, not whether their score is surprising. Almost every
+student sits in the shaded band of ordinary leverage on the left; one student (the red diamond) sits far to
+the right, with an unusual hours/attendance/pretest combination. Its standardized residual is modest, so it
+is not a wild outlier in $y$ — but its high leverage gives it extra pull on the fit. The disciplined move is
+to **investigate** the point (is it plausible? does removing it move the slopes?) and **report** what you
+find, never to silently drop it. Synthetic; seed 35203.](../assets/figures/lab10_leverage.png){#fig-lab10-leverage fig-alt="A scatter plot of standardized residual on the vertical axis against leverage, the hat value, on the horizontal axis. Most points cluster inside a shaded band of ordinary leverage on the far left, spread between standardized residuals of about minus 2 and plus 2.6 around a dashed zero line. One dark-red diamond marker sits alone far to the right at a leverage near 0.10 with a standardized residual of about minus 0.7, labeled high leverage, investigate, do NOT delete. A caption notes one student's hours, attendance, and pretest profile sits far from the rest, and a high-leverage point is checked, not dropped."}
+
 ## Verify
 
 This is where your simulation and the week-10 reasoning are supposed to meet. Check each item against the
 note, and treat a mismatch as a **bug in your code, not a discovery about the world** — every target value
-is the locked, synthetic Dataset R slice (provisional). R is not executed on this site, so these are
+is the locked, synthetic Dataset R slice (illustrative). R is not executed on this site, so these are
 the numbers your own run should reproduce, not output shown here.
 
 - **The simple slope is $1.6$ with intercept $55$.** `coef(fit_simple)` should read about

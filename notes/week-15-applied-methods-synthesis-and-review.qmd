@@ -4,7 +4,6 @@ subtitle: "The whole blueprint, one picture, across the five datasets"
 page_mode: overview_review_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 depth_rationale: "One-day synthesis meeting, Dec 7; consolidates the whole analysis blueprint across the five datasets rather than introducing new machinery"
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), the modeling arc as a whole — supports the synthesis"
@@ -155,6 +154,8 @@ $\approx 1.25$** and **OR Structured vs None $\approx 2.72$ (adjusted, down from
 adjustment changes the estimate (confounding), and because students self-select into programs, even a
 significant association is **not** proof the program *caused* passing.
 
+![**One blueprint, eight methods, five datasets — the whole course in one picture.** Reading left to right, the six blueprint steps (Question → Structure → Method → Assumptions → Estimate → Conclusion) run through every method; below, each dataset enters those same steps and a different analysis falls out. Dataset P gives the paired $t$ ($\bar d = +6.0$, $t \approx 3.65$); G the two-sample $t$ (difference $6.0$, $d \approx 0.53$); F one-way ANOVA ($F \approx 7.61$, $\eta^2 \approx 0.19$); X the two-way interaction ($F \approx 5.0$, cell means $73/85/62/83$); F with a pretest the ANCOVA adjusted means ($74.5/80.6/70.9/78.1$); and R the regression ($b_1 = 1.6$, $R^2 \approx 0.30$), the chi-square ($\chi^2 \approx 7.5$, OR $\approx 3.67$), and the logistic odds ratios ($1.25$ per hour, $2.72$ Structured). The structure changed from panel to panel; the six-step reasoning did not. Synthetic; seed 35203.](../assets/figures/wk15_blueprint_mosaic.png){#fig-wk15-mosaic fig-alt="A large mosaic. Across the top, six rounded boxes labeled 1 Question, 2 Structure, 3 Method, 4 Assumptions, 5 Estimate, and 6 Conclusion are joined left to right by arrows, the shared blueprint. Below sit eight small panels, one per method. Paired t for Dataset P shows two bars, Pre 62 and a hatched Post 68, with mean difference plus 6.0 and t equals 3.65. Two-sample t for Dataset G shows a hatched Support 78 and Self 72, difference 6.0 and d equals 0.53. One-way ANOVA for Dataset F shows four bars 74, a hatched 81, 70, and 79, with F equals 7.61 and eta-squared 0.19. Two-way ANOVA for Dataset X shows two non-parallel lines, In-person rising from 73 to 85 and Online rising from 62 to 83, interaction F equals 5.0. ANCOVA for Dataset F plus pretest shows adjusted means 74.5, 80.6, 70.9, and 78.1. Regression for Dataset R shows a scatter of study hours against final score crossed by an upward fitted line of slope 1.6 with R-squared 0.30. Chi-square for Dataset R shows pass percentages 45, 60, and a hatched 75 by program, chi-square 7.5 and odds ratio 3.67. Logistic for Dataset R shows two odds-ratio bars, 1.25 per study hour and a hatched 2.72 for Structured, above a dashed no-effect line at an odds ratio of 1."}
+
 ### A method-chooser recap: structure → method, walked across the datasets
 
 **The idea.** You should never choose a method by recall. You read the structure — the **outcome type**
@@ -201,6 +202,8 @@ method-chooser.
   and report a **predicted probability** as the conclusion — never the raw logit, and never confusing
   the odds ratio with the relative risk ($\mathrm{OR} \ne \mathrm{RR}$).
 
+![**Adjust for a confounder and the estimate shrinks — in every method.** The same confounding-to-adjustment thread appears three times across the course. In the regression, the study-hours slope falls from $1.6$ to $1.1$ final-score points per hour once attendance and pretest are held fixed. In the logistic model, the Structured-versus-None odds ratio falls from a raw $3.67$ to an adjusted $2.72$. In the ANCOVA, the widest format gap — Lecture+Lab versus Online — shrinks from $11$ to $9.7$ points after adjusting for the pretest. Each time, part of the raw association was baseline difference, not effect; the direction of the lesson is the same everywhere. Synthetic; seed 35203.](../assets/figures/wk15_confounding_adjustment.png){#fig-wk15-confounding fig-alt="Three small bar-pair panels sharing one message. Left, regression hours slope: an unadjusted bar at 1.6 and a hatched adjusted bar at 1.1, joined by a red curved arrow labeled shrinks. Center, logistic program odds ratio: unadjusted 3.67 and a hatched adjusted 2.72, with the same shrinks arrow. Right, ANCOVA widest format gap of Lecture+Lab versus Online: unadjusted 11.0 and a hatched adjusted 9.7, with the same shrinks arrow. In all three panels the adjusted bar is visibly lower than the unadjusted bar."}
+
 ## Worked examples
 
 ### Worked example — two contrasting datasets through all six steps (recurring)
@@ -211,7 +214,7 @@ so you can see the *same* reasoning produce two very different analyses. No new 
 locked results.
 
 The static R below maps each structure to its method and shows the locked output as `# comment`. It is
-teaching code, shown, not executed (R is not installed in this build).
+teaching code, shown, not executed (R is not run on this site).
 
 ```r
 set.seed(35203)
@@ -267,6 +270,8 @@ This is the drill the final exam will ask for. For each new mini-scenario, read 
 type + design), then name the analysis and say what it estimates. These are brand-new contexts, distinct
 from the Cypress Ridge world; the numbers below are **clearly-distinct illustrative values**, not the
 locked ones.
+
+![**The method-chooser as a decision tree: read the structure, name the method.** This is the drill in one picture. Start at the left — read the *structure* (outcome type plus design) — and the branch you land on forces the analysis, with no test name recalled from memory. A quantitative outcome splits into six leaves (paired $t$, two-sample/Welch $t$, one-way ANOVA, two-way ANOVA, regression, ANCOVA); a categorical or binary outcome splits into two (chi-square, logistic regression). Each leaf names the effect size and estimate you would report with it. Run each scenario below down this tree before you name its method. Synthetic; illustrative.](../assets/figures/wk15_method_chooser_tree.png){#fig-wk15-chooser fig-alt="A left-to-right decision tree. A single root box on the left reads: read the structure, outcome type plus design. It branches to two nodes, Quantitative outcome above and Categorical or binary outcome below. From the quantitative node, six leaf boxes: two measurements on the same units gives the paired t (Dataset P); two independent groups gives the two-sample or Welch t (Dataset G); three or more groups with one factor gives one-way ANOVA with Tukey or a planned contrast (Dataset F); two factors crossed gives two-way ANOVA read interaction first (Dataset X); a continuous predictor gives regression, simple then multiple (Dataset R); and a group comparison with a covariate gives ANCOVA reporting adjusted means (Dataset F plus pretest). From the categorical or binary node, two leaf boxes: two categorical variables gives chi-square with a risk difference, relative risk, or odds ratio (Dataset R); and a binary outcome with several predictors gives logistic regression reporting odds ratios and predicted probabilities (Dataset R)."}
 
 **Scenario A — a clinic's wait-time redesign.** A clinic measures **patient wait time in minutes** for
 the **same $40$ patients'** typical visit before and after a scheduling redesign, and asks whether wait
@@ -341,22 +346,6 @@ modeling arc, from comparing means through ANOVA, regression, two-way tables, an
 from **IMS** (Çetinkaya-Rundel & Hardin), the main open-text anchor read across the course. *These notes
 are the course's own synthesis, grounded in but not copied from the sources.* No prose, examples,
 exercises, figures, or solutions are reproduced from any source.
-
-## Evidence and verification status
-
-**verified: false.** The synthesis logic and the method-chooser reasoning on this page are
-course-authored, but every numeric value here is **drafted, synthetic, and not independently checked** —
-and this review introduces **no new numbers**; it recalls the locked results from weeks 3–13. The
-load-bearing synthetic figures on this page are: for Dataset P, the mean difference $+6.0$, paired
-$t \approx 3.65$, 95% CI $(2.6, 9.4)$, and $d_z \approx 0.67$; for Dataset G, the difference $6.0$,
-Welch $t \approx 2.53$, 95% CI $(1.3, 10.7)$, and $d \approx 0.53$; for Dataset F, $F \approx 7.61$,
-$\eta^2 \approx 0.19$, the Tukey pairs, the contrast $\hat\psi = 8$ ($t \approx 4.44$), and the ANCOVA
-adjusted means ($L\,74.5, LL\,80.6, O\,70.9, H\,78.1$); for Dataset X, Delivery $F \approx 10.4$,
-Background $F \approx 67.2$, and Interaction $F \approx 5.0$ ($p \approx 0.028$); for Dataset R, the
-simple slope $1.6$ ($R^2 \approx 0.30$, CI $(1.16, 2.04)$), the adjusted slope $1.1$ ($R^2 \approx
-0.46$), $\chi^2 \approx 7.5$ ($p \approx 0.024$), risk difference $0.30$, RR $\approx 1.67$, OR
-$\approx 3.67$, and the logistic odds ratios ($\approx 1.25$ per hour; $\approx 2.72$ Structured vs None,
-adjusted). All study data are synthetic with `set.seed(35203)`; **R is not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 

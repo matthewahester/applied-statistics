@@ -4,7 +4,6 @@ subtitle: "Lines as applied tools: relationship, prediction, and adjustment"
 page_mode: normal_week
 week_contract: public_note
 source_mode: source-informed
-verified: false
 readings:
   - "IMS (Çetinkaya-Rundel & Hardin), linear regression and multiple regression — supports the regression review"
   - "ModernDive (Ismay, Kim & Valdivia), inference for regression — supports the R workflow and slope inference"
@@ -135,6 +134,14 @@ the words "on average" and "associated with" are doing honest work, because this
 is near the edge of but inside the observed range, so $55$ is a plausible-to-borderline reading rather
 than a wild extrapolation — flag it as such.
 
+![**One line summarizing 120 students.** Each point is a student's weekly study hours against their
+final score; the fitted line $\widehat{\text{final}} = 55 + 1.6\cdot\text{hours}$ runs through the
+cloud. The slope $1.6$ is the "per one hour" rise marked by the little step, and the line explains
+about $30\%$ of the scatter ($r \approx 0.55$, $R^2 \approx 0.30$, residual SD $\approx 10$ points).
+The cloud is wide around the line — that leftover spread is the $70\%$ the model does not explain, and
+because study hours were chosen, not assigned, the slope is an association, not a cause. Synthetic; seed
+35203.](../assets/figures/wk10_regression_scatter.png){#fig-wk10-scatter fig-alt="A scatter plot of weekly study hours on the horizontal axis, from 0 to about 20, against final exam score on the vertical axis, from 40 to 100, for 120 students. A brown fitted line rises from about 55 at zero hours to about 87 at twenty hours. A small step drawn on the line shows that one more hour of study raises the fitted score by about 1.6 points. Printed on the plot are the equation final equals 55 plus 1.6 times hours, and r about 0.55, R squared about 0.30, residual standard deviation about 10. The points scatter fairly widely on both sides of the line."}
+
 How well does the line track the cloud? The correlation is $r \approx 0.55$, and **$R^2 = r^2 \approx
 0.30$**. Read $R^2$ as variance explained: study hours alone account for about $30\%$ of the variation
 in final scores, leaving $70\%$ to everything else — attendance, prior preparation, test-day luck. That
@@ -183,6 +190,13 @@ $0.46$: adding attendance and pretest explains more of the variation in final, a
 relevant predictors. Second — and this is the headline — **the hours slope dropped from $1.6$ to
 $1.1$.**
 
+![**The same variable, two different slopes.** The simple regression estimates the hours slope at $1.6$
+final points per study-hour (95% CI $1.16$ to $2.04$, shown as the error bar); once attendance and
+pretest enter the model, the partial slope drops to $1.1$. That $0.5$-point fall is confounding made
+visible: heavy studiers also attend more and started with higher pretests, and the simple slope
+bundled those companions in. The partial slope holds them fixed, and $R^2$ rises from $0.30$ to $0.46$
+— but even adjusted, this stays an association, not a cause. Synthetic; seed 35203.](../assets/figures/wk10_slope_comparison.png){#fig-wk10-slope-comparison fig-alt="A bar chart comparing two estimates of the study-hours slope. The left bar, labeled simple with hours alone, reaches 1.6 and carries a 95 percent confidence interval error bar spanning about 1.16 to 2.04. The right bar, labeled adjusted or partial with attendance and pretest added, is drawn with diagonal hatching and reaches 1.1. A dashed guide at 1.6 and a red downward arrow show the slope dropping by about 0.5 after adjustment, annotated confounding minus 0.5 after adjustment. A caption notes R squared rises from 0.30 to 0.46 and the relationship stays association, not causation."}
+
 Read that drop carefully, because it is the confounding-and-adjustment story in one number. The
 **partial slope** $1.1$ is interpreted "each extra study-hour per week is associated with about $1.1$
 more final points, **holding attendance and pretest fixed**." Compare two students with the *same*
@@ -214,6 +228,13 @@ residuals grows a little for higher fitted values, which is common and usually t
 note in the report. A residuals-vs-fitted plot should show a shapeless band around zero; a curved band
 would signal a missing nonlinear term, and a fanning band signals the mild heteroscedasticity you see
 here.
+
+![**Where the assumptions are checked.** Plotting residuals against fitted values turns the four
+regression assumptions into one picture. Here the residuals form a shapeless band around zero with no
+strong curve (linearity holds) and a residual SD of about $10$ points; the spread widens a little at
+higher fitted values, the **mild heteroscedasticity** the report should note. The one ringed point far
+to the right is the **high-leverage student** — an unusual combination of hours, attendance, and
+pretest; the discipline is to **investigate, not delete** it. Synthetic; seed 35203.](../assets/figures/wk10_residual_diagnostics.png){#fig-wk10-residuals fig-alt="A residuals-versus-fitted plot. The horizontal axis is the fitted final score from about 55 to 87; the vertical axis is the residual, observed minus fitted, from about minus 30 to plus 30. A dashed horizontal line marks zero. Most points form a shapeless band around zero. Two faint dotted envelope lines fan outward to the right, showing the spread widening mildly at higher fitted values. One point at the far right, near a fitted value of 87, is circled in red and labeled one high-leverage student, investigate, do not drop."}
 
 Two more diagnostics matter once you have several predictors. **Leverage and influence**: there is
 **one high-leverage student** in Dataset R — someone with an unusual combination of hours, attendance,
@@ -381,6 +402,13 @@ model, and a modest $R^2$ can describe a real, useful relationship. Report the r
 points here) alongside $R^2$ so a reader knows the typical size of a prediction miss, and never predict
 outside the observed range without flagging it.
 
+![**Why extrapolation is a guess wearing a line's clothes.** The line $\widehat{\text{final}} = 55 +
+1.6\cdot\text{hours}$ is fitted only on the shaded observed range of $0$ to $20$ study hours. Extend it
+(dashed) to a student studying $40$ hours and it predicts a final of $55 + 1.6(40) = 119$ — above the
+$100$-point maximum a $0$–$100$ exam can even reach. The linear pattern has no data out there to stand
+on, so the prediction is an assumption, not a finding; a straight line will happily keep rising past
+what is possible. Synthetic; seed 35203.](../assets/figures/wk10_extrapolation.png){#fig-wk10-extrapolation fig-alt="A scatter plot of study hours against final exam score with the observed range from 0 to 20 hours shaded. A solid brown line is fitted within that range, rising from about 55 to 87. A dashed red line continues the same slope beyond the data out to 40 hours, where a circled red point sits at a predicted final score of 119, labeled predict at 40 hours gives 119, impossible on a 0 to 100 exam. A dotted horizontal line marks the maximum possible exam score of 100, which the extrapolated line crosses well before 40 hours."}
+
 The third flavor is **using causal language for an observational regression**. Because regression
 "controls for" attendance and pretest, it is tempting to write "studying an extra hour **causes** $1.1$
 more final points, controlling for the others." But adjustment only removes the confounders you
@@ -421,18 +449,6 @@ treatment of **inference for regression** for the R workflow and the slope's sta
 statistic, and confidence interval. *These notes are the course's own synthesis, grounded in but not
 copied from the sources.* No prose, examples, exercises, figures, or solutions are reproduced from any
 source.
-
-## Evidence and verification status
-
-**verified: false.** The regression logic on this page is course-authored, but every numeric value here
-is **drafted, synthetic, and not independently checked**. The load-bearing numbers are the Dataset R
-simple model — slope $1.6$ with standard error $\approx 0.22$, $t \approx 7.3$, 95% CI $(1.16, 2.04)$,
-$r \approx 0.55$, and $R^2 \approx 0.30$ — and the multiple model — $\widehat{\text{final}} = 30 +
-1.1\cdot\text{hours} + 0.25\cdot\text{attendance} + 0.30\cdot\text{pretest}$ with the **hours slope
-$1.1$** (down from $1.6$) and $R^2 \approx 0.46$, together with the hours–attendance correlation $r
-\approx 0.45$ ($\mathrm{VIF} \approx 1.3$), the one high-leverage point, and the illustrative housing
-transfer values (size slope $15 \to 9$). All example data are synthetic with `set.seed(35203)`, and **R
-is not executed in this build**. These worked numbers are **provisional and not independently verified** — treat them as targets to reproduce, not as confirmed reference values.
 
 ## Public vs. graded
 
