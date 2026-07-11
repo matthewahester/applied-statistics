@@ -3,7 +3,7 @@ pagetitle: "Applied Statistical Methods"
 toc: false
 ---
 
-![](assets/hero-web-800.webp){srcset="assets/hero-web-800.webp 800w, assets/hero-web.webp 1400w" sizes="(min-width: 992px) 760px, 92vw" .course-hero-img fig-alt="Course identity hero for Applied Statistical Methods — a pink-and-green watermelon-tourmaline crystal cluster surrounded by applied-statistics graphics including a linear-model equation, group comparisons and one-way and two-way ANOVA, regression with residual diagnostics, a contingency table, and a logistic-regression curve, with the course title."}
+![](assets/hero-web-800.webp){srcset="assets/hero-web-800.webp 800w, assets/hero-web.webp 1400w" sizes="(min-width: 1200px) 1100px, 92vw" .course-hero-img .column-page fig-alt="Course identity hero for Applied Statistical Methods — a pink-and-green watermelon-tourmaline crystal cluster surrounded by applied-statistics graphics including a linear-model equation, group comparisons and one-way and two-way ANOVA, regression with residual diagnostics, a contingency table, and a logistic-regression curve, with the course title."}
 
 # Applied Statistical Methods {.course-landing-title}
 
