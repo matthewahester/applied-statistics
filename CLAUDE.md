@@ -54,7 +54,10 @@ directory listed above was deliberately left behind.
 - `assets/hero.png` — full course-identity banner (carries the title);
   referenced on `index.qmd` with `.course-hero-img` and alt text.
 - `assets/icon.png` — square crystal mark with transparent background
-  (a pink-and-green watermelon-tourmaline square mark); wired as the navbar `logo`.
+  (a pink-and-green watermelon-tourmaline square mark), the 1254 px master.
+  It is not a web asset: the navbar `logo` is its 128 px copy,
+  `assets/icon-128.png`, written by `tools/make_navbar_logo.py` in the hub
+  repo.
 
 ## Hard rules for Claude in this repo
 
